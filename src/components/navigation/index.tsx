@@ -13,35 +13,32 @@ import { useState } from 'react';
 
 const NavBox = styled.nav`
   position: fixed;
-  top: 0;
-  left: 0;
   display: flex;
   justify-content: space-between;
-  width: 100%;
+  align-items: center;
+
+  margin: 0 5%;
+  width: 90%;
   height: 100px;
   background: #fff;
 `;
 
 const NavLogoImg = styled.img`
-  margin: 22px 0 0 77px;
   max-width: 100px;
   height: 50px;
   cursor: pointer;
 `;
 
 const AuthBtn = styled.div`
-  margin: 45px 108px 0 0;
   cursor: pointer;
 `;
 const AuthBtnSpan = styled.span`
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 26px;
+  font-weight: bold;
+  font-size: var(--font-size-mid);
 `;
 
 const NavIconBox = styled.div`
   display: flex;
-  margin: 26px 84px 0 0;
 `;
 
 const NavIcon = styled.div`
@@ -52,7 +49,7 @@ const NavIcon = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f8d274;
+  background: var(--color-yellow);
   border-radius: 50%;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
   cursor: pointer;
@@ -80,7 +77,8 @@ const NavIconAlertDot = styled.div`
 `;
 
 function Navigation() {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
+  const [isAlert, setIsAlert] = useState(true);
 
   return (
     <NavBox>
@@ -92,7 +90,7 @@ function Navigation() {
           </NavIcon>
           <NavIcon>
             <NavIconImg src={Notification} />
-            <NavIconAlertDot />
+            {isAlert && <NavIconAlertDot />}
           </NavIcon>
           <NavIcon>
             <NavIconImg src={Profile} />
