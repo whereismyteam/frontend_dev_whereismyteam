@@ -4,6 +4,7 @@ import LogoImg from '../../assets/images/logo.svg';
 import Pencil from '../../assets/images/pencil.svg';
 import Notification from '../../assets/images/notification.svg';
 import Profile from '../../assets/images/profile.svg';
+import { useState } from 'react';
 
 // const colorSet = {
 //   Default: '#F8F8F8',
@@ -60,8 +61,11 @@ const NavIcon = styled.div`
 const NavIconImg = styled.img`
   /* #F8F8F8 */
   filter: invert(99%) sepia(5%) saturate(2%) hue-rotate(208deg) brightness(120%) contrast(95%);
-  /* #2353BB */
-  /* filter: invert(24%) sepia(60%) saturate(2542%) hue-rotate(205deg) brightness(98%) contrast(82%); */
+
+  :hover {
+    /* #2353BB */
+    filter: invert(24%) sepia(60%) saturate(2542%) hue-rotate(205deg) brightness(98%) contrast(82%);
+  }
 `;
 
 const NavIconAlertDot = styled.div`
@@ -76,10 +80,12 @@ const NavIconAlertDot = styled.div`
 `;
 
 function Navigation() {
+  const [isLogin, setIsLogin] = useState(true);
+
   return (
     <NavBox>
       <NavLogoImg src={LogoImg} />
-      {true ? ( // isLogined
+      {isLogin ? (
         <NavIconBox>
           <NavIcon>
             <NavIconImg src={Pencil} />

@@ -2,17 +2,25 @@ module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', 'prettier'],
-  extends: ['standard-with-typescript', 'prettier', 'plugin:prettier/recommended'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    'plugin:prettier/recommended',
+  ],
   parserOptions: {
     project: './tsconfig.json',
   },
   rules: {
-    "prettier/prettier": ["error", {
-      "endOfLine":"auto"
-    }],
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
     '@typescript-eslint/semi': 'off',
     '@typescript-eslint/space-before-function-paren': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    'no-constant-condition': 'off'
+    'prettier/prettier': ['error', { endOfLine: 'auto' }],
   },
 };
