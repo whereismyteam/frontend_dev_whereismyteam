@@ -14,6 +14,12 @@ const GlobalStyles = createGlobalStyle`
   }
 
   font-size: var(--font-size-base);
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export default GlobalStyles;

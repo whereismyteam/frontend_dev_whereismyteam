@@ -13,11 +13,13 @@ import { useState } from 'react';
 
 const NavBox = styled.nav`
   position: fixed;
+  top: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  margin: 0 5%;
+  z-index: 10;
+  padding: 0 5%;
   width: 90%;
   height: 100px;
   background: #fff;
