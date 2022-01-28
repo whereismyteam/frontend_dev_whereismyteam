@@ -19,7 +19,7 @@ const NavBox = styled.nav`
   width: 100%;
   height: 100px;
   background: #fff;
-  `;
+`;
 
 const NavLogoImg = styled.img`
   margin: 22px 0 0 77px;
@@ -31,12 +31,12 @@ const NavLogoImg = styled.img`
 const AuthBtn = styled.div`
   margin: 45px 108px 0 0;
   cursor: pointer;
-`
+`;
 const AuthBtnSpan = styled.span`
   font-weight: 400;
   font-size: 20px;
   line-height: 26px;
-`
+`;
 
 const NavIconBox = styled.div`
   display: flex;
@@ -62,7 +62,7 @@ const NavIconImg = styled.img`
   filter: invert(99%) sepia(5%) saturate(2%) hue-rotate(208deg) brightness(120%) contrast(95%);
   /* #2353BB */
   /* filter: invert(24%) sepia(60%) saturate(2542%) hue-rotate(205deg) brightness(98%) contrast(82%); */
-`
+`;
 
 const NavIconAlertDot = styled.div`
   position: absolute;
@@ -72,14 +72,14 @@ const NavIconAlertDot = styled.div`
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background-color: #2353BB;
+  background-color: #2353bb;
 `;
 
 function Navigation() {
   return (
     <NavBox>
       <NavLogoImg src={LogoImg} />
-      { true ? ( // isLogined
+      {true ? ( // isLogined
         <NavIconBox>
           <NavIcon>
             <NavIconImg src={Pencil} />
@@ -92,12 +92,11 @@ function Navigation() {
             <NavIconImg src={Profile} />
           </NavIcon>
         </NavIconBox>
-        ) : (
-          <AuthBtn>
-            <AuthBtnSpan>로그인/회원가입</AuthBtnSpan>
-          </AuthBtn>
-        )
-      }
+      ) : (
+        <AuthBtn>
+          <AuthBtnSpan>로그인/회원가입</AuthBtnSpan>
+        </AuthBtn>
+      )}
     </NavBox>
   );
 }
