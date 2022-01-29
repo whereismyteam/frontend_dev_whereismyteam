@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import Modal from '../../components/Modal';
+import Modal from '../../components/common/modal';
+import Login from './login';
 
 interface AuthProps {
   setModalClose: () => void;
@@ -7,7 +7,7 @@ interface AuthProps {
 }
 
 function Auth({ setModalClose, visible }: AuthProps) {
-  return <Modal visible={visible} onClickClose={setModalClose}></Modal>;
+  return <Modal children={Login()} visible={visible} onClickClose={setModalClose}></Modal>;
 }
 
 export default Auth;

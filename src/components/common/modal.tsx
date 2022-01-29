@@ -1,10 +1,10 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 
 import { fadeIn, fadeOut } from '../../assets/styles/keyframes';
 
 type ModalProps = {
-  children?: ReactNode;
+  children?: JSX.Element;
   visible: boolean;
   onClickClose: () => void;
 };
@@ -27,7 +27,7 @@ const Background = styled.div<{ visible: boolean }>`
 `;
 
 const ModalSection = styled.div<{ visible: boolean }>`
-  width: 768px;
+  width: 800px;
   height: 600px;
   position: absolute;
   top: 50%;
@@ -35,7 +35,6 @@ const ModalSection = styled.div<{ visible: boolean }>`
   transform: translate(-50%, -50%);
   border-radius: 50px;
   background-color: #fff;
-  padding: 16px;
   ${(props) => modalSettings(props.visible)}
 `;
 
