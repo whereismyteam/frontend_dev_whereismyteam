@@ -5,12 +5,15 @@ const GlobalStyles = createGlobalStyle`
   ${normalize}
 
   :root {
+    --font-size-large-2: 35px;
+    --font-size-large: 30px;
     --font-size-mid: 20px;
     --font-size-base: 17px;
     --font-size-small: 13px;
 
     --color-blue: #2353BB;
     --color-yellow: #f8d274;
+    --color-dark-grey: #9d9d9d;
   }
 
   body {
