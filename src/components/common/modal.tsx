@@ -17,19 +17,18 @@ const modalSettings = (visible: boolean) => css`
 `;
 
 const Background = styled.div<{ visible: boolean }>`
+  position: fixed;
   top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  position: absolute;
+  width: 100vw;
+  height: 100vh;
   background-color: rgba(41, 41, 41, 0.5);
   ${(props) => modalSettings(props.visible)}
 `;
 
 const ModalSection = styled.div<{ visible: boolean }>`
+  position: fixed;
   width: 600px;
   height: 600px;
-  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
