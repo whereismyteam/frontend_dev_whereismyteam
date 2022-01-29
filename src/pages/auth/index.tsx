@@ -7,7 +7,7 @@ interface AuthProps {
 }
 
 function Auth({ setModalClose, visible }: AuthProps) {
-  return <Modal children={Login()} visible={visible} onClickClose={setModalClose}></Modal>;
+  return <Modal children={<Login />} visible={visible} onClickClose={setModalClose}></Modal>;
 }
 
 export default Auth;

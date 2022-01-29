@@ -16,16 +16,18 @@ const ContentWrapper = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
   align-items: center;
 `;
 
 const Logo = styled.img`
+  margin-top: 64px;
   width: 240px;
   height: 130px;
 `;
 
 const DescriptionWrapper = styled.div`
+  margin-top: 17px;
+  margin-bottom: 24px;
   font-size: var(--font-size-mid);
   color: #909090;
   display: flex;
@@ -35,30 +37,32 @@ const DescriptionWrapper = styled.div`
 `;
 
 const SignUpSpan = styled.span`
+  margin-top: 30px;
   font-size: var(--font-size-base);
   font-weight: bold;
   color: #909090;
-  cursor: default;
+  cursor: pointer;
 `;
 
 const SocialLoginSection = styled.div`
+  margin-top: 50px;
+  margin-bottom: 58px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
 `;
 
 const SocialIcon = styled.img`
   width: 70px;
   height: 70px;
-  cursor: pointer;
 `;
 
 const SocialDescription = styled.span`
-  margin-top: 5px;
+  margin-top: 10px;
   font-size: var(--font-size-small);
   color: #909090;
-  cursor: default;
 `;
 
 function Login() {
@@ -73,7 +77,7 @@ function Login() {
         </DescriptionWrapper>
         <LoginInputBar spellCheck={false} placeholder="이메일" />
         <LoginInputBar type="password" placeholder="비밀번호" />
-        <DefaultButton width={400} height={50}>
+        <DefaultButton width={400} height={50} marginTop={14}>
           로그인
         </DefaultButton>
         <SignUpSpan>회원가입</SignUpSpan>
