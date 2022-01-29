@@ -13,6 +13,11 @@ const GlobalStyles = createGlobalStyle`
     --color-yellow: #f8d274;
   }
 
+  body {
+    overflow: hidden;
+  }
+
+  position: relative;
   font-size: var(--font-size-base);
   overflow-y: scroll;
   -ms-overflow-style: none;
