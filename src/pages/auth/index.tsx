@@ -1,7 +1,13 @@
+import { useState } from 'react';
 import Modal from '../../components/Modal';
 
-function index() {
-  return <Modal></Modal>;
+interface AuthProps {
+  setModalClose: () => void;
+  visible: boolean;
 }
 
-export default index;
+function Auth({ setModalClose, visible }: AuthProps) {
+  return <Modal visible={visible} onClickClose={setModalClose}></Modal>;
+}
+
+export default Auth;

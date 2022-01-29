@@ -1,10 +1,11 @@
 import styled from 'styled-components';
+import { useState } from 'react';
 
+import Auth from '../../pages/auth';
 import LogoImg from '../../assets/images/logo.svg';
 import Pencil from '../../assets/images/pencil.svg';
 import Notification from '../../assets/images/notification.svg';
 import Profile from '../../assets/images/profile.svg';
-import { useState } from 'react';
 
 // const colorSet = {
 //   Default: '#F8F8F8',
@@ -81,29 +82,41 @@ const NavIconAlertDot = styled.div`
 function Navigation() {
   const [isLogin, setIsLogin] = useState(false);
   const [isAlert, setIsAlert] = useState(true);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  const setModalOpen = () => {
+    setIsAuthModalOpen(true);
+  };
+
+  const setModalClose = () => {
+    setIsAuthModalOpen(false);
+  };
 
   return (
-    <NavBox>
-      <NavLogoImg src={LogoImg} />
-      {isLogin ? (
-        <NavIconBox>
-          <NavIcon>
-            <NavIconImg src={Pencil} />
-          </NavIcon>
-          <NavIcon>
-            <NavIconImg src={Notification} />
-            {isAlert && <NavIconAlertDot />}
-          </NavIcon>
-          <NavIcon>
-            <NavIconImg src={Profile} />
-          </NavIcon>
-        </NavIconBox>
-      ) : (
-        <AuthBtn>
-          <AuthBtnSpan>로그인/회원가입</AuthBtnSpan>
-        </AuthBtn>
-      )}
-    </NavBox>
+    <>
+      <Auth setModalClose={setModalClose} visible={isAuthModalOpen} />
+      <NavBox>
+        <NavLogoImg src={LogoImg} />
+        {isLogin ? (
+          <NavIconBox>
+            <NavIcon>
+              <NavIconImg src={Pencil} />
+            </NavIcon>
+            <NavIcon>
+              <NavIconImg src={Notification} />
+              {isAlert && <NavIconAlertDot />}
+            </NavIcon>
+            <NavIcon>
+              <NavIconImg src={Profile} />
+            </NavIcon>
+          </NavIconBox>
+        ) : (
+          <AuthBtn onClick={setModalOpen}>
+            <AuthBtnSpan>로그인/회원가입</AuthBtnSpan>
+          </AuthBtn>
+        )}
+      </NavBox>
+    </>
   );
 }
 
