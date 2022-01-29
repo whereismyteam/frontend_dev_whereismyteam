@@ -1,5 +1,6 @@
 import Modal from '../../components/common/modal';
-import Login from './login';
+// import Login from './login';
+import Register from './register';
 
 interface AuthProps {
   setModalClose: () => void;
@@ -7,7 +8,7 @@ interface AuthProps {
 }
 
 function Auth({ setModalClose, visible }: AuthProps) {
-  return <Modal children={<Login />} visible={visible} onClickClose={setModalClose}></Modal>;
+  return <Modal children={<Register />} visible={visible} onClickClose={setModalClose}></Modal>;
 }
 
 export default Auth;
