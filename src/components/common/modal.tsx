@@ -27,7 +27,7 @@ const Background = styled.div<{ visible: boolean }>`
 `;
 
 const ModalSection = styled.div<{ visible: boolean }>`
-  width: 800px;
+  width: 600px;
   height: 600px;
   position: absolute;
   top: 50%;
@@ -42,6 +42,7 @@ const CloseButton = styled.button`
   position: absolute;
   top: 0;
   right: 0;
+  z-index: 999;
   margin: 30px 30px 0px 0px;
   border: none;
   background: none;
