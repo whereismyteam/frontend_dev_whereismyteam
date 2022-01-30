@@ -24,9 +24,15 @@ const BtnWrapper = styled.div<{ width: number; height: number; marginTop?: strin
   color: var(--color-blue);
   background-color: #fff;
   cursor: pointer;
+  :hover {
+    color: #fff;
+    background-color: var(--color-blue);
+  }
 `;
 
-const Btn = styled.div``;
+const Btn = styled.div`
+  margin-top: 5px;
+`;
 
 function DefaultReverseButton({ btnName, width, height, marginTop }: BtnProps) {
   return (
