@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { setLogin, setRegister } from '../../store/auth';
+import { rootState } from '../../store';
 
 import Modal from '../../components/common/modal';
 import Login from './login';
@@ -10,11 +13,11 @@ interface AuthProps {
 }
 
 function Auth({ setModalClose, visible }: AuthProps) {
-  const [isLogin, setIsLogin] = useState(true);
+  const loginOrRegister = useSelector((state: rootState) => state.auth.loginOrRegister);
+  const dispatch = useDispatch();
+  const setRegister1 = () => dispatch(setRegister());
 
-  const setRegister = () => setIsLogin((current) => !current);
-
-  return <Modal children={isLogin ? <Login setRegister={setRegister} /> : <Register />} visible={visible} onClickClose={setModalClose}></Modal>;
+  return <Modal children={loginOrRegister ? <Login setRegister={setRegister1} /> : <Register />} visible={visible} onClickClose={setModalClose}></Modal>;
 }
 
 export default Auth;
