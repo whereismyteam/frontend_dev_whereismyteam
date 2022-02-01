@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { setModalVisible } from '../../store/auth';
+import { rootState } from '../../store';
+
 import Auth from '../../pages/auth';
 import LogoImg from '../../assets/images/logo.svg';
 import Pencil from '../../assets/images/pencil.svg';
@@ -82,19 +86,15 @@ const NavIconAlertDot = styled.div`
 function Navigation() {
   const [isLogin, setIsLogin] = useState(false);
   const [isAlert, setIsAlert] = useState(true);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  // const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  const setModalOpen = () => {
-    setIsAuthModalOpen(true);
-  };
-
-  const setModalClose = () => {
-    setIsAuthModalOpen(false);
-  };
-
+  const modalVisible = useSelector((state: rootState) => state.auth.modalVisible);
+  const dispatch = useDispatch();
+  const setModalOpen = () => dispatch(setModalVisible(true));
+  const setModalClose = () => dispatch(setModalVisible(false));
   return (
     <>
-      <Auth setModalClose={setModalClose} visible={isAuthModalOpen} />
+      <Auth setModalClose={setModalClose} visible={modalVisible} />
       <NavBox>
         <NavLogoImg src={LogoImg} />
         {isLogin ? (
