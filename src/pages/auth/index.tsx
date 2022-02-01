@@ -1,5 +1,10 @@
+import { useState } from 'react';
+
 import Modal from '../../components/common/modal';
-// import Login from './login';
+<<<<<<< Updated upstream
+=======
+import Login from './login';
+>>>>>>> Stashed changes
 import Register from './register';
 
 interface AuthProps {
@@ -8,7 +13,14 @@ interface AuthProps {
 }
 
 function Auth({ setModalClose, visible }: AuthProps) {
-  return <Modal children={<Register />} visible={visible} onClickClose={setModalClose}></Modal>;
+<<<<<<< Updated upstream
+=======
+  const [isLogin, setIsLogin] = useState(true);
+
+  const setRegister = () => setIsLogin((current) => !current);
+
+  return <Modal children={isLogin ? <Login setRegister={setRegister} /> : <Register />} visible={visible} onClickClose={setModalClose}></Modal>;
+>>>>>>> Stashed changes
 }
 
 export default Auth;

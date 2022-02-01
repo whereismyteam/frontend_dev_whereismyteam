@@ -65,7 +65,7 @@ const SocialDescription = styled.span`
   color: #909090;
 `;
 
-function Login() {
+function Login({ setRegister }: { setRegister: () => void }) {
   return (
     <>
       <BackgroundIMG src={BackgroundSVG} />
@@ -80,7 +80,7 @@ function Login() {
         <DefaultButton width={400} height={50} marginTop={14}>
           로그인
         </DefaultButton>
-        <SignUpSpan>회원가입</SignUpSpan>
+        <SignUpSpan onClick={setRegister}>회원가입</SignUpSpan>
         <SocialLoginSection>
           <SocialIcon src={GoogleIcon} />
           <SocialDescription>구글 계정으로 로그인</SocialDescription>
