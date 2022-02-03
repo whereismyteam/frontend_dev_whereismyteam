@@ -1,8 +1,8 @@
 import { createGlobalStyle } from 'styled-components';
-import { normalize } from 'styled-normalize';
+import reset from 'styled-reset';
 
 const GlobalStyles = createGlobalStyle` 
-  ${normalize}
+  ${reset}
 
   :root {
     --font-size-large-2: 35px;
@@ -14,6 +14,7 @@ const GlobalStyles = createGlobalStyle`
     --color-blue: #2353BB;
     --color-yellow: #f8d274;
     --color-dark-grey: #9d9d9d;
+    --color-pink-red: #fe7777;
   }
 
   body {
