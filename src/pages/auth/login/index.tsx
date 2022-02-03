@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import LoginInputBar from './inputBar';
-import DefaultButton from '../../../components/button/defaultButton';
+import DefaultBlueBtn from '../../../components/button/defaultBlueBtn';
 import BackgroundSVG from '../../../assets/images/authModalBackground.svg';
 import LogoImg from '../../../assets/images/logo.svg';
 import GoogleIcon from '../../../assets/images/googleIcon.svg';
@@ -12,6 +12,8 @@ const BackgroundIMG = styled.img`
 `;
 
 const ContentWrapper = styled.div`
+  margin-top: 64px;
+  margin-bottom: 58px;
   height: 100%;
   position: relative;
   display: flex;
@@ -20,7 +22,6 @@ const ContentWrapper = styled.div`
 `;
 
 const Logo = styled.img`
-  margin-top: 64px;
   width: 240px;
   height: 130px;
 `;
@@ -46,7 +47,6 @@ const SignUpSpan = styled.span`
 
 const SocialLoginSection = styled.div`
   margin-top: 50px;
-  margin-bottom: 58px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -77,9 +77,7 @@ function Login({ setRegister }: { setRegister: () => void }) {
         </DescriptionWrapper>
         <LoginInputBar spellCheck={false} placeholder="이메일" />
         <LoginInputBar type="password" placeholder="비밀번호" />
-        <DefaultButton width={400} height={50} marginTop={14}>
-          로그인
-        </DefaultButton>
+        <DefaultBlueBtn btnName={'로그인'} width={400} height={50} marginTop={14} />
         <SignUpSpan onClick={setRegister}>회원가입</SignUpSpan>
         <SocialLoginSection>
           <SocialIcon src={GoogleIcon} />
