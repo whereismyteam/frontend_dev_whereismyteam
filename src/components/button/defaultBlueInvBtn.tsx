@@ -20,7 +20,7 @@ const BtnWrapper = styled.div<{ width: number; height: number; marginTop?: numbe
   border: 2px solid var(--color-blue);
   border-radius: 30px;
   font-size: var(--font-size-base);
-  font-weight: 400;
+  font-weight: normal;
   color: var(--color-blue);
   background-color: #fff;
   cursor: pointer;
@@ -30,9 +30,7 @@ const BtnWrapper = styled.div<{ width: number; height: number; marginTop?: numbe
   }
 `;
 
-const Btn = styled.div`
-  margin-top: 5px;
-`;
+const Btn = styled.div``;
 
 function DefaultBlueInvBtn({ btnName, width, height, marginTop }: BtnProps) {
   return (

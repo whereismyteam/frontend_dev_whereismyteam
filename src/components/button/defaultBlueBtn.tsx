@@ -19,15 +19,13 @@ const BtnWrapper = styled.div<{ width: number; height: number; marginTop?: numbe
   margin-top: ${(props) => props.marginTop}px;
   border-radius: 30px;
   font-size: var(--font-size-base);
-  font-weight: 400;
+  font-weight: bold;
   color: #fff;
   background-color: var(--color-blue);
   cursor: pointer;
 `;
 
-const Btn = styled.div`
-  margin-top: 5px;
-`;
+const Btn = styled.div``;
 
 function DefaultBlueBtn({ btnName, width, height, marginTop }: BtnProps) {
   return (
