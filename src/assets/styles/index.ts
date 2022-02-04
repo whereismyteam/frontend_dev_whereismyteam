@@ -1,8 +1,26 @@
 import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 
+import InfinitySansR from '../fonts/InfinitySansR-Regular.otf';
+import InfinitySansB from '../fonts/InfinitySans-Bold.otf';
+
 const GlobalStyles = createGlobalStyle` 
   ${reset}
+
+  @font-face {
+    font-family: "Infinity Sans";
+    src: local("InfinitySansR"),
+    url(${InfinitySansR}) format('opentype');
+    font-style: normal;
+    font-weight: normal; 
+  }
+  @font-face {
+    font-family: "Infinity Sans";
+    src: local("InfinitySansB"),
+    url(${InfinitySansB}) format('opentype');
+    font-style: normal;
+    font-weight: bold; 
+  }
 
   :root {
     --font-size-large-2: 35px;
@@ -19,6 +37,7 @@ const GlobalStyles = createGlobalStyle`
 
   body {
     overflow: hidden;
+    font-family: 'Infinity Sans';
   }
 
   position: relative;
