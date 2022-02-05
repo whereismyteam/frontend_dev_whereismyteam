@@ -43,7 +43,7 @@ const GlobalStyles = createGlobalStyle`
   position: relative;
   font-size: var(--font-size-base);
   overflow-y: scroll;
-  -ms-overflow-style: none;
+  -ms-overflow-style: none; 
   scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;

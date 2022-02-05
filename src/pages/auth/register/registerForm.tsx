@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import scrollBar from '../../../assets/styles/scrollBar';
 import RegisterInput from './input';
 import AgreementBox from './agreement';
 import DefaultBtn from '../../../components/button/defaultBtn';
@@ -21,7 +22,7 @@ const RegisterFormWrapper = styled.div`
   width: 540px;
   position: relative;
   height: 500px;
-  overflow-y: scroll;
+  ${scrollBar};
 `;
 
 const RegisterDetailTitle = styled.div`
