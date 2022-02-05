@@ -12,6 +12,7 @@ const BackgroundIMG = styled.img`
 `;
 
 const ContentWrapper = styled.div`
+  height: calc(100% - 80px);
   padding: 40px;
   position: relative;
   display: flex;
@@ -36,7 +37,7 @@ const DescriptionWrapper = styled.div`
 `;
 
 const SignUpSpan = styled.span`
-  margin-top: 30px;
+  margin-top: 20px;
   font-size: var(--font-size-base);
   font-weight: bold;
   color: #909090;
@@ -44,7 +45,7 @@ const SignUpSpan = styled.span`
 `;
 
 const SocialLoginSection = styled.div`
-  margin-top: 20px;
+  margin-top: 40px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
