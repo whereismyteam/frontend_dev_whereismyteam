@@ -1,18 +1,24 @@
 import styled from 'styled-components';
 
 import BackgroundSVG from '../../../assets/images/authModalBackground.svg';
+import Background2PNG from '../../../assets/images/welcome.png';
 import LogoImg from '../../../assets/images/logo.svg';
 import DefaultYellowBtn from '../../../components/button/defaultYellowBtn';
 
 const BackgroundIMG = styled.img`
   position: absolute;
+  z-index: -2;
+`;
+
+const BackgroundIMG2 = styled.img`
+  position: absolute;
+  width: 700px;
+  top: 25%;
   z-index: -1;
 `;
 
 const ContentWrapper = styled.div`
-  margin-top: 64px;
-  margin-bottom: 59px;
-  height: 100%;
+  padding: 40px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -55,7 +61,7 @@ const CerticifiGuideWrapper = styled.div`
 const CerticifiGuide = styled.p`
   margin-top: 5px;
   color: var(--color-pink-red);
-  font-size: var(--font-size-mid);
+  font-size: var(--font-size-base);
   text-align: center;
 `;
 
@@ -68,6 +74,7 @@ function Welcome() {
   return (
     <>
       <BackgroundIMG src={BackgroundSVG} />
+      <BackgroundIMG2 src={Background2PNG} />
       <ContentWrapper>
         <Logo src={LogoImg} />
         <ContentBox>
@@ -89,7 +96,7 @@ function Welcome() {
             <VerificationTime>03:00</VerificationTime>이내로 인증링크를 클릭 후 이메일 인증을 완료해주세요.
           </CerticifiGuide>
         </CerticifiGuideWrapper>
-        <DefaultYellowBtn btnName={'로그인하러 가기'} width={325} height={70} marginTop={20} />
+        <DefaultYellowBtn btnName={'로그인하러 가기'} width={430} height={35} marginTop={20} />
       </ContentWrapper>
     </>
   );
