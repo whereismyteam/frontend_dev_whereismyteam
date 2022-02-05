@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const LoginInputBar = styled.input`
   width: 336px;
   height: 40px;
-  margin-top: 10px;
+  margin-top: 8px;
   padding: 5px 32px;
 
   font-size: var(--font-size-base);

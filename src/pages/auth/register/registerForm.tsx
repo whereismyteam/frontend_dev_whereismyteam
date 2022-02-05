@@ -2,8 +2,7 @@ import styled from 'styled-components';
 
 import RegisterInput from './input';
 import AgreementBox from './agreement';
-import DefaultBlueBtn from '../../../components/button/defaultBlueBtn';
-import DefaultBlueInvBtn from '../../../components/button/defaultBlueInvBtn';
+import DefaultBtn from '../../../components/button/defaultBtn';
 
 const ContentWrapper = styled.div`
   padding: 40px;
@@ -54,7 +53,7 @@ function RegisterForm() {
         <RegisterDetailTitle>아이디(이메일)</RegisterDetailTitle>
         <RegisterInputWrapper>
           <RegisterInput placeholder="이메일 주소" />
-          <DefaultBlueInvBtn btnName={'중복 확인'} width={140} height={45} />
+          <DefaultBtn btnName={'중복 확인'} width={140} height={45} color={'invBlue'} />
         </RegisterInputWrapper>
         <RegisterDetailTitle>비밀번호</RegisterDetailTitle>
         <RegisterInput placeholder="비밀번호" />
@@ -70,7 +69,7 @@ function RegisterForm() {
         </AgreementWrapper>
         <br />
       </RegisterFormWrapper>
-      <DefaultBlueBtn btnName={'회원가입'} width={550} height={50} />
+      <DefaultBtn btnName={'회원가입'} width={550} height={50} color={'blue'} />
     </ContentWrapper>
   );
 }

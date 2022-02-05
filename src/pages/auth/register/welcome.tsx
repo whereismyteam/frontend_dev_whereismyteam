@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import BackgroundSVG from '../../../assets/images/authModalBackground.svg';
 import Background2PNG from '../../../assets/images/welcome.png';
 import LogoImg from '../../../assets/images/logo.svg';
-import DefaultYellowBtn from '../../../components/button/defaultYellowBtn';
+import DefaultBtn from '../../../components/button/defaultBtn';
 
 const BackgroundIMG = styled.img`
   position: absolute;
@@ -70,6 +70,10 @@ const VerificationTime = styled.span`
   color: var(--color-blue);
 `;
 
+const MarginBlock = styled.div`
+  margin-top: 10px;
+`;
+
 function Welcome() {
   return (
     <>
@@ -96,7 +100,8 @@ function Welcome() {
             <VerificationTime>03:00</VerificationTime>이내로 인증링크를 클릭 후 이메일 인증을 완료해주세요.
           </CerticifiGuide>
         </CerticifiGuideWrapper>
-        <DefaultYellowBtn btnName={'로그인하러 가기'} width={430} height={35} marginTop={20} />
+        <MarginBlock />
+        <DefaultBtn btnName={'로그인하러 가기'} width={430} height={35} color={'yellow'} />
       </ContentWrapper>
     </>
   );

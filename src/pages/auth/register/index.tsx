@@ -4,7 +4,7 @@ import RegisterForm from './registerForm';
 import Welcome from './welcome';
 
 function Register() {
-  const [isRegistered, setIsRegistered] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(true);
 
   return <>{isRegistered ? <RegisterForm /> : <Welcome />}</>;
 }
