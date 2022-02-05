@@ -1,3 +1,4 @@
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
 import LoginInputBar from './inputBar';
@@ -5,6 +6,14 @@ import DefaultBtn from '../../../components/button/defaultBtn';
 import BackgroundSVG from '../../../assets/images/authModalBackground.svg';
 import LogoImg from '../../../assets/images/logo.svg';
 import GoogleIcon from '../../../assets/images/googleIcon.svg';
+import { useRef } from 'react';
+import { fetchLoginResult } from '../../../apis';
+import { setIsLogin } from '../../../store/user';
+import { setModalVisible } from '../../../store/auth';
+
+interface LoginProps {
+  setRegister: () => void;
+}
 
 const BackgroundIMG = styled.img`
   position: absolute;
@@ -68,7 +77,30 @@ const MarginBlock = styled.div`
   margin-top: 10px;
 `;
 
-function Login({ setRegister }: { setRegister: () => void }) {
+function Login({ setRegister }: LoginProps) {
+  const dispatch = useDispatch();
+
+  const inputEmailRef = useRef<HTMLInputElement>(null);
+  const inputPasswordRef = useRef<HTMLInputElement>(null);
+
+  const onClickLoginButton = async () => {
+    const email = inputEmailRef.current?.value as string;
+    const password = inputPasswordRef.current?.value as string;
+    if (email === '' || password === '') {
+      alert('올바른 정보를 입력해주세요');
+      return;
+    }
+
+    const response = (await fetchLoginResult(email, password)) as { result: string; userName: string };
+
+    if (response.result) {
+      dispatch(setIsLogin({ isLogin: true, userName: response.userName }));
+      dispatch(setModalVisible(false));
+    } else {
+      alert('이메일과 비밀번호를 확인해주세요');
+    }
+  };
+
   return (
     <>
       <BackgroundIMG src={BackgroundSVG} />
@@ -78,10 +110,10 @@ function Login({ setRegister }: { setRegister: () => void }) {
           <span>프로젝트, 대회, 스터디 팀원 구인은</span>
           <span>간편하게 구해줘 팀원에서!</span>
         </DescriptionWrapper>
-        <LoginInputBar spellCheck={false} placeholder="이메일" />
-        <LoginInputBar type="password" placeholder="비밀번호" />
+        <LoginInputBar ref={inputEmailRef} spellCheck={false} placeholder="이메일" />
+        <LoginInputBar ref={inputPasswordRef} type="password" placeholder="비밀번호" />
         <MarginBlock />
-        <DefaultBtn btnName={'로그인'} width={400} height={50} color="blue" />
+        <DefaultBtn onClick={onClickLoginButton} btnName={'로그인'} width={400} height={50} color="blue" />
         <SignUpSpan onClick={setRegister}>회원가입</SignUpSpan>
         <SocialLoginSection>
           <SocialIcon src={GoogleIcon} />
