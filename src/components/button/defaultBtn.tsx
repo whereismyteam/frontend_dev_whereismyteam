@@ -8,6 +8,7 @@ type BtnProps = {
   width: number;
   height: number;
   color: string;
+  onClick?: () => void;
 };
 
 const blueCSS = `
@@ -58,9 +59,9 @@ const BtnWrapper = styled.div<{ width: number; height: number; color: string }>`
 
 const Btn = styled.div``;
 
-function DefaultBlueBtn({ btnName, width, height, color }: BtnProps) {
+function DefaultBlueBtn({ btnName, width, height, color, onClick }: BtnProps) {
   return (
-    <BtnWrapper width={width} height={height} color={color}>
+    <BtnWrapper onClick={onClick} width={width} height={height} color={color}>
       <Btn>{btnName}</Btn>
     </BtnWrapper>
   );
