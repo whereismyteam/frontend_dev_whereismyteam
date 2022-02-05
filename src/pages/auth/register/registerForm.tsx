@@ -6,9 +6,7 @@ import DefaultBlueBtn from '../../../components/button/defaultBlueBtn';
 import DefaultBlueInvBtn from '../../../components/button/defaultBlueInvBtn';
 
 const ContentWrapper = styled.div`
-  margin-top: 37px;
-  margin-bottom: 33px;
-  height: 100%;
+  padding: 40px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -22,7 +20,6 @@ const ContentTitle = styled.span`
 
 const RegisterFormWrapper = styled.div`
   width: 540px;
-  margin-top: 43px;
   position: relative;
   height: 500px;
   overflow-y: scroll;
@@ -71,8 +68,9 @@ function RegisterForm() {
           <AgreementBox agreementTitle={'이용약관 동의'} />
           <AgreementBox agreementTitle={'개인정보 취급방침 동의'} />
         </AgreementWrapper>
+        <br />
       </RegisterFormWrapper>
-      <DefaultBlueBtn btnName={'회원가입'} width={550} height={50} marginTop={50} />
+      <DefaultBlueBtn btnName={'회원가입'} width={550} height={50} />
     </ContentWrapper>
   );
 }

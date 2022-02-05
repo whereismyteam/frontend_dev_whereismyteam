@@ -28,7 +28,7 @@ const Background = styled.div<{ visible: boolean }>`
 const ModalSection = styled.div<{ visible: boolean }>`
   position: fixed;
   width: 700px;
-  height: auto;
+  height: 650px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

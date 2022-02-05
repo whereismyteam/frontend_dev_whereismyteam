@@ -12,9 +12,7 @@ const BackgroundIMG = styled.img`
 `;
 
 const ContentWrapper = styled.div`
-  margin-top: 64px;
-  margin-bottom: 58px;
-  height: 100%;
+  padding: 40px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -46,7 +44,7 @@ const SignUpSpan = styled.span`
 `;
 
 const SocialLoginSection = styled.div`
-  margin-top: 50px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
