@@ -12,7 +12,7 @@ function IndexRouter() {
       <Navigation />
       <Routes>
         <Route path="/" element={<Main />} />
-        <Route path="post/:id" element={<Post />} />
+        <Route path="/post/:postId" element={<Post />} />
       </Routes>
       <Footer />
     </BrowserRouter>
