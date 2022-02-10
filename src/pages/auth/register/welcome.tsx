@@ -65,16 +65,16 @@ const CerticifiGuide = styled.p`
   text-align: center;
 `;
 
-const VerificationTime = styled.span`
+const CerticifiUserInfo = styled.span`
   margin-right: 2px;
-  color: var(--color-blue);
+  color: #000;
 `;
 
 const MarginBlock = styled.div`
   margin-top: 10px;
 `;
 
-function Welcome() {
+function Welcome({ setClearState }: { setClearState: () => void }) {
   return (
     <>
       <BackgroundIMG src={BackgroundSVG} />
@@ -95,13 +95,16 @@ function Welcome() {
           </ContentTitleWrapper>
         </ContentBox>
         <CerticifiGuideWrapper>
-          <CerticifiGuide>9T123@gmail.com으로 이메일 인증링크를 전송했습니다.</CerticifiGuide> {/* 메일 받도록 수정 */}
           <CerticifiGuide>
-            <VerificationTime>03:00</VerificationTime>이내로 인증링크를 클릭 후 이메일 인증을 완료해주세요.
+            <CerticifiUserInfo>9T123@gmail.com</CerticifiUserInfo>으로 이메일 인증링크를 전송했습니다.
+          </CerticifiGuide>{' '}
+          {/* 메일 받도록 수정 */}
+          <CerticifiGuide>
+            <CerticifiUserInfo>03:00</CerticifiUserInfo>이내로 인증링크를 클릭 후 이메일 인증을 완료해주세요.
           </CerticifiGuide>
         </CerticifiGuideWrapper>
         <MarginBlock />
-        <DefaultBtn btnName={'로그인하러 가기'} width={430} height={35} color={'yellow'} />
+        <DefaultBtn onClick={setClearState} btnName={'로그인하러 가기'} width={430} height={35} color={'yellow'} />
       </ContentWrapper>
     </>
   );
