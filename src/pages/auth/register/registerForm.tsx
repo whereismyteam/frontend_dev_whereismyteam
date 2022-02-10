@@ -46,7 +46,7 @@ const AgreementWrapper = styled.div`
   margin-top: 57px;
 `;
 
-function RegisterForm() {
+function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
   return (
     <ContentWrapper>
       <ContentTitle>회원가입</ContentTitle>
@@ -70,7 +70,7 @@ function RegisterForm() {
         </AgreementWrapper>
         <br />
       </RegisterFormWrapper>
-      <DefaultBtn btnName={'회원가입'} width={550} height={50} color={'blue'} />
+      <DefaultBtn onClick={setNextStep} btnName={'회원가입'} width={550} height={50} color={'blue'} />
     </ContentWrapper>
   );
 }

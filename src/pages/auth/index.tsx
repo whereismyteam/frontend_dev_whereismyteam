@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 
-import { setLogin, setRegister } from '../../store/auth';
+import { clearState, setRegister } from '../../store/auth';
 import { rootState } from '../../store';
 
 import Modal from '../../components/common/modal';
@@ -20,7 +20,7 @@ function Auth({ setModalClose, visible }: AuthProps) {
 
   useEffect(
     () => () => {
-      setTimeout(() => dispatch(setLogin()), 200);
+      setTimeout(() => dispatch(clearState()), 200);
     },
     [visible],
   );
