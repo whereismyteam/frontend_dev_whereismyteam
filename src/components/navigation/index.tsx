@@ -1,11 +1,12 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setModalVisible } from '../../store/auth';
 import { rootState } from '../../store';
 import Auth from '../../pages/auth';
 import LogoImg from '../../assets/images/logo.svg';
+import LogoWhiteImg from '../../assets/images/logoWhite.svg';
 import Pencil from '../../assets/images/pencil.svg';
 import Notification from '../../assets/images/notification.svg';
 import Profile from '../../assets/images/profile.svg';
@@ -15,7 +16,7 @@ import Profile from '../../assets/images/profile.svg';
 //   Blue: '#2353BB'
 // }
 
-const NavBox = styled.nav`
+const NavBox = styled.nav<{ isScrolled: boolean }>`
   position: fixed;
   top: 0;
   display: flex;
@@ -26,7 +27,7 @@ const NavBox = styled.nav`
   padding: 0 5%;
   width: 90%;
   height: 100px;
-  background: #fff;
+  background: ${(props) => (props.isScrolled ? '#2353BB' : '#fff')};
 `;
 
 const NavLogoImg = styled.img`
@@ -38,9 +39,10 @@ const NavLogoImg = styled.img`
 const AuthBtn = styled.div`
   cursor: pointer;
 `;
-const AuthBtnSpan = styled.span`
+const AuthBtnSpan = styled.span<{ isScrolled: boolean }>`
   font-weight: bold;
   font-size: var(--font-size-mid);
+  color: ${(props) => (props.isScrolled ? '#fff' : '#000')};
 `;
 
 const NavIconBox = styled.div`
@@ -90,11 +92,25 @@ function Navigation() {
   const dispatch = useDispatch();
   const setModalOpen = () => dispatch(setModalVisible(true));
   const setModalClose = () => dispatch(setModalVisible(false));
+
+  const [isScrolled, setIsScrolled] = useState(false);
+  useEffect(() => {
+    document.body.children[1].children[1].addEventListener('scroll', handleScroll);
+  }, []);
+  const handleScroll = () => {
+    const scrollTop = document.body.children[1].children[1].scrollTop;
+    if (scrollTop > 0) {
+      // 나중에 적절한 높이에서 변경하도록 값 수정
+      setIsScrolled(true);
+    } else {
+      setIsScrolled(false);
+    }
+  };
   return (
     <>
       <Auth setModalClose={setModalClose} visible={modalVisible} />
-      <NavBox>
-        <NavLogoImg src={LogoImg} />
+      <NavBox isScrolled={isScrolled}>
+        <NavLogoImg src={isScrolled ? LogoWhiteImg : LogoImg} />
         {isLogin ? (
           <NavIconBox>
             <NavIcon>
@@ -110,7 +126,7 @@ function Navigation() {
           </NavIconBox>
         ) : (
           <AuthBtn onClick={setModalOpen}>
-            <AuthBtnSpan>로그인/회원가입</AuthBtnSpan>
+            <AuthBtnSpan isScrolled={isScrolled}>로그인/회원가입</AuthBtnSpan>
           </AuthBtn>
         )}
       </NavBox>
