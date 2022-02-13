@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
@@ -6,7 +7,6 @@ import DefaultBtn from '../../../components/button/defaultBtn';
 import BackgroundSVG from '../../../assets/images/authModalBackground.svg';
 import LogoImg from '../../../assets/images/logo.svg';
 import GoogleIcon from '../../../assets/images/googleIcon.svg';
-import { useRef } from 'react';
 import { fetchLoginResult } from '../../../apis';
 import { setIsLogin } from '../../../store/user';
 import { setModalVisible } from '../../../store/auth';
