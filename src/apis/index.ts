@@ -11,16 +11,9 @@ import { postJSON } from './util';
 
 export const fetchLoginResult = async (email: string, password: string) => {
   try {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/user/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: {
-        email,
-        password,
-      },
-    });
+    const response = await fetch(`http://prod.9tapi.site:9000/user/login`, postJSON({ email, password }));
+
+    return response;
   } catch (e) {
     console.error(e);
   }

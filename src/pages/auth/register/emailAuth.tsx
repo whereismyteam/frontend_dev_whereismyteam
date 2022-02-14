@@ -11,9 +11,11 @@ const BackgroundIMG = styled.img`
 const ContentWrapper = styled.div`
   padding: 40px;
   position: relative;
+  height: calc(100% - 80px);
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-evenly;
 `;
 
 const ContentTitle = styled.h2`
@@ -24,12 +26,9 @@ const ContentTitle = styled.h2`
   letter-spacing: 1px;
 `;
 
-const ContentTitleWrapper = styled.div`
-  margin-top: 155px;
-`;
+const ContentTitleWrapper = styled.div``;
 
 const ContentTitleDetail = styled.h2`
-  margin-top: 10px;
   font-size: var(--font-size-mid);
   color: #000;
   font-weight: bold;
@@ -43,14 +42,12 @@ const HighlightText = styled.span`
 `;
 
 const SkipBtn = styled.div`
-  margin-top: 26px;
   font-size: var(--font-size-base);
   color: var(--color-dark-grey);
   cursor: pointer;
 `;
 
 const FailAuthWrapper = styled.div`
-  margin-top: 68px;
   width: 500px;
   display: flex;
   justify-content: space-between;

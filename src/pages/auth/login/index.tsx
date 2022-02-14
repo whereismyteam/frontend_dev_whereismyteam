@@ -91,14 +91,15 @@ function Login({ setRegister }: LoginProps) {
       return;
     }
 
-    const response = (await fetchLoginResult(email, password)) as { result: string; userName: string };
+    const response = await fetchLoginResult(email, password);
+    console.log(response);
 
-    if (response.result) {
-      dispatch(setIsLogin({ isLogin: true, userName: response.userName }));
-      dispatch(setModalVisible(false));
-    } else {
-      alert('이메일과 비밀번호를 확인해주세요');
-    }
+    // if (response.result) {
+    //   dispatch(setIsLogin({ isLogin: true, userName: response.userName }));
+    //   dispatch(setModalVisible(false));
+    // } else {
+    //   alert('이메일과 비밀번호를 확인해주세요');
+    // }
   };
 
   return (
