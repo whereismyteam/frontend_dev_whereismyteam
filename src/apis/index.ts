@@ -7,12 +7,23 @@
 //   withCredentials: true,
 // });
 
+import { postJSON } from './util';
+
 export const fetchLoginResult = async (email: string, password: string) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ result: 'success', userName: '9T' });
-    }, 500);
-  });
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/user/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: {
+        email,
+        password,
+      },
+    });
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 export const fetchEmailConfirm = async (email: string) => {
