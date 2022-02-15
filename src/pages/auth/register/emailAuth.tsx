@@ -1,7 +1,12 @@
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { fetchEmailSend } from '../../../apis';
 
 import BackgroundSVG from '../../../assets/images/authModalBackground.svg';
+import LoadingSpinner from '../../../assets/styles/loadingSpinner';
 import DefaultBtn from '../../../components/button/defaultBtn';
+import { rootState } from '../../../store';
 
 const BackgroundIMG = styled.img`
   position: absolute;
@@ -65,6 +70,10 @@ const ResendBtn = styled.span`
 `;
 
 function EmailAuth({ setNextStep }: { setNextStep: () => void }) {
+  const userEmail = useSelector((state: rootState) => state.auth.userId);
+
+  const [loading, setLoading] = useState(false);
+
   const alertSkipEmailAuth = () => {
     const ok = confirm('건너뛰면 서비스 이용 일부가 제한될 수 있습니다. 그래도 건너뛰시겠습니까?');
     if (ok) {
@@ -72,19 +81,36 @@ function EmailAuth({ setNextStep }: { setNextStep: () => void }) {
     }
   };
 
+  const onClickBtn = async () => {
+    setLoading(true);
+    const response = await fetchEmailSend(userEmail);
+
+    if (response.ok) {
+      setNextStep();
+    } else {
+      alert(response.msg);
+    }
+  };
+
   return (
     <>
       <BackgroundIMG src={BackgroundSVG} />
       <ContentWrapper>
-        <ContentTitle>이메일 인증</ContentTitle>
-        <ContentTitleWrapper>
-          <ContentTitleDetail>구해줘 팀원의 다양한 서비스 이용을 위해</ContentTitleDetail>
-          <ContentTitleDetail>
-            <HighlightText>이메일 인증</HighlightText>이 한 번 필요합니다.
-          </ContentTitleDetail>
-        </ContentTitleWrapper>
-        <DefaultBtn onClick={setNextStep} btnName={'인증링크 전송'} width={500} height={50} color={'blue'} />
-        <SkipBtn onClick={alertSkipEmailAuth}>건너뛰기</SkipBtn>
+        {loading ? <ContentTitle>이메일 전송중입니다</ContentTitle> : <ContentTitle>이메일 인증</ContentTitle>}
+        {loading ? (
+          <LoadingSpinner />
+        ) : (
+          <>
+            <ContentTitleWrapper>
+              <ContentTitleDetail>구해줘 팀원의 다양한 서비스 이용을 위해</ContentTitleDetail>
+              <ContentTitleDetail>
+                <HighlightText>이메일 인증</HighlightText>이 한 번 필요합니다.
+              </ContentTitleDetail>
+            </ContentTitleWrapper>
+            <DefaultBtn onClick={onClickBtn} btnName={'인증링크 전송'} width={500} height={50} color={'blue'} />
+            <SkipBtn onClick={alertSkipEmailAuth}>건너뛰기</SkipBtn>
+          </>
+        )}
         <FailAuthWrapper>
           <FailAuthTitle>이메일을 받지 못하셨나요?</FailAuthTitle>
           <ResendBtn>이메일 인증링크 재전송</ResendBtn>
