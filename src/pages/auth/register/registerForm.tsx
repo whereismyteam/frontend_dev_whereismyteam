@@ -8,6 +8,7 @@ import AgreementBox from './agreement';
 import DefaultBtn from '../../../components/button/defaultBtn';
 import { fetchEmailConfirm, fetchRegister } from '../../../apis';
 import { setUserId } from '../../../store/auth';
+import { useDispatch } from 'react-redux';
 
 const ContentWrapper = styled.div`
   padding: 40px;
@@ -57,6 +58,8 @@ const AlertText = styled.div<{ ok: boolean }>`
 `;
 
 function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
+  const dispatch = useDispatch();
+
   const inputEmailRef = useRef<HTMLInputElement>(null);
   const inputPasswordRef = useRef<HTMLInputElement>(null);
   const inputNickNameRef = useRef<HTMLInputElement>(null);
@@ -118,7 +121,7 @@ function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
     const response = await fetchRegister(registerData);
 
     if (response.ok) {
-      setUserId(email);
+      dispatch(setUserId(email));
       setNextStep();
     } else {
       alert(response.msg);
