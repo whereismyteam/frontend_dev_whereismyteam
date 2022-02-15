@@ -2,6 +2,8 @@ import styled from 'styled-components';
 
 type Props = {
   agreementTitle: string;
+  inputId: string;
+  inputRef: React.RefObject<HTMLInputElement>;
 };
 
 const Wrapper = styled.div`
@@ -20,14 +22,6 @@ const WrapperRight = styled.div`
   cursor: pointer;
 `;
 
-const CheckBox = styled.input`
-  width: 20px;
-  height: 20px;
-  /* border: 2px solid var(--color-yellow);
-  border-radius: 50%; */
-  /* --체크박스 컴포넌트 따로 작성 필요-- */
-`;
-
 const LeftSpan = styled.span`
   margin-left: 11px;
   font-size: var(--font-size-base);
@@ -39,11 +33,41 @@ const RightSpan = styled.span`
   color: var(--color-dark-grey);
 `;
 
-function AgreementBox({ agreementTitle }: Props) {
+const CheckBoxInput = styled.input`
+  display: none;
+
+  &:checked + label {
+    background-color: var(--color-yellow);
+  }
+`;
+
+const CheckBoxLabel = styled.label`
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-yellow);
+  border-radius: 50%;
+
+  &:hover {
+    background-color: var(--color-yellow);
+    opacity: 0.5;
+  }
+`;
+
+function CheckBox({ inputId, inputRef }: { inputId: string; inputRef: React.RefObject<HTMLInputElement> }) {
+  return (
+    <>
+      <CheckBoxInput ref={inputRef} type="checkbox" id={inputId} />
+      <CheckBoxLabel htmlFor={inputId} />
+    </>
+  );
+}
+
+function AgreementBox({ agreementTitle, inputId, inputRef }: Props) {
   return (
     <Wrapper>
       <WrapperLeft>
-        <CheckBox type="checkbox" />
+        <CheckBox inputId={inputId} inputRef={inputRef} />
         <LeftSpan>{agreementTitle}</LeftSpan>
       </WrapperLeft>
       <WrapperRight>
