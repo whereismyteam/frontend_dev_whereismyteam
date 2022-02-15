@@ -34,33 +34,18 @@ export const fetchEmailConfirm = async (email: string): Promise<{ ok: boolean; m
   } catch (e) {
     return { ok: false, msg: '서버가 불안정합니다. 다시 시도해주세요' };
   }
-
-  // try {
-  //   await httpClient.get(`users/emails?email=${email}`);
-  //   return '사용 가능한 이메일입니다.';
-  // } catch (error) {
-  //   return '중복된 이메일입니다.';
-  // }
 };
 
-export const fetchRegister = async (registerData: object) => {
-  // try {
-  //   const res = await ~.post("users/signup", registerData);
-  //   return res;
-  // } catch (error) {
-  //   console.error(error);
-  // }
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        success: true,
-        code: 0,
-        msg: '성공',
-        data: {
-          userIdx: 2,
-          email: 'cofls6581@naver.com',
-        },
-      });
-    }, 500);
-  });
+export const fetchRegister = async (registerData: object): Promise<{ ok: boolean; msg: string }> => {
+  try {
+    const res = (await fetch(`${API_URL}/users/signup`, postJSON(registerData)).then((res) => res.json())) as {
+      success: boolean | undefined;
+      message: string;
+    };
+
+    if (res.success) return { ok: true, msg: '성공' };
+    else return { ok: false, msg: res.message };
+  } catch (e) {
+    return { ok: false, msg: '서버가 불안정합니다. 다시 시도해주세요' };
+  }
 };

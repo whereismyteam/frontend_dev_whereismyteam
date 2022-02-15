@@ -47,9 +47,7 @@ const PasswordGuide = styled.div`
   color: var(--color-dark-grey);
 `;
 
-const AgreementWrapper = styled.div`
-  margin-top: 57px;
-`;
+const AgreementWrapper = styled.div``;
 
 const AlertText = styled.div<{ ok: boolean }>`
   margin-top: 6px;
@@ -86,41 +84,29 @@ function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
     const passwordConfirm = inputPasswordConfirmRef.current?.value as string;
 
     if (password !== passwordConfirm) setPassConfirm(() => ({ ok: false, msg: '비밀번호가 일치하지 않습니다.' }));
-    else setPassConfirm(() => ({ ok: true, msg: '비밀번호가 확인되었습니다.' }));
+    else setPassConfirm(() => ({ ok: true, msg: '비밀번호가 일치합니다.' }));
   };
 
   const onClickRegister = async () => {
     const email = inputEmailRef.current?.value as string;
     const password = inputPasswordRef.current?.value as string;
     const nickName = inputNickNameRef.current?.value as string;
-    if (!emailConfirm.ok || !passConfirm.ok || nickName === '') {
-      alert('정보를 모두 입력해주세요');
+    if (!emailConfirm.ok || regConfirm !== '' || !passConfirm.ok || nickName === '') {
+      alert('입력 정보를 확인해주세요');
       return;
     }
 
-    // fetchRegister
-    type registerDataProps = {
-      email: string;
-      password: string;
-      nickName: string;
-    };
-    type resDataProps = {
-      success: boolean;
-      code: number;
-      msg: string;
-      data: object;
-    };
-    const registerData: registerDataProps = {
+    const registerData = {
       email,
       password,
       nickName,
     };
-    const response = (await fetchRegister(registerData)) as resDataProps;
+    const response = await fetchRegister(registerData);
 
-    if (response.success) {
+    if (response.ok) {
       setNextStep();
     } else {
-      alert('정보를 모두 입력해주세요');
+      alert(response.msg);
     }
   };
   return (
@@ -147,6 +133,7 @@ function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
           <AgreementBox agreementTitle={'이용약관 동의'} />
           <AgreementBox agreementTitle={'개인정보 취급방침 동의'} />
         </AgreementWrapper>
+        <br />
         <br />
       </RegisterFormWrapper>
       <DefaultBtn onClick={onClickRegister} btnName={'회원가입'} width={550} height={50} color={'blue'} />
