@@ -31,7 +31,7 @@ const RegisterFormWrapper = styled.div`
 `;
 
 const RegisterDetailTitle = styled.div`
-  margin-top: 37px;
+  margin-top: 20px;
   color: var(--color-blue);
   font-size: var(--font-size-mid);
   font-weight: 700;
@@ -52,6 +52,7 @@ const AgreementWrapper = styled.div`
 `;
 
 const AlertText = styled.div<{ ok: boolean }>`
+  margin-top: 6px;
   font-size: var(--font-size-base);
   color: ${(props) => (props.ok ? 'black' : 'red')};
 `;
@@ -63,6 +64,8 @@ function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
   const inputPasswordConfirmRef = useRef<HTMLInputElement>(null);
 
   const [emailConfirm, setEmailConfirm] = useState({ ok: false, msg: '' });
+  const [passConfirm, setPassConfirm] = useState({ ok: false, msg: '' });
+  const [regConfirm, setRegConfirm] = useState('');
 
   const onClickEmailConfirm = async () => {
     const email = inputEmailRef.current?.value as string;
@@ -70,19 +73,31 @@ function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
     setEmailConfirm(() => response);
   };
 
+  const onChangePassword = () => {
+    const password = inputPasswordRef.current?.value as string;
+    const regex = new RegExp('(?=.*[!@#$%^&*])(?=.*[0-9])((?=.*[a-z])|(?=.*[A-Z]))');
+    const { length } = password;
+
+    setRegConfirm(() => (length >= 8 && length <= 15 && regex.test(password) ? '' : '형식에 맞게 입력해주세요.'));
+  };
+
+  const onChangePasswordConfirm = () => {
+    const password = inputPasswordRef.current?.value as string;
+    const passwordConfirm = inputPasswordConfirmRef.current?.value as string;
+
+    if (password !== passwordConfirm) setPassConfirm(() => ({ ok: false, msg: '비밀번호가 일치하지 않습니다.' }));
+    else setPassConfirm(() => ({ ok: true, msg: '비밀번호가 확인되었습니다.' }));
+  };
+
   const onClickRegister = async () => {
     const email = inputEmailRef.current?.value as string;
     const password = inputPasswordRef.current?.value as string;
-    const passwordConfirm = inputPasswordConfirmRef.current?.value as string;
     const nickName = inputNickNameRef.current?.value as string;
-    if (!emailConfirm.ok || password === '' || passwordConfirm === '' || nickName === '') {
+    if (!emailConfirm.ok || !passConfirm.ok || nickName === '') {
       alert('정보를 모두 입력해주세요');
       return;
     }
-    if (password !== passwordConfirm) {
-      alert('비밀번호가 일치하지 않습니다. 다시 확인해주세요');
-      return;
-    }
+
     // fetchRegister
     type registerDataProps = {
       email: string;
@@ -119,10 +134,12 @@ function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
         </RegisterInputWrapper>
         {emailConfirm.msg !== '' && <AlertText ok={emailConfirm.ok}>{emailConfirm.msg}</AlertText>}
         <RegisterDetailTitle>비밀번호</RegisterDetailTitle>
-        <RegisterInput ref={inputPasswordRef} placeholder="비밀번호" />
+        <RegisterInput onChange={onChangePassword} ref={inputPasswordRef} placeholder="비밀번호" type="password" />
         <PasswordGuide>* 영문/숫자/특수문자 조합으로 8~15자로 입력해주세요.</PasswordGuide>
+        {regConfirm !== '' && <AlertText ok={false}>{regConfirm}</AlertText>}
         <RegisterDetailTitle>비밀번호 확인</RegisterDetailTitle>
-        <RegisterInput ref={inputPasswordConfirmRef} placeholder="비밀번호 재입력" />
+        <RegisterInput onChange={onChangePasswordConfirm} ref={inputPasswordConfirmRef} placeholder="비밀번호 재입력" type="password" />
+        {passConfirm.msg !== '' && <AlertText ok={passConfirm.ok}>{passConfirm.msg}</AlertText>}
         <RegisterDetailTitle>이름</RegisterDetailTitle> {/* 닉네임으로 변경? */}
         <RegisterInput ref={inputNickNameRef} placeholder="닉네임을 입력하세요" />
         <AgreementWrapper>
