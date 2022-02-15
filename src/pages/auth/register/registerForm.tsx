@@ -144,7 +144,7 @@ function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
         <RegisterDetailTitle>비밀번호 확인</RegisterDetailTitle>
         <RegisterInput onChange={onChangePasswordConfirm} ref={inputPasswordConfirmRef} placeholder="비밀번호 재입력" type="password" />
         {passConfirm.msg !== '' && <AlertText ok={passConfirm.ok}>{passConfirm.msg}</AlertText>}
-        <RegisterDetailTitle>닉네임</RegisterDetailTitle>
+        <RegisterDetailTitle>이름</RegisterDetailTitle> {/* 닉네임으로 변경? */}
         <RegisterInput ref={inputNickNameRef} placeholder="닉네임을 입력하세요" />
         <br />
         <br />
