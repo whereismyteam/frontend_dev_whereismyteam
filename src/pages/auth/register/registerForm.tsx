@@ -23,9 +23,11 @@ const ContentTitle = styled.span`
 
 const RegisterFormWrapper = styled.div`
   width: 540px;
+  padding-right: 4px;
   position: relative;
   height: 500px;
-  ${scrollBar};
+  ${scrollBar}
+  overflow-y: scroll;
 `;
 
 const RegisterDetailTitle = styled.div`
@@ -49,24 +51,31 @@ const AgreementWrapper = styled.div`
   margin-top: 57px;
 `;
 
+const AlertText = styled.div<{ ok: boolean }>`
+  font-size: var(--font-size-base);
+  color: ${(props) => (props.ok ? 'black' : 'red')};
+`;
+
 function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
   const inputEmailRef = useRef<HTMLInputElement>(null);
   const inputPasswordRef = useRef<HTMLInputElement>(null);
   const inputNickNameRef = useRef<HTMLInputElement>(null);
   const inputPasswordConfirmRef = useRef<HTMLInputElement>(null);
 
-  const email = inputEmailRef.current?.value as string;
-  const password = inputPasswordRef.current?.value as string;
-  const passwordConfirm = inputPasswordConfirmRef.current?.value as string;
-  const nickName = inputNickNameRef.current?.value as string;
+  const [emailConfirm, setEmailConfirm] = useState({ ok: false, msg: '' });
+
   const onClickEmailConfirm = async () => {
-    const response = (await fetchEmailConfirm(email)) as string;
-    alert(response);
-    // 중복확인되지 않았을 때 회원가입 불가 로직 추가 필요
+    const email = inputEmailRef.current?.value as string;
+    const response = await fetchEmailConfirm(email);
+    setEmailConfirm(() => response);
   };
 
   const onClickRegister = async () => {
-    if (email === '' || password === '' || passwordConfirm === '' || nickName === '') {
+    const email = inputEmailRef.current?.value as string;
+    const password = inputPasswordRef.current?.value as string;
+    const passwordConfirm = inputPasswordConfirmRef.current?.value as string;
+    const nickName = inputNickNameRef.current?.value as string;
+    if (!emailConfirm.ok || password === '' || passwordConfirm === '' || nickName === '') {
       alert('정보를 모두 입력해주세요');
       return;
     }
@@ -108,6 +117,7 @@ function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
           <RegisterInput ref={inputEmailRef} placeholder="이메일 주소" />
           <DefaultBtn onClick={onClickEmailConfirm} btnName={'중복 확인'} width={140} height={45} color={'invBlue'} />
         </RegisterInputWrapper>
+        {emailConfirm.msg !== '' && <AlertText ok={emailConfirm.ok}>{emailConfirm.msg}</AlertText>}
         <RegisterDetailTitle>비밀번호</RegisterDetailTitle>
         <RegisterInput ref={inputPasswordRef} placeholder="비밀번호" />
         <PasswordGuide>* 영문/숫자/특수문자 조합으로 8~15자로 입력해주세요.</PasswordGuide>
