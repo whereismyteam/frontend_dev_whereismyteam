@@ -7,6 +7,7 @@ import RegisterInput from './input';
 import AgreementBox from './agreement';
 import DefaultBtn from '../../../components/button/defaultBtn';
 import { fetchEmailConfirm, fetchRegister } from '../../../apis';
+import { setUserId } from '../../../store/auth';
 
 const ContentWrapper = styled.div`
   padding: 40px;
@@ -60,6 +61,8 @@ function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
   const inputPasswordRef = useRef<HTMLInputElement>(null);
   const inputNickNameRef = useRef<HTMLInputElement>(null);
   const inputPasswordConfirmRef = useRef<HTMLInputElement>(null);
+  const agreementOneRef = useRef<HTMLInputElement>(null);
+  const agreementTwoRef = useRef<HTMLInputElement>(null);
 
   const [emailConfirm, setEmailConfirm] = useState({ ok: false, msg: '' });
   const [passConfirm, setPassConfirm] = useState({ ok: false, msg: '' });
@@ -77,6 +80,9 @@ function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
     const { length } = password;
 
     setRegConfirm(() => (length >= 8 && length <= 15 && regex.test(password) ? '' : '형식에 맞게 입력해주세요.'));
+
+    const passwordConfirm = inputPasswordConfirmRef.current?.value as string;
+    if (passwordConfirm !== '') onChangePasswordConfirm();
   };
 
   const onChangePasswordConfirm = () => {
@@ -91,8 +97,16 @@ function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
     const email = inputEmailRef.current?.value as string;
     const password = inputPasswordRef.current?.value as string;
     const nickName = inputNickNameRef.current?.value as string;
+    const agreementOne = agreementOneRef.current?.checked;
+    const agreementTwo = agreementTwoRef.current?.checked;
+
     if (!emailConfirm.ok || regConfirm !== '' || !passConfirm.ok || nickName === '') {
       alert('입력 정보를 확인해주세요');
+      return;
+    }
+
+    if (!agreementOne || !agreementTwo) {
+      alert('약관에 모두 동의해주세요');
       return;
     }
 
@@ -104,6 +118,7 @@ function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
     const response = await fetchRegister(registerData);
 
     if (response.ok) {
+      setUserId(email);
       setNextStep();
     } else {
       alert(response.msg);
@@ -126,12 +141,15 @@ function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
         <RegisterDetailTitle>비밀번호 확인</RegisterDetailTitle>
         <RegisterInput onChange={onChangePasswordConfirm} ref={inputPasswordConfirmRef} placeholder="비밀번호 재입력" type="password" />
         {passConfirm.msg !== '' && <AlertText ok={passConfirm.ok}>{passConfirm.msg}</AlertText>}
-        <RegisterDetailTitle>이름</RegisterDetailTitle> {/* 닉네임으로 변경? */}
+        <RegisterDetailTitle>닉네임</RegisterDetailTitle>
         <RegisterInput ref={inputNickNameRef} placeholder="닉네임을 입력하세요" />
+        <br />
+        <br />
         <AgreementWrapper>
-          <RegisterDetailTitle>모두 동의합니다.</RegisterDetailTitle> {/* 닉네임으로 변경? */}
-          <AgreementBox agreementTitle={'이용약관 동의'} />
-          <AgreementBox agreementTitle={'개인정보 취급방침 동의'} />
+          <RegisterDetailTitle>모두 동의합니다.</RegisterDetailTitle>
+          <br />
+          <AgreementBox inputRef={agreementOneRef} inputId="agreement1" agreementTitle={'이용약관 동의'} />
+          <AgreementBox inputRef={agreementTwoRef} inputId="agreement2" agreementTitle={'개인정보 취급방침 동의'} />
         </AgreementWrapper>
         <br />
         <br />
