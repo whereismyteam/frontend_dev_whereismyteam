@@ -278,8 +278,8 @@ function Post() {
             <CommentInputBox placeholder="댓글을 입력하세요" />
             <br />
             <br />
-            {commentsList.map((comment) => (
-              <Comment comment={comment} />
+            {commentsList.map((comment, idx) => (
+              <Comment key={idx} comment={comment} />
             ))}
           </CommentWrapper>
         </ContentWrapper>

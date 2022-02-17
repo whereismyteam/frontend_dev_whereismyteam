@@ -95,8 +95,8 @@ function Comment({ comment }: CommentProps) {
     <>
       <CommentBox>
         <CommentLayout userImg={comment.userImg} userName={comment.userName} text={comment.text} date={comment.date} isPrivate={comment.isPrivate} />
-        {comment.children.map((reply) => (
-          <ReplyWrapper>
+        {comment.children.map((reply, idx) => (
+          <ReplyWrapper key={idx}>
             <ReplyImg src={Reply} alt="L" />
             <CommentLayout userImg={reply.userImg} userName={reply.userName} text={reply.text} date={reply.date} isPrivate={reply.isPrivate} />
           </ReplyWrapper>
