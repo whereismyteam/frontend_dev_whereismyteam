@@ -7,6 +7,7 @@ import { BtnWrapper } from '../../components/button/defaultBtn';
 import LogoImg from '../../assets/images/logo.svg';
 import Watch from '../../assets/images/watch.svg';
 import Heart from '../../assets/images/heart.svg';
+import BackBtn from '../../assets/images/backBtn.svg';
 
 const ContentWrapper = styled.div`
   position: relative;
@@ -131,6 +132,13 @@ const CommentInputBox = styled.textarea`
   }
 `;
 
+const BackBtnImg = styled.img`
+  position: fixed;
+  z-index: -1;
+  opacity: 0.5;
+  left: 0;
+`;
+
 function DetailLine({ title, value }: { title: string; value: string }) {
   return (
     <Detail>
@@ -157,6 +165,7 @@ const DATA = {
   },
   postText: POST_TEXT,
   isAvailable: true,
+  userImg: 'https://d1fdloi71mui9q.cloudfront.net/HR7SF2QrSImI4ol8XNQh_NvAsCZ89ThPrjr0i',
   userName: 'USER_NAME',
   date: '2021-12-25',
   watch: 125,
@@ -181,25 +190,27 @@ const COMMENTS_LIST = [
     ],
   },
 ];
-
+interface IPost {
+  stackList: string[]; // 스택 리스트
+  title: string; // 제목
+  detail: {
+    // 지역, 모집인원, 호의방식, 모집파트
+    location: string;
+    number: number;
+    onOff: string;
+    parts: string[];
+  };
+  postText: string; // 내용
+  isAvailable: boolean; // 모집중 or 모집완료
+  userImg: string; // 작성자 프로필 사진 URL
+  userName: string; // 작성자 닉네임
+  date: string; // 시간
+  watch: number; // 조회수
+  heart: number; // 하트수
+}
 function Post() {
   const { postId } = useParams();
-  const [postInfo, setPostInfo] = useState<{
-    stackList: string[];
-    title: string;
-    detail: {
-      location: string;
-      number: number;
-      onOff: string;
-      parts: string[];
-    };
-    postText: string;
-    isAvailable: boolean;
-    userName: string;
-    date: string;
-    watch: number;
-    heart: number;
-  } | null>(null);
+  const [postInfo, setPostInfo] = useState<IPost | null>(null);
   const [commentsList, setCommentsList] = useState<Array<IComment>>([]);
 
   const [loading, setLoading] = useState(true);
@@ -219,6 +230,7 @@ function Post() {
         <div>로딩중</div>
       ) : (
         <ContentWrapper>
+          <BackBtnImg src={BackBtn} />
           <InfoWrapper>
             <StackList>
               {postInfo!.stackList.map((stack) => (
@@ -238,7 +250,7 @@ function Post() {
             모집중
           </AvailableBox>
           <UserWrapper>
-            <UserImg src={LogoImg} />
+            <UserImg src={postInfo!.userImg} />
             &nbsp;&nbsp;&nbsp;{postInfo!.userName}
           </UserWrapper>
           <EtcWrapper>

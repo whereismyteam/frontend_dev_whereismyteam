@@ -4,12 +4,19 @@ import DefaultBlueBtn, { BtnWrapper } from '../../components/button/defaultBtn';
 import Reply from '../../assets/images/reply.svg';
 
 export interface IComment {
-  userImg: string;
-  userName: string;
-  text: string;
-  date: string;
-  isPrivate: boolean;
-  children: Array<{ userImg: string; userName: string; text: string; date: string; isPrivate: boolean }>;
+  userImg: string; // 작성자 프로필 사진 URL
+  userName: string; // 작성자 닉네임
+  text: string; // 댓글 내용
+  date: string; // 시간
+  isPrivate: boolean; // 비밀댓글 여부
+  children: Array<{
+    userImg: string;
+    userName: string;
+    text: string;
+    date: string;
+    isPrivate: boolean;
+  }>;
+  // 대댓글 시간순
 }
 
 interface CommentProps {
