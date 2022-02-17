@@ -2,21 +2,22 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import DefaultButton from '../../components/button/defaultBtn';
+import Comment, { IComment } from './comment';
+import { BtnWrapper } from '../../components/button/defaultBtn';
+import LogoImg from '../../assets/images/logo.svg';
+import Watch from '../../assets/images/watch.svg';
+import Heart from '../../assets/images/heart.svg';
 
 const ContentWrapper = styled.div`
   position: relative;
-  width: 700px;
+  width: 60vw;
+  min-width: 500px;
+  max-width: 700px;
   margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  margin-top: 100px;
-  margin-bottom: 40px;
-
-  height: calc(100vh - 140px);
-  overflow-y: scroll;
+  padding-bottom: 50px;
 `;
 
 const InfoWrapper = styled.div`
@@ -70,11 +71,65 @@ const DetailTitle = styled.div`
   width: 100px;
 `;
 const DetailValue = styled.div``;
-
 const PostText = styled.div``;
-const UserWrapper = styled.div``;
-const EtcWrapper = styled.div``;
-const CommentWrapper = styled.div``;
+const AvailableBox = styled(BtnWrapper)`
+  margin-top: 100px;
+  align-self: end;
+  cursor: default;
+  :hover {
+    color: var(--color-blue);
+    background-color: #fff;
+  }
+`;
+const UserWrapper = styled.div`
+  display: flex;
+  align-self: flex-start;
+  align-items: center;
+  margin-top: 20px;
+`;
+const UserImg = styled.img`
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+`;
+const EtcWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  padding-bottom: 30px;
+  box-shadow: 0px 5px 10px -10px #909090;
+`;
+
+const Date = styled.div`
+  color: #9d9d9d;
+`;
+const EtcInfo = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const CommentWrapper = styled.div`
+  width: 100%;
+  align-items: flex-start;
+`;
+
+const CommentInputBox = styled.textarea`
+  font-family: 'Infinity Sans';
+
+  width: calc(100% - 20px);
+  height: 80px;
+  overflow-y: scroll;
+  padding: 10px;
+  border: none;
+  box-shadow: 3px 3px 5px 2px rgba(35, 83, 187, 0.3);
+  border-radius: 10px;
+
+  :focus {
+    outline: none;
+  }
+`;
 
 function DetailLine({ title, value }: { title: string; value: string }) {
   return (
@@ -101,7 +156,31 @@ const DATA = {
     parts: ['백엔드', '프론트엔드'],
   },
   postText: POST_TEXT,
+  isAvailable: true,
+  userName: 'USER_NAME',
+  date: '2021-12-25',
+  watch: 125,
+  heart: 15,
 };
+
+const COMMENTS_LIST = [
+  {
+    userImg: 'https://d1fdloi71mui9q.cloudfront.net/HR7SF2QrSImI4ol8XNQh_NvAsCZ89ThPrjr0i',
+    userName: 'USER_NAME1',
+    text: `댓글 어쩌구저쩌구 저도 참여하고 싶은데 신청은 어떻게 하면 되나요? 신청하는 방법 알려주시면 신청하도록 하겠습니다.`,
+    date: `2022.12.25.12:00`,
+    isPrivate: false,
+    children: [
+      {
+        userImg: 'https://d1fdloi71mui9q.cloudfront.net/HR7SF2QrSImI4ol8XNQh_NvAsCZ89ThPrjr0i',
+        userName: 'USER_NAME2',
+        text: `댓글 어쩌구저쩌구 저도 참여하고 싶은데 신청은 어떻게 하면 되나요? 신청하는 방법 알려주시면 신청하도록 하겠습니다.`,
+        date: `2022.12.25.12:00`,
+        isPrivate: true,
+      },
+    ],
+  },
+];
 
 function Post() {
   const { postId } = useParams();
@@ -115,13 +194,20 @@ function Post() {
       parts: string[];
     };
     postText: string;
+    isAvailable: boolean;
+    userName: string;
+    date: string;
+    watch: number;
+    heart: number;
   } | null>(null);
+  const [commentsList, setCommentsList] = useState<Array<IComment>>([]);
 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
       setPostInfo(DATA);
+      setCommentsList(COMMENTS_LIST);
       setLoading(false);
     }, 200);
   });
@@ -148,9 +234,33 @@ function Post() {
             </DetailInfoWrapper>
           </InfoWrapper>
           <PostText>{POST_TEXT}</PostText>
-          <UserWrapper></UserWrapper>
-          <EtcWrapper></EtcWrapper>
-          <CommentWrapper></CommentWrapper>
+          <AvailableBox width={125} height={35} color="invBlue">
+            모집중
+          </AvailableBox>
+          <UserWrapper>
+            <UserImg src={LogoImg} />
+            &nbsp;&nbsp;&nbsp;{postInfo!.userName}
+          </UserWrapper>
+          <EtcWrapper>
+            <Date>{postInfo!.date}</Date>
+            <EtcInfo>
+              <img src={Watch} /> <span>&nbsp;{postInfo!.watch}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+              <img src={Heart} /> <span>&nbsp;{postInfo!.heart}</span>
+            </EtcInfo>
+          </EtcWrapper>
+          <CommentWrapper>
+            <br />
+            <br />
+            <h1>댓글 작성하기</h1>
+            <br />
+            <br />
+            <CommentInputBox placeholder="댓글을 입력하세요" />
+            <br />
+            <br />
+            {commentsList.map((comment) => (
+              <Comment comment={comment} />
+            ))}
+          </CommentWrapper>
         </ContentWrapper>
       )}
     </>
