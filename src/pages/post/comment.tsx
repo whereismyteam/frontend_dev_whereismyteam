@@ -29,6 +29,9 @@ const CommentBox = styled.div`
   width: calc(100% - 40px);
   box-shadow: 3px 3px 5px 2px rgba(149, 149, 149, 0.5);
   border-radius: 10px;
+  background-color: #fff;
+  opacity: 0.8;
+  margin-bottom: 20px;
 `;
 
 const Layout = styled.div`
