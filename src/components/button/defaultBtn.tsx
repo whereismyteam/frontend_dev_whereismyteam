@@ -7,7 +7,7 @@ type BtnProps = {
   btnName: string;
   width: number;
   height: number;
-  color: string;
+  color: 'blue' | 'yellow' | 'invBlue';
   onClick?: () => void;
 };
 
@@ -44,7 +44,7 @@ const handleColorTypes = (color: string) => {
   }
 };
 
-const BtnWrapper = styled.div<{ width: number; height: number; color: string }>`
+export const BtnWrapper = styled.div<{ width: number; height: number; color: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
