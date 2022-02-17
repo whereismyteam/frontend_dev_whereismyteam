@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Comment, { IComment } from './comment';
 import { BtnWrapper } from '../../components/button/defaultBtn';
-import LogoImg from '../../assets/images/logo.svg';
 import Watch from '../../assets/images/watch.svg';
 import Heart from '../../assets/images/heart.svg';
 import BackBtn from '../../assets/images/backBtn.svg';
+import LoadingSpinner from '../../assets/styles/loadingSpinner';
 
 const ContentWrapper = styled.div`
   position: relative;
@@ -19,6 +19,7 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   padding-bottom: 50px;
+  z-index: 2;
 `;
 
 const InfoWrapper = styled.div`
@@ -134,9 +135,12 @@ const CommentInputBox = styled.textarea`
 
 const BackBtnImg = styled.img`
   position: fixed;
-  z-index: -1;
+  z-index: 1;
   opacity: 0.5;
   left: 0;
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 function DetailLine({ title, value }: { title: string; value: string }) {
@@ -210,6 +214,8 @@ interface IPost {
 }
 function Post() {
   const { postId } = useParams();
+  const navigate = useNavigate();
+
   const [postInfo, setPostInfo] = useState<IPost | null>(null);
   const [commentsList, setCommentsList] = useState<Array<IComment>>([]);
 
@@ -221,16 +227,19 @@ function Post() {
       setCommentsList(COMMENTS_LIST);
       setLoading(false);
     }, 200);
-  });
+  }, []);
 
-  console.log(postId);
+  const onClickBackBtn = () => {
+    navigate(-1);
+  };
+
   return (
     <>
+      <BackBtnImg src={BackBtn} onClick={onClickBackBtn} />
       {loading ? (
-        <div>로딩중</div>
+        <LoadingSpinner />
       ) : (
         <ContentWrapper>
-          <BackBtnImg src={BackBtn} />
           <InfoWrapper>
             <StackList>
               {postInfo!.stackList.map((stack) => (
