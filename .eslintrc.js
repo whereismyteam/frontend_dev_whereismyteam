@@ -22,5 +22,6 @@ module.exports = {
     '@typescript-eslint/semi': 'off',
     '@typescript-eslint/space-before-function-paren': 'off',
     'prettier/prettier': ['error', { endOfLine: 'auto' }],
+    '@typescript-eslint/no-unsafe-assignment': 'off',
   },
 };
