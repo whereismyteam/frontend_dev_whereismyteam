@@ -117,7 +117,7 @@ const CommentWrapper = styled.div`
   align-items: flex-start;
 `;
 
-const CommentInputBox = styled.textarea`
+export const CommentInputBox = styled.textarea`
   font-family: 'Infinity Sans';
 
   width: calc(100% - 20px);
@@ -133,7 +133,7 @@ const CommentInputBox = styled.textarea`
   }
 `;
 
-const PrivateCheckBox = styled.input`
+export const PrivateCheckBox = styled.input`
   width: 22px;
   height: 22px;
 `;
@@ -148,7 +148,7 @@ const BackBtnImg = styled.img`
   }
 `;
 
-const FlexRow = styled.div`
+export const FlexRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;

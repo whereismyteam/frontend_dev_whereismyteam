@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 
-import DefaultBlueBtn, { BtnWrapper } from '../../components/button/defaultBtn';
+import DefaultBtn, { BtnWrapper } from '../../components/button/defaultBtn';
 import Reply from '../../assets/images/reply.svg';
+import { CommentInputBox, FlexRow, PrivateCheckBox } from '.';
+import { useRef, useState } from 'react';
 
 export interface IComment {
   userImg: string; // 작성자 프로필 사진 URL
@@ -76,6 +78,22 @@ const ReplyImg = styled.img`
 const ReplyBtn = styled(BtnWrapper)``;
 
 function CommentLayout({ userImg, userName, text, date, isPrivate }: { userImg: string; userName: string; text: string; date: string; isPrivate: boolean }) {
+  const commentTextRef = useRef<HTMLTextAreaElement>(null);
+  const isPrivateRef = useRef<HTMLInputElement>(null);
+
+  const [isReplyOn, setIsReplyOn] = useState(false);
+  const [enableSubmitButton, setEnableSubmitButton] = useState(false);
+
+  const onClickReply = () => {
+    setIsReplyOn((val) => !val);
+  };
+
+  const onChangeComment = () => {
+    const commentInput = commentTextRef.current?.value;
+
+    setEnableSubmitButton(!(commentInput === ''));
+  };
+
   return (
     <Layout>
       <br />
@@ -87,8 +105,23 @@ function CommentLayout({ userImg, userName, text, date, isPrivate }: { userImg: 
       <Text>{text}</Text>
       <EtcWrapper>
         <Date>{date}</Date>
-        <DefaultBlueBtn btnName="답글" width={75} height={35} color="invBlue" />
+        <DefaultBtn btnName="답글" width={75} height={35} color="invBlue" onClick={onClickReply} />
       </EtcWrapper>
+      <br />
+      {isReplyOn && (
+        <>
+          <CommentInputBox ref={commentTextRef} onChange={onChangeComment} placeholder="댓글을 입력하세요" />
+          <br />
+          <br />
+          <FlexRow>
+            <FlexRow>
+              <PrivateCheckBox type="checkbox" ref={isPrivateRef} defaultChecked={isPrivate} />
+              <span>비밀댓글</span>
+            </FlexRow>
+            <DefaultBtn btnName="등록" width={75} height={35} color="blue" disabled={!enableSubmitButton} />
+          </FlexRow>
+        </>
+      )}
     </Layout>
   );
 }
