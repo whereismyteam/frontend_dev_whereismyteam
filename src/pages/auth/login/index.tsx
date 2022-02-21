@@ -7,7 +7,7 @@ import DefaultBtn from '../../../components/button/defaultBtn';
 import BackgroundSVG from '../../../assets/images/authModalBackground.svg';
 import LogoImg from '../../../assets/images/logo.svg';
 import GoogleIcon from '../../../assets/images/googleIcon.svg';
-import { fetchLoginResult } from '../../../apis';
+import { fetchLogin } from '../../../apis';
 import { setIsLogin } from '../../../store/user';
 import { setModalVisible } from '../../../store/auth';
 
@@ -91,15 +91,19 @@ function Login({ setRegister }: LoginProps) {
       return;
     }
 
-    const response = await fetchLoginResult(email, password);
-    console.log(response);
+    const loginData = {
+      email,
+      password,
+    };
 
-    // if (response.result) {
-    //   dispatch(setIsLogin({ isLogin: true, userName: response.userName }));
-    //   dispatch(setModalVisible(false));
-    // } else {
-    //   alert('이메일과 비밀번호를 확인해주세요');
-    // }
+    const response = await fetchLogin(loginData);
+    console.log(response); //console.log
+    if (response.ok) {
+      dispatch(setIsLogin({ isLogin: true, userName: response.userName }));
+      dispatch(setModalVisible(false));
+    } else {
+      alert(response.msg);
+    }
   };
 
   return (
@@ -111,7 +115,7 @@ function Login({ setRegister }: LoginProps) {
           <span>프로젝트, 대회, 스터디 팀원 구인은</span>
           <span>간편하게 구해줘 팀원에서!</span>
         </DescriptionWrapper>
-        <LoginInputBar ref={inputEmailRef} spellCheck={false} placeholder="이메일" />
+        <LoginInputBar ref={inputEmailRef} type="email" spellCheck={false} placeholder="이메일" />
         <LoginInputBar ref={inputPasswordRef} type="password" placeholder="비밀번호" />
         <MarginBlock />
         <DefaultBtn onClick={onClickLoginButton} btnName={'로그인'} width={400} height={50} color="blue" />

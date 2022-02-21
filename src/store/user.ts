@@ -23,4 +23,4 @@ export default function user(state = initialState, action: Action) {
   }
 }
 
-export const setIsLogin = (info: { isLogin: boolean; userName: string }) => ({ type: LOGIN_INFO, info });
+export const setIsLogin = (info: { isLogin: boolean; userName: string | undefined }) => ({ type: LOGIN_INFO, info });
