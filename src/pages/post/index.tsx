@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Comment, { IComment } from './comment';
-import { BtnWrapper } from '../../components/button/defaultBtn';
+import DefaultBtn, { BtnWrapper } from '../../components/button/defaultBtn';
 import Watch from '../../assets/images/watch.svg';
 import Heart from '../../assets/images/heart.svg';
 import BackBtn from '../../assets/images/backBtn.svg';
@@ -133,6 +133,11 @@ const CommentInputBox = styled.textarea`
   }
 `;
 
+const PrivateCheckBox = styled.input`
+  width: 22px;
+  height: 22px;
+`;
+
 const BackBtnImg = styled.img`
   position: fixed;
   z-index: 1;
@@ -141,6 +146,12 @@ const BackBtnImg = styled.img`
   :hover {
     cursor: pointer;
   }
+`;
+
+const FlexRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 function DetailLine({ title, value }: { title: string; value: string }) {
@@ -260,9 +271,13 @@ function Post() {
   const { postId } = useParams();
   const navigate = useNavigate();
 
+  const commentTextRef = useRef<HTMLTextAreaElement>(null);
+  const isPrivateRef = useRef<HTMLInputElement>(null);
+
   const [postInfo, setPostInfo] = useState<IPost | null>(null);
   const [commentsList, setCommentsList] = useState<Array<IComment>>([]);
 
+  const [enableSubmitButton, setEnableSubmitButton] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -275,6 +290,12 @@ function Post() {
 
   const onClickBackBtn = () => {
     navigate(-1);
+  };
+
+  const onChangeComment = () => {
+    const commentInput = commentTextRef.current?.value;
+
+    setEnableSubmitButton(!(commentInput === ''));
   };
 
   return (
@@ -319,8 +340,16 @@ function Post() {
             <h1>댓글 작성하기</h1>
             <br />
             <br />
-            <CommentInputBox placeholder="댓글을 입력하세요" />
+            <CommentInputBox ref={commentTextRef} onChange={onChangeComment} placeholder="댓글을 입력하세요" />
             <br />
+            <br />
+            <FlexRow>
+              <FlexRow>
+                <PrivateCheckBox type="checkbox" ref={isPrivateRef} />
+                <span>비밀댓글</span>
+              </FlexRow>
+              <DefaultBtn btnName="등록" width={75} height={35} color="blue" disabled={!enableSubmitButton} />
+            </FlexRow>
             <br />
             {commentsList.map((comment, idx) => (
               <Comment key={idx} comment={comment} />

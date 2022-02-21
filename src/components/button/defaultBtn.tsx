@@ -9,6 +9,7 @@ type BtnProps = {
   height: number;
   color: 'blue' | 'yellow' | 'invBlue';
   onClick?: () => void;
+  disabled?: boolean;
 };
 
 const blueCSS = `
@@ -44,7 +45,7 @@ const handleColorTypes = (color: string) => {
   }
 };
 
-export const BtnWrapper = styled.div<{ width: number; height: number; color: string }>`
+export const BtnWrapper = styled.div<{ width: number; height: number; color: string; disabled?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,17 +55,19 @@ export const BtnWrapper = styled.div<{ width: number; height: number; color: str
   font-size: var(--font-size-base);
   cursor: pointer;
 
-  ${(props) => handleColorTypes(props.color)}
+  ${(props) => handleColorTypes(props.color)};
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+  pointer-events: ${(props) => props.disabled && 'none'};
 `;
 
 const Btn = styled.div``;
 
-function DefaultBlueBtn({ btnName, width, height, color, onClick }: BtnProps) {
+function DefaultBtn({ btnName, width, height, color, onClick, disabled }: BtnProps) {
   return (
-    <BtnWrapper onClick={onClick} width={width} height={height} color={color}>
+    <BtnWrapper onClick={onClick} width={width} height={height} color={color} disabled={disabled || false}>
       <Btn>{btnName}</Btn>
     </BtnWrapper>
   );
 }
 
-export default DefaultBlueBtn;
+export default DefaultBtn;
