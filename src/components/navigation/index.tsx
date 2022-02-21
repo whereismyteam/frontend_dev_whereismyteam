@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setModalVisible } from '../../store/auth';
 import { rootState } from '../../store';
 import Auth from '../../pages/auth';
+import SearchTitleBox from '../common/searchTitleBox';
 import LogoImg from '../../assets/images/logo.svg';
 import LogoWhiteImg from '../../assets/images/logoWhite.svg';
 import Pencil from '../../assets/images/pencil.svg';
@@ -28,6 +29,8 @@ const NavBox = styled.nav<{ isScrolled: boolean }>`
   width: 90%;
   height: 100px;
   background: ${(props) => (props.isScrolled ? '#2353BB' : '#fff')};
+
+  transition: all 0.5s ease-in-out;
 `;
 
 const NavLogoImg = styled.img`
@@ -99,7 +102,7 @@ function Navigation() {
   }, []);
   const handleScroll = () => {
     const scrollTop = document.body.children[1].children[1].scrollTop;
-    if (scrollTop > 0) {
+    if (scrollTop > 477) {
       // 나중에 적절한 높이에서 변경하도록 값 수정
       setIsScrolled(true);
     } else {
@@ -111,6 +114,7 @@ function Navigation() {
       <Auth setModalClose={setModalClose} visible={modalVisible} />
       <NavBox isScrolled={isScrolled}>
         <NavLogoImg src={isScrolled ? LogoWhiteImg : LogoImg} />
+        {isScrolled ? <SearchTitleBox location={'nav'} /> : <></>}
         {isLogin ? (
           <NavIconBox>
             <NavIcon>

@@ -27,10 +27,13 @@ const GlobalStyles = createGlobalStyle`
     --font-size-large: 30px;
     --font-size-mid: 20px;
     --font-size-base: 17px;
+    --font-size-base-2: 15px;
     --font-size-small: 13px;
+    --font-size-small-2: 11px;
 
     --color-blue: #2353BB;
     --color-yellow: #f8d274;
+    --color-light-yellow: rgba(255, 209, 98, 0.3);
     --color-dark-grey: #9d9d9d;
     --color-pink-red: #fe7777;
   }
