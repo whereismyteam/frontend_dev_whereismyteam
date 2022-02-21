@@ -11,6 +11,7 @@ import LogoWhiteImg from '../../assets/images/logoWhite.svg';
 import Pencil from '../../assets/images/pencil.svg';
 import Notification from '../../assets/images/notification.svg';
 import Profile from '../../assets/images/profile.svg';
+import { useNavigate } from 'react-router-dom';
 
 // const colorSet = {
 //   Default: '#F8F8F8',
@@ -88,6 +89,7 @@ const NavIconAlertDot = styled.div`
 `;
 
 function Navigation() {
+  const navigate = useNavigate();
   const { isLogin } = useSelector((state: rootState) => state.user);
   const [isAlert, setIsAlert] = useState(true);
 
@@ -109,11 +111,15 @@ function Navigation() {
       setIsScrolled(false);
     }
   };
+
+  const onClickLogo = () => {
+    navigate('/');
+  };
   return (
     <>
       <Auth setModalClose={setModalClose} visible={modalVisible} />
       <NavBox isScrolled={isScrolled}>
-        <NavLogoImg src={isScrolled ? LogoWhiteImg : LogoImg} />
+        <NavLogoImg src={isScrolled ? LogoWhiteImg : LogoImg} onClick={onClickLogo} />
         {isScrolled ? <SearchTitleBox location={'nav'} /> : <></>}
         {isLogin ? (
           <NavIconBox>
