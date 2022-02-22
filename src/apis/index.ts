@@ -1,7 +1,7 @@
 import { getJSON, postJSON, postCredentialsJSON } from './util';
 import { Cookies } from 'react-cookie';
 
-const API_URL = `http://prod.9tapi.site:9000`;
+export const API_URL = `http://prod.9tapi.site:9000`;
 
 // local login
 

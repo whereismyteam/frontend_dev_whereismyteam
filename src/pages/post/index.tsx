@@ -8,6 +8,7 @@ import Watch from '../../assets/images/watch.svg';
 import Heart from '../../assets/images/heart.svg';
 import BackBtn from '../../assets/images/backBtn.svg';
 import LoadingSpinner from '../../assets/styles/loadingSpinner';
+import { postComment } from '../../apis/post';
 
 const ContentWrapper = styled.div`
   position: relative;
@@ -280,12 +281,17 @@ function Post() {
   const [enableSubmitButton, setEnableSubmitButton] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchPostData = () => {
+    setLoading(true);
     setTimeout(() => {
       setPostInfo(DATA);
       setCommentsList(COMMENTS_LIST);
       setLoading(false);
     }, 200);
+  };
+
+  useEffect(() => {
+    fetchPostData();
   }, []);
 
   const onClickBackBtn = () => {
@@ -296,6 +302,16 @@ function Post() {
     const commentInput = commentTextRef.current?.value;
 
     setEnableSubmitButton(!(commentInput === ''));
+  };
+
+  const onClickCommentSubmit = async () => {
+    const commentInput = commentTextRef.current?.value as string;
+    const isSecret = isPrivateRef.current?.checked as boolean;
+
+    const res = await postComment(postId as string, 1, commentInput, isSecret);
+
+    if (res.ok) fetchPostData();
+    else alert(res.msg);
   };
 
   return (
@@ -348,7 +364,7 @@ function Post() {
                 <PrivateCheckBox type="checkbox" ref={isPrivateRef} />
                 <span>비밀댓글</span>
               </FlexRow>
-              <DefaultBtn btnName="등록" width={75} height={35} color="blue" disabled={!enableSubmitButton} />
+              <DefaultBtn btnName="등록" width={75} height={35} color="blue" disabled={!enableSubmitButton} onClick={onClickCommentSubmit} />
             </FlexRow>
             <br />
             {commentsList.map((comment, idx) => (
