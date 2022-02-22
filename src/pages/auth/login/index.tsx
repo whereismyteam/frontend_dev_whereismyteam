@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
@@ -6,8 +7,7 @@ import DefaultBtn from '../../../components/button/defaultBtn';
 import BackgroundSVG from '../../../assets/images/authModalBackground.svg';
 import LogoImg from '../../../assets/images/logo.svg';
 import GoogleIcon from '../../../assets/images/googleIcon.svg';
-import { useRef } from 'react';
-import { fetchLoginResult } from '../../../apis';
+import { fetchLogin } from '../../../apis';
 import { setIsLogin } from '../../../store/user';
 import { setModalVisible } from '../../../store/auth';
 
@@ -87,20 +87,28 @@ function Login({ setRegister }: LoginProps) {
     const email = inputEmailRef.current?.value as string;
     const password = inputPasswordRef.current?.value as string;
     if (email === '' || password === '') {
-      alert('올바른 정보를 입력해주세요');
+      alert('로그인 정보를 모두 입력해주세요');
       return;
     }
 
-    const response = (await fetchLoginResult(email, password)) as { result: string; userName: string };
+    const loginData = {
+      email,
+      password,
+    };
 
-    if (response.result) {
+    const response = await fetchLogin(loginData);
+    console.log(response); //console.log
+    if (response.ok) {
       dispatch(setIsLogin({ isLogin: true, userName: response.userName }));
       dispatch(setModalVisible(false));
     } else {
-      alert('이메일과 비밀번호를 확인해주세요');
+      alert(response.msg);
     }
   };
 
+  const onClickSocialLoginButton = () => {
+    return null;
+  };
   return (
     <>
       <BackgroundIMG src={BackgroundSVG} />
@@ -110,12 +118,12 @@ function Login({ setRegister }: LoginProps) {
           <span>프로젝트, 대회, 스터디 팀원 구인은</span>
           <span>간편하게 구해줘 팀원에서!</span>
         </DescriptionWrapper>
-        <LoginInputBar ref={inputEmailRef} spellCheck={false} placeholder="이메일" />
+        <LoginInputBar ref={inputEmailRef} type="email" spellCheck={false} placeholder="이메일" />
         <LoginInputBar ref={inputPasswordRef} type="password" placeholder="비밀번호" />
         <MarginBlock />
         <DefaultBtn onClick={onClickLoginButton} btnName={'로그인'} width={400} height={50} color="blue" />
         <SignUpSpan onClick={setRegister}>회원가입</SignUpSpan>
-        <SocialLoginSection>
+        <SocialLoginSection onClick={onClickSocialLoginButton}>
           <SocialIcon src={GoogleIcon} />
           <SocialDescription>구글 계정으로 로그인</SocialDescription>
         </SocialLoginSection>
