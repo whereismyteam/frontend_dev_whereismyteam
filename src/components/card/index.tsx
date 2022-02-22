@@ -1,7 +1,12 @@
 import styled from 'styled-components';
 
+import Watch from '../../assets/images/watch.svg';
+import Comment from '../../assets/images/comment.svg';
+import Heart from '../../assets/images/heart.svg';
+
 const PostWrapper = styled.li`
   padding-top: 36px;
+  margin: 21px 14.5px;
 `;
 
 const PostMarker = styled.div`
@@ -61,13 +66,41 @@ const PostContentWrapper = styled.div`
   width: 173px;
 `;
 
+const PostContentWrapperInner = styled.div`
+  margin: 0 auto;
+  width: 138px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const PostContentInfoWrapper = styled.div`
+  display: flex;
+  margin-top: 20px;
+  width: 160px;
+`;
+
+const PostContentInfo = styled.div`
+  box-sizing: border-box;
+  height: 21px;
+  background: #fff;
+  color: var(--color-blue);
+  border: 1px solid var(--color-yellow);
+  border-radius: 30px;
+  font-size: var(--font-size-small-2);
+  padding: 3.5px 7px 0 7px;
+  margin: 0 2.5px;
+`;
+
 const PostContentTitle = styled.h3`
+  margin-top: 12px;
   font-size: var(--font-size-base-2);
   font-weight: bold;
+  line-height: 18px;
   color: #000;
 `;
 
 const PostContentTagWrapper = styled.ul`
+  margin-top: 20px;
   max-width: 100px;
   display: flex;
   flex-wrap: wrap;
@@ -76,10 +109,28 @@ const PostContentTagWrapper = styled.ul`
 const PostContentTag = styled.li`
   color: var(--color-blue);
   font-size: var(--font-size-small-2);
+  margin: 3px 1px;
 `;
 
-const PostContentInfo = styled.div`
+const PostContentEtcWrapper = styled.div`
+  margin-top: 30px;
   display: flex;
+  width: 93px;
+  justify-content: space-between;
+`;
+
+const PostContentEtc = styled.div`
+  display: flex;
+`;
+
+const PostContentEtcImg = styled.img`
+  height: 9.5px;
+`;
+
+const PostContentEtcSpan = styled.span`
+  margin-left: 3px;
+  color: #000;
+  font-size: var(--font-size-small-2);
 `;
 
 function Card() {
@@ -94,13 +145,34 @@ function Card() {
         </PostMarker>
         <PostLeftBar></PostLeftBar>
         <PostContentWrapper>
-          <PostContentTitle>웹 프로젝트 함께할 열정 넘치는 팀원 모집합니다.</PostContentTitle>
-          <PostContentTagWrapper>
-            <PostContentTag>#백엔드</PostContentTag>
-            <PostContentTag>#프론트엔드</PostContentTag>
-            <PostContentTag>#기획자</PostContentTag>
-            <PostContentTag>#디자이너</PostContentTag>
-          </PostContentTagWrapper>
+          <PostContentWrapperInner>
+            <PostContentInfoWrapper>
+              <PostContentInfo>모집중</PostContentInfo>
+              <PostContentInfo>서울</PostContentInfo>
+              <PostContentInfo>온라인</PostContentInfo>
+            </PostContentInfoWrapper>
+            <PostContentTitle>웹 프로젝트 함께할 열정 넘치는 팀원 모집합니다.</PostContentTitle>
+            <PostContentTagWrapper>
+              <PostContentTag>#백엔드</PostContentTag>
+              <PostContentTag>#프론트엔드</PostContentTag>
+              <PostContentTag>#기획자</PostContentTag>
+              <PostContentTag>#디자이너</PostContentTag>
+            </PostContentTagWrapper>
+            <PostContentEtcWrapper>
+              <PostContentEtc>
+                <PostContentEtcImg src={Watch} />
+                <PostContentEtcSpan>125</PostContentEtcSpan>
+              </PostContentEtc>
+              <PostContentEtc>
+                <PostContentEtcImg src={Comment} />
+                <PostContentEtcSpan>12</PostContentEtcSpan>
+              </PostContentEtc>
+              <PostContentEtc>
+                <PostContentEtcImg src={Heart} />
+                <PostContentEtcSpan>15</PostContentEtcSpan>
+              </PostContentEtc>
+            </PostContentEtcWrapper>
+          </PostContentWrapperInner>
         </PostContentWrapper>
       </PostBox>
     </PostWrapper>

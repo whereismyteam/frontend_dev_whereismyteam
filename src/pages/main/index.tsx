@@ -3,15 +3,25 @@ import styled from 'styled-components';
 import SearchTitleBox from '../../components/common/searchTitleBox';
 import mainBanner from '../../assets/images/mainBanner.png';
 import Card from '../../components/card';
+import LeftIndex from '../../components/leftIndex';
+import StackBtn from '../../components/button/stackBtn';
 
 const MainWrapper = styled.div`
-  margin-top: 100px;
-  margin-bottom: 40px;
-
+  position: relative;
   height: calc(100vh - 140px);
   overflow-y: scroll;
 `;
 
+// Left Index
+
+const LeftIndexWrapper = styled.div`
+  position: absolute;
+  top: 105px;
+  left: 0;
+  z-index: 999;
+`;
+
+// Main Banner
 const MainBannerWrapper = styled.div`
   position: relative;
   width: 100%;
@@ -59,7 +69,7 @@ const MainBannerTitleH2 = styled.h2`
   text-align: center;
 `;
 
-// searchBar
+// Search Bar
 const SearchBarWrapper = styled.div`
   width: 1000px;
   display: flex;
@@ -73,18 +83,9 @@ const SearchStackWrapper = styled.div`
   justify-content: center;
 `;
 
-const SearchStackBtn = styled.div`
-  height: 25px;
-  background: rgba(35, 83, 187, 0.4);
-  border-radius: 30px;
-  color: #fff;
-  padding: 7px 10px 0 10px;
-  margin: 0 4.5px;
-`;
-
-// post list
+// Post List
 const PostListWrapper = styled.div`
-  width: 760px;
+  width: 780px;
   margin: 75px auto 0;
 `;
 
@@ -95,7 +96,9 @@ const PostListGuideWrapper = styled.div`
 `;
 
 const PostListGuideLeft = styled.div`
+  width: 200px;
   display: flex;
+  justify-content: space-between;
 `;
 
 const PostListGuideRight = styled.div``;
@@ -125,8 +128,14 @@ const PostListBox = styled.ul`
 `;
 
 function Main() {
+  const stackfirstLineList = ['JavaScript', 'TypeScript', 'Node.js', 'Python', 'Spring', 'React'];
+  const stackSecondLineList = ['Angular', 'Kotlin', 'Flutter', 'Swift', 'Java', 'Vue', 'Go', 'C++', 'C', 'Django'];
+
   return (
     <MainWrapper>
+      <LeftIndexWrapper>
+        <LeftIndex />
+      </LeftIndexWrapper>
       <MainBannerWrapper>
         <MainBannerImg src={mainBanner} />
         <MainBannerBackground>
@@ -139,24 +148,14 @@ function Main() {
       <SearchBarWrapper>
         <SearchStackWrapper>
           <SearchTitleBox location={'main'} />
-          <SearchStackBtn>Javascript</SearchStackBtn>
-          <SearchStackBtn>TypeScript</SearchStackBtn>
-          <SearchStackBtn>Node.js</SearchStackBtn>
-          <SearchStackBtn>Python</SearchStackBtn>
-          <SearchStackBtn>Spring</SearchStackBtn>
-          <SearchStackBtn>React</SearchStackBtn>
+          {stackfirstLineList.map((stack) => (
+            <StackBtn key={stack} btnName={`${stack}`} />
+          ))}
         </SearchStackWrapper>
         <SearchStackWrapper>
-          <SearchStackBtn>Angular</SearchStackBtn>
-          <SearchStackBtn>Kotlin</SearchStackBtn>
-          <SearchStackBtn>Flutter</SearchStackBtn>
-          <SearchStackBtn>Swift</SearchStackBtn>
-          <SearchStackBtn>Java</SearchStackBtn>
-          <SearchStackBtn>Vue</SearchStackBtn>
-          <SearchStackBtn>Go</SearchStackBtn>
-          <SearchStackBtn>C++</SearchStackBtn>
-          <SearchStackBtn>C</SearchStackBtn>
-          <SearchStackBtn>Django</SearchStackBtn>
+          {stackSecondLineList.map((stack) => (
+            <StackBtn key={stack} btnName={`${stack}`} />
+          ))}
         </SearchStackWrapper>
       </SearchBarWrapper>
       <PostListWrapper>
@@ -179,6 +178,9 @@ function Main() {
           </PostListGuideRight>
         </PostListGuideWrapper>
         <PostListBox>
+          <Card />
+          <Card />
+          <Card />
           <Card />
           <Card />
           <Card />

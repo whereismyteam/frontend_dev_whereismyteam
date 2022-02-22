@@ -32,6 +32,7 @@ const GlobalStyles = createGlobalStyle`
     --font-size-small-2: 11px;
 
     --color-blue: #2353BB;
+    --color-light-blue: rgba(35, 83, 187, 0.4);
     --color-yellow: #f8d274;
     --color-light-yellow: rgba(255, 209, 98, 0.3);
     --color-dark-grey: #9d9d9d;
