@@ -87,7 +87,7 @@ function Login({ setRegister }: LoginProps) {
     const email = inputEmailRef.current?.value as string;
     const password = inputPasswordRef.current?.value as string;
     if (email === '' || password === '') {
-      alert('올바른 정보를 입력해주세요');
+      alert('로그인 정보를 모두 입력해주세요');
       return;
     }
 
@@ -106,6 +106,9 @@ function Login({ setRegister }: LoginProps) {
     }
   };
 
+  const onClickSocialLoginButton = () => {
+    return null;
+  };
   return (
     <>
       <BackgroundIMG src={BackgroundSVG} />
@@ -120,7 +123,7 @@ function Login({ setRegister }: LoginProps) {
         <MarginBlock />
         <DefaultBtn onClick={onClickLoginButton} btnName={'로그인'} width={400} height={50} color="blue" />
         <SignUpSpan onClick={setRegister}>회원가입</SignUpSpan>
-        <SocialLoginSection>
+        <SocialLoginSection onClick={onClickSocialLoginButton}>
           <SocialIcon src={GoogleIcon} />
           <SocialDescription>구글 계정으로 로그인</SocialDescription>
         </SocialLoginSection>
