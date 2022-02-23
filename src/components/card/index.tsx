@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Watch from '../../assets/images/watch.svg';
 import Comment from '../../assets/images/comment.svg';
 import Heart from '../../assets/images/heart.svg';
+import React from '../../assets/images/stacks/React.png';
 
 const PostWrapper = styled.li`
   padding-top: 36px;
@@ -58,8 +59,20 @@ const PostLeftBar = styled.div`
   height: 100%;
   background: var(--color-blue);
   display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const PostLeftBarInner = styled.div`
+  height: 180px;
+  display: flex;
   flex-direction: column;
   overflow-y: scroll;
+`;
+
+const PostLeftBarImg = styled.img`
+  width: 36.3px;
+  margin: 5px 0;
 `;
 
 const PostContentWrapper = styled.div`
@@ -97,6 +110,7 @@ const PostContentTitle = styled.h3`
   font-weight: bold;
   line-height: 18px;
   color: #000;
+  cursor: pointer; /* 어디 눌러야 들어가질지 정하기 */
 `;
 
 const PostContentTagWrapper = styled.ul`
@@ -143,7 +157,16 @@ function Card() {
             <PostMarkerText>4명</PostMarkerText>
           </PostMarkerBackground>
         </PostMarker>
-        <PostLeftBar></PostLeftBar>
+        <PostLeftBar>
+          <PostLeftBarInner>
+            <PostLeftBarImg src={React} />
+            <PostLeftBarImg src={React} />
+            <PostLeftBarImg src={React} />
+            <PostLeftBarImg src={React} />
+            <PostLeftBarImg src={React} />
+            <PostLeftBarImg src={React} />
+          </PostLeftBarInner>
+        </PostLeftBar>
         <PostContentWrapper>
           <PostContentWrapperInner>
             <PostContentInfoWrapper>
