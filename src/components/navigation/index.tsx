@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setModalVisible } from '../../store/auth';
+// import { setScrolled } from '../../store/navigation';
 import { rootState } from '../../store';
 import Auth from '../../pages/auth';
 import SearchTitleBox from '../common/searchTitleBox';
@@ -100,15 +101,17 @@ function Navigation() {
 
   const [isScrolled, setIsScrolled] = useState(false);
   useEffect(() => {
-    document.body.children[1].children[1].addEventListener('scroll', handleScroll);
+    document.body.children[1].children[1].children[0].addEventListener('scroll', handleScroll);
   }, []);
   const handleScroll = () => {
-    const scrollTop = document.body.children[1].children[1].scrollTop;
+    const scrollTop = document.body.children[1].children[1].children[0].scrollTop;
     if (scrollTop > 477) {
       // 나중에 적절한 높이에서 변경하도록 값 수정
       setIsScrolled(true);
+      // dispatch(setIsScrolled);
     } else {
       setIsScrolled(false);
+      // dispatch(setIsScrolled);
     }
   };
 
