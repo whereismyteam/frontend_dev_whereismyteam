@@ -34,7 +34,7 @@ const MainBannerImg = styled.img`
   top: 58px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 99;
+  z-index: 9;
 `;
 
 const MainBannerBackground = styled.div`

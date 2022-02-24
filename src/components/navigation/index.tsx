@@ -1,23 +1,21 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
-
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 import { setModalVisible } from '../../store/auth';
 // import { setScrolled } from '../../store/navigation';
 import { rootState } from '../../store';
 import Auth from '../../pages/auth';
 import SearchTitleBox from '../common/searchTitleBox';
+import DefaultBtn from '../button/defaultBtn';
+import scrollBar from '../../assets/styles/scrollBar';
+
 import LogoImg from '../../assets/images/logo.svg';
 import LogoWhiteImg from '../../assets/images/logoWhite.svg';
 import Pencil from '../../assets/images/pencil.svg';
 import Notification from '../../assets/images/notification.svg';
 import Profile from '../../assets/images/profile.svg';
-import { useNavigate } from 'react-router-dom';
-
-// const colorSet = {
-//   Default: '#F8F8F8',
-//   Blue: '#2353BB'
-// }
 
 const NavBox = styled.nav<{ isScrolled: boolean }>`
   position: fixed;
@@ -52,13 +50,15 @@ const AuthBtnSpan = styled.span<{ isScrolled: boolean }>`
 
 const NavIconBox = styled.div`
   display: flex;
+  position: relative;
+  width: 215px;
+  justify-content: space-between;
 `;
 
 const NavIcon = styled.div`
   position: relative;
   width: 53px;
   height: 53px;
-  margin-left: 28px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -68,10 +68,12 @@ const NavIcon = styled.div`
   cursor: pointer;
 `;
 
-const NavIconImg = styled.img`
+const NavIconImg = styled.img<{ isClickedNoti?: boolean; isClickedProfi?: boolean }>`
   /* #F8F8F8 */
-  filter: invert(99%) sepia(5%) saturate(2%) hue-rotate(208deg) brightness(120%) contrast(95%);
-
+  filter: ${(props) =>
+    props.isClickedProfi || props.isClickedNoti
+      ? 'invert(24%) sepia(60%) saturate(2542%) hue-rotate(205deg) brightness(98%) contrast(82%)'
+      : 'invert(99%) sepia(5%) saturate(2%) hue-rotate(208deg) brightness(120%) contrast(95%)'};
   :hover {
     /* #2353BB */
     filter: invert(24%) sepia(60%) saturate(2542%) hue-rotate(205deg) brightness(98%) contrast(82%);
@@ -80,19 +82,128 @@ const NavIconImg = styled.img`
 
 const NavIconAlertDot = styled.div`
   position: absolute;
-  top: -2px;
-  right: 0;
+  top: -3px;
+  right: -3px;
   z-index: 99;
   width: 14px;
   height: 14px;
   border-radius: 50%;
   background-color: #2353bb;
+  border: 2px solid #fff;
+`;
+
+// Navigation Modal
+
+const NavModalCSS = `
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  animation: fadein 0.5s;
+  z-index: 999;
+`;
+
+const NavModalNoti = styled.div`
+  position: absolute;
+  width: 314px;
+  height: 300px;
+  ${NavModalCSS}
+  top: 62px;
+  left: -179px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const NavModalNotiInner = styled.div`
+  margin-left: 10px;
+  width: 270px;
+  height: 256px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  ${scrollBar}
+`;
+
+const NavModalNotiBox = styled.div`
+  width: 246px;
+  height: 70px;
+  margin-bottom: 28px;
+`;
+
+const NavModalNotiBoxH3 = styled.h3`
+  font-size: var(--font-size-base);
+  color: #000;
+  line-height: 23px;
+`;
+
+const NavModalNotiBoxSpan = styled.span`
+  font-size: var(--font-size-small);
+  color: var(--color-dark-grey);
+`;
+
+const NavModalProfi = styled.div`
+  position: absolute;
+  box-sizing: border-box;
+  width: 276px;
+  height: 215px;
+  ${NavModalCSS}
+  top: 62px;
+  left: -61px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26px 0 17px;
+`;
+
+const NavModalProfiImgWrapper = styled.div`
+  position: relative;
+  width: 53px;
+  height: 53px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--color-yellow);
+  border-radius: 50%;
+`;
+
+const NavModalProfiImg = styled.img`
+  filter: invert(99%) sepia(5%) saturate(2%) hue-rotate(208deg) brightness(120%) contrast(95%);
+`;
+
+const NavModalProfiUserName = styled.span`
+  font-size: var(--font-size-base);
+  color: #000;
+`;
+
+const NavModalProfiUserEmail = styled.span`
+  font-size: var(--font-size-small);
+  color: var(--color-dark-grey);
+`;
+
+const NavModalProfiLogoutBtn = styled.span`
+  padding: 0 10px;
+  font-size: var(--font-size-small);
+  color: var(--color-dark-grey);
+  cursor: pointer;
 `;
 
 function Navigation() {
   const navigate = useNavigate();
   const { isLogin } = useSelector((state: rootState) => state.user);
   const [isAlert, setIsAlert] = useState(true);
+  const [isClickedNoti, setIsClickedNoti] = useState(false);
+  const [isClickedProfi, setIsClickedProfi] = useState(false);
 
   const modalVisible = useSelector((state: rootState) => state.auth.modalVisible);
   const dispatch = useDispatch();
@@ -106,7 +217,6 @@ function Navigation() {
   const handleScroll = () => {
     const scrollTop = document.body.children[1].children[1].children[0].scrollTop;
     if (scrollTop > 477) {
-      // 나중에 적절한 높이에서 변경하도록 값 수정
       setIsScrolled(true);
       // dispatch(setIsScrolled);
     } else {
@@ -118,6 +228,20 @@ function Navigation() {
   const onClickLogo = () => {
     navigate('/');
   };
+
+  const onClickNotiIcon = () => {
+    if (isClickedProfi) {
+      setIsClickedProfi((prev) => !prev);
+    }
+    setIsClickedNoti((prev) => !prev);
+  };
+  const onClickProfiIcon = () => {
+    if (isClickedNoti) {
+      setIsClickedNoti((prev) => !prev);
+    }
+    setIsClickedProfi((prev) => !prev);
+  };
+
   return (
     <>
       <Auth setModalClose={setModalClose} visible={modalVisible} />
@@ -129,13 +253,54 @@ function Navigation() {
             <NavIcon>
               <NavIconImg src={Pencil} />
             </NavIcon>
-            <NavIcon>
-              <NavIconImg src={Notification} />
+            <NavIcon onClick={onClickNotiIcon}>
+              <NavIconImg src={Notification} isClickedNoti={isClickedNoti} />
               {isAlert && <NavIconAlertDot />}
             </NavIcon>
-            <NavIcon>
-              <NavIconImg src={Profile} />
+            <NavIcon onClick={onClickProfiIcon}>
+              <NavIconImg src={Profile} isClickedProfi={isClickedProfi} />
             </NavIcon>
+            {isClickedNoti ? (
+              <NavModalNoti>
+                <NavModalNotiInner>
+                  <NavModalNotiBox>
+                    <NavModalNotiBoxH3>[웹 프로젝트 함께할 열정 넘치...]에 댓글이 (2)개 달렸습니다</NavModalNotiBoxH3>
+                    <NavModalNotiBoxSpan>2022.12.25.12:00</NavModalNotiBoxSpan>
+                  </NavModalNotiBox>
+                  <NavModalNotiBox>
+                    <NavModalNotiBoxH3>[웹 프로젝트 함께할 열정 넘치...]에 댓글이 (2)개 달렸습니다</NavModalNotiBoxH3>
+                    <NavModalNotiBoxSpan>2022.12.25.12:00</NavModalNotiBoxSpan>
+                  </NavModalNotiBox>
+                  <NavModalNotiBox>
+                    <NavModalNotiBoxH3>[웹 프로젝트 함께할 열정 넘치...]에 댓글이 (2)개 달렸습니다</NavModalNotiBoxH3>
+                    <NavModalNotiBoxSpan>2022.12.25.12:00</NavModalNotiBoxSpan>
+                  </NavModalNotiBox>
+                  <NavModalNotiBox>
+                    <NavModalNotiBoxH3>[웹 프로젝트 함께할 열정 넘치...]에 댓글이 (2)개 달렸습니다</NavModalNotiBoxH3>
+                    <NavModalNotiBoxSpan>2022.12.25.12:00</NavModalNotiBoxSpan>
+                  </NavModalNotiBox>
+                  <NavModalNotiBox>
+                    <NavModalNotiBoxH3>[웹 프로젝트 함께할 열정 넘치...]에 댓글이 (2)개 달렸습니다</NavModalNotiBoxH3>
+                    <NavModalNotiBoxSpan>2022.12.25.12:00</NavModalNotiBoxSpan>
+                  </NavModalNotiBox>
+                </NavModalNotiInner>
+              </NavModalNoti>
+            ) : (
+              <></>
+            )}
+            {isClickedProfi ? (
+              <NavModalProfi>
+                <NavModalProfiImgWrapper>
+                  <NavModalProfiImg src={Profile} />
+                </NavModalProfiImgWrapper>
+                <NavModalProfiUserName>사용자님</NavModalProfiUserName>
+                <NavModalProfiUserEmail>whereismyteam@gmail.com</NavModalProfiUserEmail>
+                <DefaultBtn btnName={'마이페이지'} width={99} height={24} color={'blue'} />
+                <NavModalProfiLogoutBtn>로그아웃</NavModalProfiLogoutBtn>
+              </NavModalProfi>
+            ) : (
+              <></>
+            )}
           </NavIconBox>
         ) : (
           <AuthBtn onClick={setModalOpen}>
