@@ -74,7 +74,7 @@ const NavIconImg = styled.img<{ isClickedNoti?: boolean; isClickedProfi?: boolea
     props.isClickedProfi || props.isClickedNoti
       ? 'invert(24%) sepia(60%) saturate(2542%) hue-rotate(205deg) brightness(98%) contrast(82%)'
       : 'invert(99%) sepia(5%) saturate(2%) hue-rotate(208deg) brightness(120%) contrast(95%)'};
-  :hover {
+  ${NavIcon}:hover & {
     /* #2353BB */
     filter: invert(24%) sepia(60%) saturate(2542%) hue-rotate(205deg) brightness(98%) contrast(82%);
   }
