@@ -97,9 +97,8 @@ function Login({ setRegister }: LoginProps) {
     };
 
     const response = await fetchLogin(loginData);
-    console.log(response); //console.log
     if (response.ok) {
-      dispatch(setIsLogin({ isLogin: true, userName: response.userName }));
+      dispatch(setIsLogin({ isLogin: true, userIdx: response.userIdx, userName: response.userName }));
       dispatch(setModalVisible(false));
     } else {
       alert(response.msg);
