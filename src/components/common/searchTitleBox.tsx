@@ -13,7 +13,7 @@ const navbarInputCSS = `
 `;
 
 const mainInputCSS = `
-  margin-right: 4.5px;
+  margin: 0 4.5px;
   padding-left: 20px;
   width: 300px;
   height: 32px;
@@ -62,6 +62,7 @@ const SearchTitleInput = styled.input<{ location: string }>`
   background: #f7f7f7;
   box-shadow: 4px 4px 4px rgba(173, 173, 173, 0.25);
   color: var(--color-dark-grey);
+  font-size: var(--font-size-base);
   border: none;
   border-radius: 30px;
   outline: none;

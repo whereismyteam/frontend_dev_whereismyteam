@@ -54,12 +54,13 @@ const MainBannerTitleWrapper = styled.div`
 `;
 
 const MainBannerTitleH1 = styled.h1`
-  margin-top: 10px;
+  margin: 10px auto 0;
   font-size: var(--font-size-large);
   font-weight: bold;
   color: #000;
   text-align: center;
   line-height: 46.44px;
+  width: 460px;
 `;
 
 const MainBannerTitleH2 = styled.h2`
@@ -80,7 +81,7 @@ const SearchBarWrapper = styled.div`
 const SearchStackWrapper = styled.div`
   display: flex;
   margin-top: 17px;
-  justify-content: center;
+  justify-content: start; /* 스크롤시 center로 변경 */
 `;
 
 // Post List
@@ -96,12 +97,15 @@ const PostListGuideWrapper = styled.div`
 `;
 
 const PostListGuideLeft = styled.div`
+  margin-left: 15px; /* 19px */
   width: 200px;
   display: flex;
   justify-content: space-between;
 `;
 
-const PostListGuideRight = styled.div``;
+const PostListGuideRight = styled.div`
+  margin-right: 19px;
+`;
 
 const PostListGuideBox = styled.div`
   display: flex;

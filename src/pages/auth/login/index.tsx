@@ -35,20 +35,24 @@ const Logo = styled.img`
 `;
 
 const DescriptionWrapper = styled.div`
-  margin-top: 17px;
-  margin-bottom: 24px;
-  font-size: var(--font-size-mid);
-  color: #909090;
+  margin: 17px 0 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: default;
 `;
 
+const DescriptionSpan = styled.span`
+  font-size: var(--font-size-base);
+  color: #909090;
+  line-height: 25px;
+  width: 245px;
+  text-align: center;
+`;
+
 const SignUpSpan = styled.span`
   margin-top: 20px;
   font-size: var(--font-size-base);
-  font-weight: bold;
   color: #909090;
   cursor: pointer;
 `;
@@ -114,8 +118,7 @@ function Login({ setRegister }: LoginProps) {
       <ContentWrapper>
         <Logo src={LogoImg} />
         <DescriptionWrapper>
-          <span>프로젝트, 대회, 스터디 팀원 구인은</span>
-          <span>간편하게 구해줘 팀원에서!</span>
+          <DescriptionSpan>프로젝트, 대회, 스터디 팀원 구인은 간편하게 구해줘 팀원에서!</DescriptionSpan>
         </DescriptionWrapper>
         <LoginInputBar ref={inputEmailRef} type="email" spellCheck={false} placeholder="이메일" />
         <LoginInputBar ref={inputPasswordRef} type="password" placeholder="비밀번호" />

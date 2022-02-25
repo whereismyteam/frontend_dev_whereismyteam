@@ -15,7 +15,6 @@ const FooterBox = styled.div`
 
 const FooterSpan = styled.span`
   font-size: var(--font-size-small);
-  font-weight: bold;
   margin-right: 20px;
 `;
 
