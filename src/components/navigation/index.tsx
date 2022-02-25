@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { setModalVisible } from '../../store/auth';
 // import { setScrolled } from '../../store/navigation';
 import { rootState } from '../../store';
+import { fetchLogout } from '../../apis';
 import Auth from '../../pages/auth';
 import SearchTitleBox from '../common/searchTitleBox';
 import DefaultBtn from '../button/defaultBtn';
@@ -242,6 +243,17 @@ function Navigation() {
     setIsClickedProfi((prev) => !prev);
   };
 
+  const { userIdx } = useSelector((state: rootState) => state.user);
+  const logoutData = { userIdx };
+  const onClickLogoutBtn = async () => {
+    const response = await fetchLogout(logoutData);
+    if (response.ok) {
+      alert('로그아웃 되었습니다');
+    } else {
+      alert(response.msg);
+    }
+  };
+
   return (
     <>
       <Auth setModalClose={setModalClose} visible={modalVisible} />
@@ -296,7 +308,7 @@ function Navigation() {
                 <NavModalProfiUserName>사용자님</NavModalProfiUserName>
                 <NavModalProfiUserEmail>whereismyteam@gmail.com</NavModalProfiUserEmail>
                 <DefaultBtn btnName={'마이페이지'} width={99} height={24} color={'blue'} />
-                <NavModalProfiLogoutBtn>로그아웃</NavModalProfiLogoutBtn>
+                <NavModalProfiLogoutBtn onClick={onClickLogoutBtn}>로그아웃</NavModalProfiLogoutBtn>
               </NavModalProfi>
             ) : (
               <></>
