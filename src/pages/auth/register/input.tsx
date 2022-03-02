@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
 const RegisterInput = styled.input`
-  margin-top: 6px;
+  margin-top: 15px;
   padding: 0; /* reset.css 적용이 안된것같습니다. */
-  height: 43px;
+  height: 25px;
   width: 100%;
   border: none;
   border-bottom: 2px solid var(--color-yellow);

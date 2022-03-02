@@ -4,6 +4,7 @@ type Props = {
   agreementTitle: string;
   inputId: string;
   inputRef: React.RefObject<HTMLInputElement>;
+  onClickAll?: () => void;
 };
 
 const Wrapper = styled.div`
@@ -54,25 +55,27 @@ const CheckBoxLabel = styled.label`
   }
 `;
 
-function CheckBox({ inputId, inputRef }: { inputId: string; inputRef: React.RefObject<HTMLInputElement> }) {
+function CheckBox({ inputId, inputRef, onClickAll }: { inputId: string; inputRef: React.RefObject<HTMLInputElement>; onClickAll?: () => void }) {
   return (
     <>
       <CheckBoxInput ref={inputRef} type="checkbox" id={inputId} />
-      <CheckBoxLabel htmlFor={inputId} />
+      <CheckBoxLabel htmlFor={inputId} onClick={onClickAll} />
     </>
   );
 }
 
-function AgreementBox({ agreementTitle, inputId, inputRef }: Props) {
+function AgreementBox({ agreementTitle, inputId, inputRef, onClickAll }: Props) {
   return (
     <Wrapper>
       <WrapperLeft>
-        <CheckBox inputId={inputId} inputRef={inputRef} />
+        <CheckBox inputId={inputId} inputRef={inputRef} onClickAll={onClickAll} />
         <LeftSpan>{agreementTitle}</LeftSpan>
       </WrapperLeft>
-      <WrapperRight>
-        <RightSpan>보기&emsp;&gt;</RightSpan>
-      </WrapperRight>
+      {inputId !== 'all' && (
+        <WrapperRight>
+          <RightSpan>보기&emsp;&gt;</RightSpan>
+        </WrapperRight>
+      )}
     </Wrapper>
   );
 }
