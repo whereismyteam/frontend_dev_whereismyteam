@@ -61,6 +61,21 @@ export const fetchEmailConfirm = async (email: string): Promise<{ ok: boolean; m
   }
 };
 
+export const fetchNickNameConfirm = async (nickName: string): Promise<{ ok: boolean; msg: string }> => {
+  try {
+    const res = (await fetch(`${API_URL}/users/nickNames?nickName=${nickName}`, getJSON()).then((res) => res.json())) as {
+      success: boolean | undefined;
+      data: string;
+      message: string;
+    };
+
+    if (res.success) return { ok: true, msg: res.data };
+    else return { ok: false, msg: res.message };
+  } catch (e) {
+    return { ok: false, msg: '서버가 불안정합니다. 다시 시도해주세요' };
+  }
+};
+
 export const fetchRegister = async (registerData: object): Promise<{ ok: boolean; msg: string }> => {
   try {
     const res = (await fetch(`${API_URL}/users/signup`, postJSON(registerData)).then((res) => res.json())) as {

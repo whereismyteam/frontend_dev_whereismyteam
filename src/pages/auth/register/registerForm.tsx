@@ -6,7 +6,7 @@ import scrollBar from '../../../assets/styles/scrollBar';
 import RegisterInput from './input';
 import AgreementBox from './agreement';
 import DefaultBtn from '../../../components/button/defaultBtn';
-import { fetchEmailConfirm, fetchRegister } from '../../../apis';
+import { fetchEmailConfirm, fetchNickNameConfirm, fetchRegister } from '../../../apis';
 import { setUserId } from '../../../store/auth';
 import { useDispatch } from 'react-redux';
 
@@ -70,12 +70,19 @@ function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
 
   const [emailConfirm, setEmailConfirm] = useState({ ok: false, msg: '' });
   const [passConfirm, setPassConfirm] = useState({ ok: false, msg: '' });
+  const [nickNameConfirm, setNickNameConfirm] = useState({ ok: false, msg: '' });
   const [regConfirm, setRegConfirm] = useState('');
 
   const onClickEmailConfirm = async () => {
     const email = inputEmailRef.current?.value as string;
     const response = await fetchEmailConfirm(email);
     setEmailConfirm(() => response);
+  };
+
+  const onClickNicknameConfirm = async () => {
+    const nickName = inputNickNameRef.current?.value as string;
+    const response = await fetchNickNameConfirm(nickName);
+    setNickNameConfirm(() => response);
   };
 
   const onChangePassword = () => {
@@ -157,7 +164,11 @@ function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
         <RegisterInput onChange={onChangePasswordConfirm} ref={inputPasswordConfirmRef} placeholder="비밀번호 재입력" type="password" />
         {passConfirm.msg !== '' && <AlertText ok={passConfirm.ok}>{passConfirm.msg}</AlertText>}
         <RegisterDetailTitle>닉네임</RegisterDetailTitle>
-        <RegisterInput ref={inputNickNameRef} placeholder="닉네임을 입력하세요" />
+        <RegisterInputWrapper>
+          <RegisterInput ref={inputNickNameRef} placeholder="닉네임을 입력하세요" />
+          <DefaultBtn onClick={onClickNicknameConfirm} btnName={'중복 확인'} width={140} height={45} color={'invBlue'} />
+        </RegisterInputWrapper>
+        {nickNameConfirm.msg !== '' && <AlertText ok={nickNameConfirm.ok}>{nickNameConfirm.msg}</AlertText>}
         <br />
         <br />
         <AgreementWrapper>
