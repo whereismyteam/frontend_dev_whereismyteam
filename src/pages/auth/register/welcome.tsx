@@ -4,6 +4,9 @@ import BackgroundSVG from '../../../assets/images/authModalBackground.svg';
 import Background2PNG from '../../../assets/images/welcome.png';
 import LogoImg from '../../../assets/images/logo.svg';
 import DefaultBtn from '../../../components/button/defaultBtn';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { rootState } from '../../../store';
 
 const BackgroundIMG = styled.img`
   position: absolute;
@@ -75,6 +78,19 @@ const MarginBlock = styled.div`
 `;
 
 function Welcome({ setClearState }: { setClearState: () => void }) {
+  const userEmail = useSelector((state: rootState) => state.auth.userId);
+
+  const [timer, setTimer] = useState(180);
+
+  useEffect(() => {
+    const timerId = setInterval(() => {
+      setTimer((now) => {
+        if (now == 1) clearInterval(timerId);
+        return now - 1;
+      });
+    }, 1000);
+  }, []);
+
   return (
     <>
       <BackgroundIMG src={BackgroundSVG} />
@@ -96,11 +112,12 @@ function Welcome({ setClearState }: { setClearState: () => void }) {
         </ContentBox>
         <CerticifiGuideWrapper>
           <CerticifiGuide>
-            <CerticifiUserInfo>9T123@gmail.com</CerticifiUserInfo>으로 이메일 인증링크를 전송했습니다.
+            <CerticifiUserInfo>{userEmail}</CerticifiUserInfo>으로 이메일 인증링크를 전송했습니다.
           </CerticifiGuide>{' '}
           {/* 메일 받도록 수정 */}
           <CerticifiGuide>
-            <CerticifiUserInfo>03:00</CerticifiUserInfo>이내로 인증링크를 클릭 후 이메일 인증을 완료해주세요.
+            <CerticifiUserInfo>{`${String(Math.floor(timer / 60)).padStart(2, '0')}:${String(timer % 60).padStart(2, '0')}`}</CerticifiUserInfo>이내로
+            인증링크를 클릭 후 이메일 인증을 완료해주세요.
           </CerticifiGuide>
         </CerticifiGuideWrapper>
         <MarginBlock />
