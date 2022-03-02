@@ -33,7 +33,7 @@ const RegisterFormWrapper = styled.div`
 `;
 
 const RegisterDetailTitle = styled.div`
-  margin-top: 20px;
+  margin-top: 40px;
   color: var(--color-blue);
   font-size: var(--font-size-mid);
   font-weight: 700;
@@ -64,6 +64,7 @@ function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
   const inputPasswordRef = useRef<HTMLInputElement>(null);
   const inputNickNameRef = useRef<HTMLInputElement>(null);
   const inputPasswordConfirmRef = useRef<HTMLInputElement>(null);
+  const agreementAllRef = useRef<HTMLInputElement>(null);
   const agreementOneRef = useRef<HTMLInputElement>(null);
   const agreementTwoRef = useRef<HTMLInputElement>(null);
 
@@ -127,6 +128,17 @@ function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
       alert(response.msg);
     }
   };
+
+  const onClickAllAgreement = () => {
+    if (!agreementAllRef.current?.checked) {
+      agreementOneRef.current!.checked = true;
+      agreementTwoRef.current!.checked = true;
+    } else {
+      agreementOneRef.current!.checked = false;
+      agreementTwoRef.current!.checked = false;
+    }
+  };
+
   return (
     <ContentWrapper>
       <ContentTitle>회원가입</ContentTitle>
@@ -149,7 +161,7 @@ function RegisterForm({ setNextStep }: { setNextStep: () => void }) {
         <br />
         <br />
         <AgreementWrapper>
-          <RegisterDetailTitle>모두 동의합니다.</RegisterDetailTitle>
+          <AgreementBox inputRef={agreementAllRef} inputId="all" agreementTitle={'모두 동의합니다'} onClickAll={onClickAllAgreement} />
           <br />
           <AgreementBox inputRef={agreementOneRef} inputId="agreement1" agreementTitle={'이용약관 동의'} />
           <AgreementBox inputRef={agreementTwoRef} inputId="agreement2" agreementTitle={'개인정보 취급방침 동의'} />
