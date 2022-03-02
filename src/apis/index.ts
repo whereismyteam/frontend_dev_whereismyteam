@@ -5,12 +5,14 @@ const API_URL = `http://prod.9tapi.site:9000`;
 
 // local login
 
-export const fetchLogin = async (loginData: object): Promise<{ ok: boolean; msg: string; userIdx?: number; userName?: string }> => {
+export const fetchLogin = async (loginData: object): Promise<{ ok: boolean; msg: string; userIdx?: number; nickName?: string; email?: string }> => {
   try {
     const res = (await fetch(`${API_URL}/users/login`, postJSON(loginData)).then((res) => res.json())) as {
       success: boolean | undefined;
       message: string;
       data: {
+        email: string;
+        nickName: string;
         userIdx: number;
         token: string;
         refreshToken: string;
@@ -18,9 +20,10 @@ export const fetchLogin = async (loginData: object): Promise<{ ok: boolean; msg:
     };
     if (res.success) {
       const cookies = new Cookies();
-      cookies.set('ACCESS_TOKEN', res.data.token, { httpOnly: true });
+      cookies.set('ACCESS_TOKEN', res.data.token);
       cookies.set('REFRESH_TOKEN', res.data.refreshToken, { httpOnly: true });
-      return { ok: true, msg: '성공', userIdx: res.data.userIdx, userName: '홍길동' };
+      console.log(res);
+      return { ok: true, msg: '성공', userIdx: res.data.userIdx, nickName: res.data.nickName, email: res.data.email };
     } else return { ok: false, msg: res.message };
   } catch (e) {
     return { ok: false, msg: '서버가 불안정합니다. 다시 시도해주세요' };
@@ -29,7 +32,7 @@ export const fetchLogin = async (loginData: object): Promise<{ ok: boolean; msg:
 
 export const fetchLogout = async (logoutData: object): Promise<{ ok: boolean; msg: string; userIdx?: number; userName?: string }> => {
   try {
-    const res = (await fetch(`${API_URL}/users/login`, postCredentialsJSON(logoutData)).then((res) => res.json())) as {
+    const res = (await fetch(`${API_URL}/users/logout`, postCredentialsJSON(logoutData)).then((res) => res.json())) as {
       success: boolean | undefined;
       message: string;
     };

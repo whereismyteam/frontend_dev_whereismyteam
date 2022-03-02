@@ -102,7 +102,7 @@ function Login({ setRegister }: LoginProps) {
 
     const response = await fetchLogin(loginData);
     if (response.ok) {
-      dispatch(setIsLogin({ isLogin: true, userIdx: response.userIdx, userName: response.userName }));
+      dispatch(setIsLogin({ isLogin: true, userIdx: response.userIdx, nickName: response.nickName, email: response.email }));
       dispatch(setModalVisible(false));
     } else {
       alert(response.msg);

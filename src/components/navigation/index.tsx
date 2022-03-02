@@ -201,7 +201,7 @@ const NavModalProfiLogoutBtn = styled.span`
 
 function Navigation() {
   const navigate = useNavigate();
-  const { isLogin } = useSelector((state: rootState) => state.user);
+  const { isLogin, nickName, email } = useSelector((state: rootState) => state.user);
   const [isAlert, setIsAlert] = useState(true);
   const [isClickedNoti, setIsClickedNoti] = useState(false);
   const [isClickedProfi, setIsClickedProfi] = useState(false);
@@ -305,8 +305,8 @@ function Navigation() {
                 <NavModalProfiImgWrapper>
                   <NavModalProfiImg src={Profile} />
                 </NavModalProfiImgWrapper>
-                <NavModalProfiUserName>사용자님</NavModalProfiUserName>
-                <NavModalProfiUserEmail>whereismyteam@gmail.com</NavModalProfiUserEmail>
+                <NavModalProfiUserName>{nickName}님</NavModalProfiUserName>
+                <NavModalProfiUserEmail>{email}</NavModalProfiUserEmail>
                 <DefaultBtn btnName={'마이페이지'} width={99} height={24} color={'blue'} />
                 <NavModalProfiLogoutBtn onClick={onClickLogoutBtn}>로그아웃</NavModalProfiLogoutBtn>
               </NavModalProfi>
