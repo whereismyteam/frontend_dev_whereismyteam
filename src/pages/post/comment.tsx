@@ -69,6 +69,7 @@ const UserImg = styled.img`
 
 const Text = styled.p`
   font-size: 15px;
+  line-height: 20px;
   overflow-wrap: break-word;
 `;
 
