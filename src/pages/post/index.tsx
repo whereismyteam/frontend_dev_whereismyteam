@@ -6,6 +6,7 @@ import Comment, { IComment } from './comment';
 import DefaultBtn, { BtnWrapper } from '../../components/button/defaultBtn';
 import Watch from '../../assets/images/watch.svg';
 import Heart from '../../assets/images/heart.svg';
+import Hearted from '../../assets/images/hearted.svg';
 import BackBtn from '../../assets/images/backBtn.svg';
 import LoadingSpinner from '../../assets/styles/loadingSpinner';
 import { patchPost, postComment } from '../../apis/post';
@@ -116,6 +117,18 @@ const Date = styled.div`
 const EtcInfo = styled.div`
   display: flex;
   align-items: center;
+`;
+
+const HeartImg = styled.img`
+  width: 20px;
+  height: 18px;
+
+  :hover {
+    cursor: pointer;
+    width: 24px;
+    height: 22px;
+    transition: all 0.3s ease-out;
+  }
 `;
 
 const CommentWrapper = styled.div`
@@ -239,7 +252,7 @@ function Post() {
     const commentInput = commentTextRef.current?.value as string;
     const isSecret = isPrivateRef.current?.checked as boolean;
 
-    const res = await postComment(postId as string, 1, commentInput, isSecret);
+    const res = await postComment(postId as string, userIdx, commentInput, isSecret);
 
     if (res.ok)
       fetchPostData()
@@ -284,7 +297,7 @@ function Post() {
             <Date>{postInfo!.createdAt.substring(0, 10).replaceAll('-', '.')}</Date>
             <EtcInfo>
               <img src={Watch} /> <span>&nbsp;{postInfo!.watch}&nbsp;&nbsp;&nbsp;&nbsp;</span>
-              <img src={Heart} /> <span>&nbsp;{postInfo!.heart}</span>
+              <HeartImg src={postInfo!.isHeart === 'Y' ? Hearted : Heart} /> <span>&nbsp;{postInfo!.heart}</span>
             </EtcInfo>
           </EtcWrapper>
           <CommentWrapper>
