@@ -52,7 +52,8 @@ const StackIcon = styled.div`
 const PostTitle = styled.div`
   font-size: var(--font-size-large-2);
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-top: 3px;
+  margin-bottom: 22px;
 `;
 
 const DetailInfoWrapper = styled.div`
@@ -78,8 +79,10 @@ const DetailTitle = styled.div`
   width: 100px;
 `;
 const DetailValue = styled.div``;
-const PostText = styled.div`
+const PostText = styled.p`
   width: 100%;
+  line-height: 25px;
+  color: #373737;
 `;
 const AvailableBox = styled(BtnWrapper)`
   margin-top: 100px;
@@ -171,6 +174,12 @@ export const FlexRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`;
+
+export const CommentButtons = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 `;
 
 function DetailLine({ title, value }: { title: string; value: string }) {
@@ -325,13 +334,14 @@ function Post() {
             <CommentInputBox ref={commentTextRef} onChange={onChangeComment} placeholder="댓글을 입력하세요" />
             <br />
             <br />
-            <FlexRow>
+            <CommentButtons>
               <FlexRow>
                 <PrivateCheckBox type="checkbox" ref={isPrivateRef} />
                 <span>비밀댓글</span>
               </FlexRow>
               <DefaultBtn btnName="등록" width={75} height={35} color="blue" disabled={!enableSubmitButton} onClick={onClickCommentSubmit} />
-            </FlexRow>
+            </CommentButtons>
+            <br />
             <br />
             {postInfo!.commentList.map((comment, idx) => (
               <Comment key={idx} comment={comment} />

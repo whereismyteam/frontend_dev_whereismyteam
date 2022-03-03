@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import DefaultBtn, { BtnWrapper } from '../../components/button/defaultBtn';
 import Reply from '../../assets/images/reply.svg';
 import Secret from '../../assets/images/secret.svg';
-import { CommentInputBox, FlexRow, PrivateCheckBox } from '.';
+import { CommentButtons, CommentInputBox, FlexRow, PrivateCheckBox } from '.';
 import { useRef, useState } from 'react';
 
 export interface IComment {
@@ -113,13 +113,13 @@ function CommentLayout({ userImg, userName, text, date, isPrivate }: { userImg: 
           <CommentInputBox ref={commentTextRef} onChange={onChangeComment} placeholder="댓글을 입력하세요" />
           <br />
           <br />
-          <FlexRow>
+          <CommentButtons>
             <FlexRow>
               <PrivateCheckBox type="checkbox" ref={isPrivateRef} defaultChecked={isPrivate} />
               <span>비밀댓글</span>
             </FlexRow>
             <DefaultBtn btnName="등록" width={75} height={35} color="blue" disabled={!enableSubmitButton} />
-          </FlexRow>
+          </CommentButtons>
         </>
       )}
     </Layout>
