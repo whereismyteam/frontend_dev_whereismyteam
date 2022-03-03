@@ -155,7 +155,6 @@ function CommentLayout({
   };
 
   const renderChildrens = (childrens: IComment[]) => {
-    console.log(childrens);
     return (
       <>
         {childrens.map((reply, idx) => (
@@ -196,7 +195,9 @@ function CommentLayout({
         <br />
         {!isPrivate && (
           <>
-            <Text>{text}</Text>
+            <pre>
+              <Text>{text}</Text>
+            </pre>
             <EtcWrapper>
               <Date>{date.replaceAll('-', '.').replace('T', '.').slice(0, -3)}</Date>
               <DefaultBtn btnName="답글" width={75} height={35} color="invBlue" onClick={onClickReply} />
@@ -206,7 +207,9 @@ function CommentLayout({
         {isPrivate &&
           (userIdx === ownerIdx || userIdx === parentOwnerIdx ? (
             <>
-              <Text>{text}</Text>
+              <pre>
+                <Text>{text}</Text>
+              </pre>
               <EtcWrapper>
                 <Date>{date.replaceAll('-', '.').replace('T', '.').slice(0, -3)}</Date>
                 <DefaultBtn btnName="답글" width={75} height={35} color="invBlue" onClick={onClickReply} />
@@ -223,7 +226,9 @@ function CommentLayout({
         <br />
         {isReplyOn && (
           <>
-            <CommentInputBox ref={commentTextRef} onChange={onChangeComment} placeholder="댓글을 입력하세요" />
+            <pre>
+              <CommentInputBox ref={commentTextRef} onChange={onChangeComment} placeholder="댓글을 입력하세요" />
+            </pre>
             <br />
             <br />
             <CommentButtons>

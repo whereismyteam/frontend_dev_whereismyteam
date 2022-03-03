@@ -348,8 +348,9 @@ function Post() {
           </InfoWrapper>
           <br />
           <br />
-          <PostText>{postInfo!.postText}</PostText>
-
+          <pre style={{ width: '100%' }}>
+            <PostText>{postInfo!.postText}</PostText>
+          </pre>
           <AvailableBox width={125} height={35} color="invBlue">
             {postInfo!.boardStatus}
           </AvailableBox>
