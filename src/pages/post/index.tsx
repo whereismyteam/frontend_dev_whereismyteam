@@ -10,7 +10,7 @@ import Hearted from '../../assets/images/hearted.svg';
 import BackBtn from '../../assets/images/backBtn.svg';
 import CheckedGray from '../../assets/images/checkedGray.png';
 import LoadingSpinner from '../../assets/styles/loadingSpinner';
-import { patchCancelLikes, patchPost, postComment, postLikes, postReply } from '../../apis/post';
+import { deleteComment, patchCancelLikes, patchPost, postComment, postLikes, postReply } from '../../apis/post';
 import { useSelector } from 'react-redux';
 import { rootState } from '../../store';
 
@@ -291,15 +291,33 @@ function Post() {
 
     const res = await postComment(postId as string, userIdx, commentInput, isSecret);
 
-    if (res.ok)
+    if (res.ok) {
       fetchPostData()
         .then((data) => setPostInfo(data))
         .catch(alert);
-    else alert(res.msg);
+      commentTextRef.current!.value = '';
+    } else alert(res.msg);
   };
 
-  const onClickReplySubmit = async (parentCommentIdx: number, commentInput: string, isSecret: boolean) => {
+  const onClickReplySubmit = async (
+    setIsReplyOn: React.Dispatch<React.SetStateAction<boolean>>,
+    ReplyRef: React.RefObject<HTMLTextAreaElement>,
+    parentCommentIdx: number,
+    commentInput: string,
+    isSecret: boolean,
+  ) => {
     const res = await postReply(postId as string, parentCommentIdx, userIdx, commentInput, isSecret);
+    setIsReplyOn(false);
+    if (res.ok) {
+      fetchPostData()
+        .then((data) => setPostInfo(data))
+        .catch(alert);
+      ReplyRef.current!.value = '';
+    } else alert(res.msg);
+  };
+
+  const onClickDeleteComment = async (commentIdx: number) => {
+    const res = await deleteComment(userIdx, commentIdx);
     if (res.ok)
       fetchPostData()
         .then((data) => setPostInfo(data))
@@ -365,7 +383,7 @@ function Post() {
             <br />
             <br />
             {postInfo!.commentList.map((comment, idx) => (
-              <Comment key={idx} comment={comment} onClickReplySubmit={onClickReplySubmit} />
+              <Comment key={idx} comment={comment} onClickReplySubmit={onClickReplySubmit} onClickDeleteComment={onClickDeleteComment} />
             ))}
           </CommentWrapper>
         </ContentWrapper>

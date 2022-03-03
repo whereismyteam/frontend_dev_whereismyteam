@@ -26,7 +26,14 @@ export interface IComment {
 
 interface CommentProps {
   comment: IComment;
-  onClickReplySubmit: (parentCommentIdx: number, commentInput: string, isSecret: boolean) => Promise<void>;
+  onClickReplySubmit: (
+    setIsReplyOn: React.Dispatch<React.SetStateAction<boolean>>,
+    ReplyRef: React.RefObject<HTMLTextAreaElement>,
+    parentCommentIdx: number,
+    commentInput: string,
+    isSecret: boolean,
+  ) => Promise<void>;
+  onClickDeleteComment: (commentIdx: number) => Promise<void>;
 }
 
 const CommentBox = styled.div`
@@ -96,9 +103,8 @@ const DeleteImg = styled.img`
   }
 `;
 
-const ReplyBtn = styled(BtnWrapper)``;
-
 function CommentLayout({
+  commentIdx,
   userImg,
   userName,
   text,
@@ -108,7 +114,10 @@ function CommentLayout({
   parentOwnerIdx,
   parentCommentIdx,
   onClickReplySubmit,
+  onClickDeleteComment,
+  childrens,
 }: {
+  commentIdx: number;
   userImg: string;
   userName: string;
   text: string;
@@ -117,7 +126,15 @@ function CommentLayout({
   ownerIdx: number;
   parentOwnerIdx?: number;
   parentCommentIdx: number;
-  onClickReplySubmit: (parentCommentIdx: number, commentInput: string, isSecret: boolean) => Promise<void>;
+  onClickReplySubmit: (
+    setIsReplyOn: React.Dispatch<React.SetStateAction<boolean>>,
+    ReplyRef: React.RefObject<HTMLTextAreaElement>,
+    parentCommentIdx: number,
+    commentInput: string,
+    isSecret: boolean,
+  ) => Promise<void>;
+  onClickDeleteComment: (commentIdx: number) => Promise<void>;
+  childrens?: IComment[];
 }) {
   const userIdx = useSelector((state: rootState) => state.user.userIdx);
 
@@ -137,29 +154,47 @@ function CommentLayout({
     setEnableSubmitButton(!(commentInput === ''));
   };
 
+  const renderChildrens = (childrens: IComment[]) => {
+    console.log(childrens);
+    return (
+      <>
+        {childrens.map((reply, idx) => (
+          <ReplyWrapper key={idx}>
+            <ReplyImg src={Reply} alt="L" />
+            <CommentLayout
+              commentIdx={reply.commentIdx}
+              userImg={`/profileImg/${reply.member.profileImgIdx}.png`}
+              userName={reply.member.userName}
+              text={reply.comment}
+              date={reply.createdAt}
+              isPrivate={reply.isSecret === 'Y'}
+              ownerIdx={reply.member.userIdx}
+              parentOwnerIdx={ownerIdx}
+              parentCommentIdx={reply.commentIdx}
+              onClickReplySubmit={onClickReplySubmit}
+              onClickDeleteComment={onClickDeleteComment}
+              childrens={reply.children}
+            />
+          </ReplyWrapper>
+        ))}
+      </>
+    );
+  };
+
   return (
-    <Layout>
-      <br />
-      <FlexRow>
-        <UserWrapper>
-          <UserImg src={userImg} />
-          &nbsp;&nbsp;&nbsp;{userName}&nbsp;&nbsp;&nbsp;{isPrivate && <img src={Secret} alt="(비밀)" />}
-        </UserWrapper>
-        {userIdx === ownerIdx && <DeleteImg src={Delete} alt="삭제" />}
-      </FlexRow>
-      <br />
-      <br />
-      {!isPrivate && (
-        <>
-          <Text>{text}</Text>
-          <EtcWrapper>
-            <Date>{date.replaceAll('-', '.').replace('T', '.').slice(0, -3)}</Date>
-            <DefaultBtn btnName="답글" width={75} height={35} color="invBlue" onClick={onClickReply} />
-          </EtcWrapper>
-        </>
-      )}
-      {isPrivate &&
-        (userIdx === ownerIdx || userIdx === parentOwnerIdx ? (
+    <>
+      <Layout>
+        <br />
+        <FlexRow>
+          <UserWrapper>
+            <UserImg src={userImg} />
+            &nbsp;&nbsp;&nbsp;{userName}&nbsp;&nbsp;&nbsp;{isPrivate && <img src={Secret} alt="(비밀)" />}
+          </UserWrapper>
+          {userIdx === ownerIdx && <DeleteImg onClick={() => onClickDeleteComment(commentIdx)} src={Delete} alt="삭제" />}
+        </FlexRow>
+        <br />
+        <br />
+        {!isPrivate && (
           <>
             <Text>{text}</Text>
             <EtcWrapper>
@@ -167,45 +202,58 @@ function CommentLayout({
               <DefaultBtn btnName="답글" width={75} height={35} color="invBlue" onClick={onClickReply} />
             </EtcWrapper>
           </>
-        ) : (
+        )}
+        {isPrivate &&
+          (userIdx === ownerIdx || userIdx === parentOwnerIdx ? (
+            <>
+              <Text>{text}</Text>
+              <EtcWrapper>
+                <Date>{date.replaceAll('-', '.').replace('T', '.').slice(0, -3)}</Date>
+                <DefaultBtn btnName="답글" width={75} height={35} color="invBlue" onClick={onClickReply} />
+              </EtcWrapper>
+            </>
+          ) : (
+            <>
+              <SecretText>비밀댓글입니다.</SecretText>
+              <EtcWrapper>
+                <Date>{date.replaceAll('-', '.').replace('T', '.').slice(0, -3)}</Date>
+              </EtcWrapper>
+            </>
+          ))}
+        <br />
+        {isReplyOn && (
           <>
-            <SecretText>비밀댓글입니다.</SecretText>
-            <EtcWrapper>
-              <Date>{date.replaceAll('-', '.').replace('T', '.').slice(0, -3)}</Date>
-            </EtcWrapper>
+            <CommentInputBox ref={commentTextRef} onChange={onChangeComment} placeholder="댓글을 입력하세요" />
+            <br />
+            <br />
+            <CommentButtons>
+              <FlexRow>
+                <PrivateCheckBox onClick={() => setIsPrivateComment((now) => !now)}>{isPrivateComment && <img src={CheckedGray} />}</PrivateCheckBox>
+                <span>비밀댓글</span>
+              </FlexRow>
+              <DefaultBtn
+                onClick={() => onClickReplySubmit(setIsReplyOn, commentTextRef, parentCommentIdx, commentTextRef.current?.value as string, isPrivateComment)}
+                btnName="등록"
+                width={75}
+                height={35}
+                color="blue"
+                disabled={!enableSubmitButton}
+              />
+            </CommentButtons>
           </>
-        ))}
-      <br />
-      {isReplyOn && (
-        <>
-          <CommentInputBox ref={commentTextRef} onChange={onChangeComment} placeholder="댓글을 입력하세요" />
-          <br />
-          <br />
-          <CommentButtons>
-            <FlexRow>
-              <PrivateCheckBox onClick={() => setIsPrivateComment((now) => !now)}>{isPrivateComment && <img src={CheckedGray} />}</PrivateCheckBox>
-              <span>비밀댓글</span>
-            </FlexRow>
-            <DefaultBtn
-              onClick={() => onClickReplySubmit(parentCommentIdx, commentTextRef.current?.value as string, isPrivateComment)}
-              btnName="등록"
-              width={75}
-              height={35}
-              color="blue"
-              disabled={!enableSubmitButton}
-            />
-          </CommentButtons>
-        </>
-      )}
-    </Layout>
+        )}
+        {childrens && !!childrens.length && renderChildrens(childrens)}
+      </Layout>
+    </>
   );
 }
 
-function Comment({ comment, onClickReplySubmit }: CommentProps) {
+function Comment({ comment, onClickReplySubmit, onClickDeleteComment }: CommentProps) {
   return (
     <>
       <CommentBox>
         <CommentLayout
+          commentIdx={comment.commentIdx}
           userImg={`/profileImg/${comment.member.profileImgIdx}.png`}
           userName={comment.member.userName}
           text={comment.comment}
@@ -214,11 +262,13 @@ function Comment({ comment, onClickReplySubmit }: CommentProps) {
           ownerIdx={comment.member.userIdx}
           parentCommentIdx={comment.commentIdx}
           onClickReplySubmit={onClickReplySubmit}
+          onClickDeleteComment={onClickDeleteComment}
         />
         {comment.children.map((reply, idx) => (
           <ReplyWrapper key={idx}>
             <ReplyImg src={Reply} alt="L" />
             <CommentLayout
+              commentIdx={reply.commentIdx}
               userImg={`/profileImg/${reply.member.profileImgIdx}.png`}
               userName={reply.member.userName}
               text={reply.comment}
@@ -228,6 +278,8 @@ function Comment({ comment, onClickReplySubmit }: CommentProps) {
               parentOwnerIdx={comment.member.userIdx}
               parentCommentIdx={reply.commentIdx}
               onClickReplySubmit={onClickReplySubmit}
+              onClickDeleteComment={onClickDeleteComment}
+              childrens={reply.children}
             />
           </ReplyWrapper>
         ))}

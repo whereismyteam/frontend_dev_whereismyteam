@@ -47,7 +47,7 @@ export const patchCredentialsJSON = (body: any): RequestInit => ({
 });
 
 export const deleteCredentialsJSON = (body: any): RequestInit => ({
-  method: 'PATCH',
+  method: 'DELETE',
   credentials: 'include',
   headers: {
     'Content-Type': 'application/json',
