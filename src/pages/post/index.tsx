@@ -10,7 +10,7 @@ import Hearted from '../../assets/images/hearted.svg';
 import BackBtn from '../../assets/images/backBtn.svg';
 import CheckedGray from '../../assets/images/checkedGray.png';
 import LoadingSpinner from '../../assets/styles/loadingSpinner';
-import { patchCancelLikes, patchPost, postComment, postLikes } from '../../apis/post';
+import { patchCancelLikes, patchPost, postComment, postLikes, postReply } from '../../apis/post';
 import { useSelector } from 'react-redux';
 import { rootState } from '../../store';
 
@@ -298,6 +298,15 @@ function Post() {
     else alert(res.msg);
   };
 
+  const onClickReplySubmit = async (parentCommentIdx: number, commentInput: string, isSecret: boolean) => {
+    const res = await postReply(postId as string, parentCommentIdx, userIdx, commentInput, isSecret);
+    if (res.ok)
+      fetchPostData()
+        .then((data) => setPostInfo(data))
+        .catch(alert);
+    else alert(res.msg);
+  };
+
   return (
     <>
       <BackBtnImg src={BackBtn} onClick={onClickBackBtn} />
@@ -356,7 +365,7 @@ function Post() {
             <br />
             <br />
             {postInfo!.commentList.map((comment, idx) => (
-              <Comment key={idx} comment={comment} />
+              <Comment key={idx} comment={comment} onClickReplySubmit={onClickReplySubmit} />
             ))}
           </CommentWrapper>
         </ContentWrapper>

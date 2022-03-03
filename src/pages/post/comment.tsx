@@ -26,6 +26,7 @@ export interface IComment {
 
 interface CommentProps {
   comment: IComment;
+  onClickReplySubmit: (parentCommentIdx: number, commentInput: string, isSecret: boolean) => Promise<void>;
 }
 
 const CommentBox = styled.div`
@@ -35,7 +36,6 @@ const CommentBox = styled.div`
   box-shadow: 3px 3px 5px 2px rgba(149, 149, 149, 0.5);
   border-radius: 10px;
   background-color: #fff;
-  opacity: 0.8;
   margin-bottom: 20px;
 `;
 
@@ -105,7 +105,9 @@ function CommentLayout({
   date,
   isPrivate,
   ownerIdx,
-  parentIdx,
+  parentOwnerIdx,
+  parentCommentIdx,
+  onClickReplySubmit,
 }: {
   userImg: string;
   userName: string;
@@ -113,7 +115,9 @@ function CommentLayout({
   date: string;
   isPrivate: boolean;
   ownerIdx: number;
-  parentIdx?: number;
+  parentOwnerIdx?: number;
+  parentCommentIdx: number;
+  onClickReplySubmit: (parentCommentIdx: number, commentInput: string, isSecret: boolean) => Promise<void>;
 }) {
   const userIdx = useSelector((state: rootState) => state.user.userIdx);
 
@@ -155,7 +159,7 @@ function CommentLayout({
         </>
       )}
       {isPrivate &&
-        (userIdx === ownerIdx || userIdx === parentIdx ? (
+        (userIdx === ownerIdx || userIdx === parentOwnerIdx ? (
           <>
             <Text>{text}</Text>
             <EtcWrapper>
@@ -182,7 +186,14 @@ function CommentLayout({
               <PrivateCheckBox onClick={() => setIsPrivateComment((now) => !now)}>{isPrivateComment && <img src={CheckedGray} />}</PrivateCheckBox>
               <span>비밀댓글</span>
             </FlexRow>
-            <DefaultBtn btnName="등록" width={75} height={35} color="blue" disabled={!enableSubmitButton} />
+            <DefaultBtn
+              onClick={() => onClickReplySubmit(parentCommentIdx, commentTextRef.current?.value as string, isPrivateComment)}
+              btnName="등록"
+              width={75}
+              height={35}
+              color="blue"
+              disabled={!enableSubmitButton}
+            />
           </CommentButtons>
         </>
       )}
@@ -190,7 +201,7 @@ function CommentLayout({
   );
 }
 
-function Comment({ comment }: CommentProps) {
+function Comment({ comment, onClickReplySubmit }: CommentProps) {
   return (
     <>
       <CommentBox>
@@ -201,6 +212,8 @@ function Comment({ comment }: CommentProps) {
           date={comment.createdAt}
           isPrivate={comment.isSecret === 'Y'}
           ownerIdx={comment.member.userIdx}
+          parentCommentIdx={comment.commentIdx}
+          onClickReplySubmit={onClickReplySubmit}
         />
         {comment.children.map((reply, idx) => (
           <ReplyWrapper key={idx}>
@@ -212,7 +225,9 @@ function Comment({ comment }: CommentProps) {
               date={reply.createdAt}
               isPrivate={reply.isSecret === 'Y'}
               ownerIdx={reply.member.userIdx}
-              parentIdx={comment.member.userIdx}
+              parentOwnerIdx={comment.member.userIdx}
+              parentCommentIdx={reply.commentIdx}
+              onClickReplySubmit={onClickReplySubmit}
             />
           </ReplyWrapper>
         ))}
