@@ -5,6 +5,7 @@ import mainBanner from '../../assets/images/mainBanner.png';
 import Card from '../../components/card';
 import LeftIndex from '../../components/leftIndex';
 import StackBtn from '../../components/button/stackBtn';
+import { Link } from 'react-router-dom';
 
 const MainWrapper = styled.div`
   position: relative;
@@ -150,6 +151,7 @@ function Main() {
         </MainBannerBackground>
       </MainBannerWrapper>
       <SearchBarWrapper>
+        <Link to="/post/1"> test</Link>
         <SearchStackWrapper>
           <SearchTitleBox location={'main'} />
           {stackfirstLineList.map((stack) => (

@@ -6,18 +6,16 @@ import { CommentInputBox, FlexRow, PrivateCheckBox } from '.';
 import { useRef, useState } from 'react';
 
 export interface IComment {
-  userImg: string; // 작성자 프로필 사진 URL
-  userName: string; // 작성자 닉네임
-  text: string; // 댓글 내용
-  date: string; // 시간
-  isPrivate: boolean; // 비밀댓글 여부
-  children: Array<{
-    userImg: string;
-    userName: string;
-    text: string;
-    date: string;
-    isPrivate: boolean;
-  }>;
+  commentIdx: number;
+  isSecret: string;
+  comment: string;
+  member: {
+    userIdx: number;
+    profileImgIdx: number;
+    userName: string; // 작성자 닉네임
+  };
+  createdAt: string; // 시간
+  children: Array<IComment>;
   // 대댓글 시간순
 }
 
@@ -38,6 +36,7 @@ const CommentBox = styled.div`
 
 const Layout = styled.div`
   overflow-wrap: break-word;
+  width: 100%;
 `;
 
 const ReplyWrapper = styled.div`
@@ -130,11 +129,23 @@ function Comment({ comment }: CommentProps) {
   return (
     <>
       <CommentBox>
-        <CommentLayout userImg={comment.userImg} userName={comment.userName} text={comment.text} date={comment.date} isPrivate={comment.isPrivate} />
+        <CommentLayout
+          userImg={`/profileImg/${comment.member.profileImgIdx}.png`}
+          userName={comment.member.userName}
+          text={comment.comment}
+          date={comment.createdAt}
+          isPrivate={comment.isSecret === 'Y'}
+        />
         {comment.children.map((reply, idx) => (
           <ReplyWrapper key={idx}>
             <ReplyImg src={Reply} alt="L" />
-            <CommentLayout userImg={reply.userImg} userName={reply.userName} text={reply.text} date={reply.date} isPrivate={reply.isPrivate} />
+            <CommentLayout
+              userImg={`/profileImg/${reply.member.profileImgIdx}.png`}
+              userName={reply.member.userName}
+              text={reply.comment}
+              date={reply.createdAt}
+              isPrivate={reply.isSecret === 'Y'}
+            />
           </ReplyWrapper>
         ))}
       </CommentBox>
