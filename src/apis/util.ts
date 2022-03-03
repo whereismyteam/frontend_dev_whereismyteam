@@ -35,3 +35,13 @@ export const postCredentialsJSON = (body: any): RequestInit => ({
   },
   body: JSON.stringify(body),
 });
+
+export const patchCredentialsJSON = (body: any): RequestInit => ({
+  method: 'PATCH',
+  credentials: 'include',
+  headers: {
+    'Content-Type': 'application/json',
+    ACCESS_TOKEN: cookies.get('ACCESS_TOKEN'),
+  },
+  body: JSON.stringify(body),
+});

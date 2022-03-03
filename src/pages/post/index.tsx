@@ -9,7 +9,7 @@ import Heart from '../../assets/images/heart.svg';
 import Hearted from '../../assets/images/hearted.svg';
 import BackBtn from '../../assets/images/backBtn.svg';
 import LoadingSpinner from '../../assets/styles/loadingSpinner';
-import { patchPost, postComment } from '../../apis/post';
+import { patchCancelLikes, patchPost, postComment, postLikes } from '../../apis/post';
 import { useSelector } from 'react-redux';
 import { rootState } from '../../store';
 
@@ -248,6 +248,22 @@ function Post() {
     setEnableSubmitButton(!(commentInput === ''));
   };
 
+  const onClickHeart = async () => {
+    const isHeart = postInfo!.isHeart;
+
+    const res = await (isHeart == 'Y' ? patchCancelLikes(postId as string, userIdx) : postLikes(postId as string, userIdx));
+    const newHearts = postInfo!.heart + (isHeart == 'Y' ? -1 : 1);
+    const newIsHearts = isHeart == 'Y' ? 'N' : 'Y';
+
+    if (res.ok) {
+      setPostInfo((info) => {
+        if (!info) return info;
+
+        return { ...info, isHeart: newIsHearts, heart: newHearts };
+      });
+    } else alert(res.msg);
+  };
+
   const onClickCommentSubmit = async () => {
     const commentInput = commentTextRef.current?.value as string;
     const isSecret = isPrivateRef.current?.checked as boolean;
@@ -297,7 +313,7 @@ function Post() {
             <Date>{postInfo!.createdAt.substring(0, 10).replaceAll('-', '.')}</Date>
             <EtcInfo>
               <img src={Watch} /> <span>&nbsp;{postInfo!.watch}&nbsp;&nbsp;&nbsp;&nbsp;</span>
-              <HeartImg src={postInfo!.isHeart === 'Y' ? Hearted : Heart} /> <span>&nbsp;{postInfo!.heart}</span>
+              <HeartImg onClick={onClickHeart} src={postInfo!.isHeart === 'Y' ? Hearted : Heart} /> <span>&nbsp;{postInfo!.heart}</span>
             </EtcInfo>
           </EtcWrapper>
           <CommentWrapper>
