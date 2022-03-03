@@ -8,6 +8,7 @@ import Watch from '../../assets/images/watch.svg';
 import Heart from '../../assets/images/heart.svg';
 import Hearted from '../../assets/images/hearted.svg';
 import BackBtn from '../../assets/images/backBtn.svg';
+import CheckedGray from '../../assets/images/checkedGray.png';
 import LoadingSpinner from '../../assets/styles/loadingSpinner';
 import { patchCancelLikes, patchPost, postComment, postLikes } from '../../apis/post';
 import { useSelector } from 'react-redux';
@@ -99,11 +100,14 @@ const UserWrapper = styled.div`
   align-items: center;
   margin-top: 20px;
 `;
+
 const UserImg = styled.img`
   width: 60px;
   height: 60px;
   border-radius: 50%;
+  filter: drop-shadow(5px 5px 5px #909090);
 `;
+
 const EtcWrapper = styled.div`
   display: flex;
   width: 100%;
@@ -155,9 +159,17 @@ export const CommentInputBox = styled.textarea`
   }
 `;
 
-export const PrivateCheckBox = styled.input`
-  width: 22px;
+export const PrivateCheckBox = styled.div`
+  position: relative;
+  width: 21px;
   height: 22px;
+  border: 1px solid #9d9d9d;
+  margin-right: 5px;
+
+  &:hover {
+    background-color: #9d9d9d;
+    opacity: 0.5;
+  }
 `;
 
 const BackBtnImg = styled.img`
@@ -223,11 +235,11 @@ function Post() {
   const userIdx = useSelector((state: rootState) => state.user.userIdx);
 
   const commentTextRef = useRef<HTMLTextAreaElement>(null);
-  const isPrivateRef = useRef<HTMLInputElement>(null);
 
   const [postInfo, setPostInfo] = useState<IPost | null>(null);
 
   const [enableSubmitButton, setEnableSubmitButton] = useState(false);
+  const [isPrivateComment, setIsPrivateComment] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const fetchPostData = async () => {
@@ -275,7 +287,7 @@ function Post() {
 
   const onClickCommentSubmit = async () => {
     const commentInput = commentTextRef.current?.value as string;
-    const isSecret = isPrivateRef.current?.checked as boolean;
+    const isSecret = isPrivateComment;
 
     const res = await postComment(postId as string, userIdx, commentInput, isSecret);
 
@@ -336,7 +348,7 @@ function Post() {
             <br />
             <CommentButtons>
               <FlexRow>
-                <PrivateCheckBox type="checkbox" ref={isPrivateRef} />
+                <PrivateCheckBox onClick={() => setIsPrivateComment((now) => !now)}>{isPrivateComment && <img src={CheckedGray} />}</PrivateCheckBox>
                 <span>비밀댓글</span>
               </FlexRow>
               <DefaultBtn btnName="등록" width={75} height={35} color="blue" disabled={!enableSubmitButton} onClick={onClickCommentSubmit} />
