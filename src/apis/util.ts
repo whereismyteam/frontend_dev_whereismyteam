@@ -1,3 +1,7 @@
+import { Cookies } from 'react-cookie';
+
+const cookies = new Cookies();
+
 export const getJSON = (): RequestInit => ({
   method: 'get',
   headers: {
@@ -10,6 +14,7 @@ export const getCredentialsJSON = (): RequestInit => ({
   credentials: 'include',
   headers: {
     'Content-Type': 'application/json',
+    ACCESS_TOKEN: cookies.get('ACCESS_TOKEN'),
   },
 });
 
@@ -26,6 +31,7 @@ export const postCredentialsJSON = (body: any): RequestInit => ({
   credentials: 'include',
   headers: {
     'Content-Type': 'application/json',
+    ACCESS_TOKEN: cookies.get('ACCESS_TOKEN'),
   },
   body: JSON.stringify(body),
 });
