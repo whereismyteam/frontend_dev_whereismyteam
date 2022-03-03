@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import DefaultBtn, { BtnWrapper } from '../../components/button/defaultBtn';
 import Reply from '../../assets/images/reply.svg';
+import Secret from '../../assets/images/secret.svg';
 import { CommentInputBox, FlexRow, PrivateCheckBox } from '.';
 import { useRef, useState } from 'react';
 
@@ -98,7 +99,7 @@ function CommentLayout({ userImg, userName, text, date, isPrivate }: { userImg: 
       <br />
       <UserWrapper>
         <UserImg src={userImg} />
-        &nbsp;&nbsp;&nbsp;{userName}&nbsp;&nbsp;&nbsp;{isPrivate && <div>(비밀)</div>}
+        &nbsp;&nbsp;&nbsp;{userName}&nbsp;&nbsp;&nbsp;{isPrivate && <img src={Secret} alt="(비밀)" />}
       </UserWrapper>
       <br />
       <Text>{text}</Text>
