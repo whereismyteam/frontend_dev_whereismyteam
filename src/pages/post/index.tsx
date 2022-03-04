@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { MouseEvent, UIEvent, useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -177,6 +177,8 @@ const BackBtnImg = styled.img`
   z-index: 1;
   opacity: 0.5;
   left: 0;
+  width: 30vw;
+  height: 30vw;
   :hover {
     cursor: pointer;
   }
@@ -235,12 +237,14 @@ function Post() {
   const userIdx = useSelector((state: rootState) => state.user.userIdx);
 
   const commentTextRef = useRef<HTMLTextAreaElement>(null);
+  let mainSectionElement: Element;
 
   const [postInfo, setPostInfo] = useState<IPost | null>(null);
 
   const [enableSubmitButton, setEnableSubmitButton] = useState(false);
   const [isPrivateComment, setIsPrivateComment] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [offsetY, setOffsetY] = useState(0);
 
   const fetchPostData = async () => {
     const res = await patchPost(postId as string, userIdx ?? 0);
@@ -251,12 +255,20 @@ function Post() {
     }
   };
 
+  const onScroll = () => setOffsetY(mainSectionElement.scrollTop);
+
   useEffect(() => {
+    mainSectionElement = document.body.querySelector('#root')!.children[1];
+    mainSectionElement.addEventListener('scroll', onScroll);
     setLoading(true);
     fetchPostData()
       .then((data) => setPostInfo(data))
       .catch(alert)
       .finally(() => setLoading(false));
+
+    return () => {
+      mainSectionElement.removeEventListener('scroll', onScroll);
+    };
   }, []);
 
   const onClickBackBtn = () => {
@@ -327,7 +339,7 @@ function Post() {
 
   return (
     <>
-      <BackBtnImg src={BackBtn} onClick={onClickBackBtn} />
+      <BackBtnImg src={BackBtn} onClick={onClickBackBtn} style={{ transform: `translateY(-${offsetY * 0.3}px)` }} />
       {loading ? (
         <LoadingSpinner />
       ) : (
