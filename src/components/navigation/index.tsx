@@ -17,6 +17,7 @@ import LogoWhiteImg from '../../assets/images/logoWhite.svg';
 import Pencil from '../../assets/images/pencil.svg';
 import Notification from '../../assets/images/notification.svg';
 import Profile from '../../assets/images/profile.svg';
+import Write from '../../pages/post/wrte';
 
 const NavBox = styled.nav<{ isScrolled: boolean }>`
   position: fixed;
@@ -205,6 +206,7 @@ function Navigation() {
   const [isAlert, setIsAlert] = useState(true);
   const [isClickedNoti, setIsClickedNoti] = useState(false);
   const [isClickedProfi, setIsClickedProfi] = useState(false);
+  const [modal, setModal] = useState('');
 
   const modalVisible = useSelector((state: rootState) => state.auth.modalVisible);
   const dispatch = useDispatch();
@@ -225,6 +227,8 @@ function Navigation() {
       // dispatch(setIsScrolled);
     }
   };
+
+  const setModalWithTimeout = (state: string) => setTimeout(() => setModal(state), 500);
 
   const onClickLogo = () => {
     navigate('/');
@@ -256,13 +260,35 @@ function Navigation() {
 
   return (
     <>
-      <Auth setModalClose={setModalClose} visible={modalVisible} />
+      {modal === 'Auth' && (
+        <Auth
+          setModalClose={() => {
+            setModalClose();
+            setModalWithTimeout('');
+          }}
+          visible={modalVisible}
+        />
+      )}
+      {modal === 'Write' && (
+        <Write
+          setModalClose={() => {
+            setModalClose();
+            setModalWithTimeout('');
+          }}
+          visible={modalVisible}
+        />
+      )}
       <NavBox isScrolled={isScrolled}>
         <NavLogoImg src={isScrolled ? LogoWhiteImg : LogoImg} onClick={onClickLogo} />
         {isScrolled ? <SearchTitleBox location={'nav'} /> : <></>}
         {isLogin ? (
           <NavIconBox>
-            <NavIcon>
+            <NavIcon
+              onClick={() => {
+                setModalOpen();
+                setModal('Write');
+              }}
+            >
               <NavIconImg src={Pencil} />
             </NavIcon>
             <NavIcon onClick={onClickNotiIcon}>
@@ -315,7 +341,12 @@ function Navigation() {
             )}
           </NavIconBox>
         ) : (
-          <AuthBtn onClick={setModalOpen}>
+          <AuthBtn
+            onClick={() => {
+              setModalOpen();
+              setModal('Auth');
+            }}
+          >
             <AuthBtnSpan isScrolled={isScrolled}>로그인/회원가입</AuthBtnSpan>
           </AuthBtn>
         )}
