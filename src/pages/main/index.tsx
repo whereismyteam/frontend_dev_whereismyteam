@@ -132,6 +132,8 @@ const PostListBox = styled.ul`
   justify-content: center;
 `;
 
+import { mockMainData } from './mockData';
+
 function Main() {
   const stackfirstLineList = ['JavaScript', 'TypeScript', 'Node.js', 'Python', 'Spring', 'React'];
   const stackSecondLineList = ['Angular', 'Kotlin', 'Flutter', 'Swift', 'Java', 'Vue', 'Go', 'C++', 'C', 'Django'];
@@ -184,15 +186,9 @@ function Main() {
           </PostListGuideRight>
         </PostListGuideWrapper>
         <PostListBox>
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+          {mockMainData.data.map((data) => (
+            <Card key={data.boardIdx} data={data} />
+          ))}
         </PostListBox>
       </PostListWrapper>
     </MainWrapper>

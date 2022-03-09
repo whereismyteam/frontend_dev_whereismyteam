@@ -1,9 +1,10 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 import Watch from '../../assets/images/watch.svg';
 import Comment from '../../assets/images/comment.svg';
 import Heart from '../../assets/images/heart.svg';
-import React from '../../assets/images/stacks/React.png';
+import Hearted from '../../assets/images/hearted.svg';
 
 const PostWrapper = styled.li`
   padding-top: 36px;
@@ -89,7 +90,8 @@ const PostContentWrapperInner = styled.div`
 const PostContentInfoWrapper = styled.div`
   display: flex;
   margin-top: 20px;
-  width: 160px;
+  width: 200px;
+  transform: translateX(-8px);
 `;
 
 const PostContentInfo = styled.div`
@@ -110,7 +112,7 @@ const PostContentTitle = styled.h3`
   font-weight: bold;
   line-height: 18px;
   color: #000;
-  cursor: pointer; /* 어디 눌러야 들어가질지 정하기 */
+  cursor: pointer;
 `;
 
 const PostContentTagWrapper = styled.ul`
@@ -147,52 +149,74 @@ const PostContentEtcSpan = styled.span`
   font-size: var(--font-size-small-2);
 `;
 
-function Card() {
+interface ICardData {
+  boardIdx: number;
+  categoryIdx: number;
+  stackList: string[];
+  title: string;
+  detail: {
+    location: string;
+    number: number;
+    onOff: string;
+    parts: string[];
+  };
+  boardStatus: string;
+  writer: {
+    userIdx: number;
+    profileImgIdx: number;
+    userName: string;
+  };
+  createdAt: string;
+  watch: number;
+  heart: number;
+  totalComent: number;
+  isHeart: string;
+}
+
+function Card({ data }: { data: ICardData }) {
   return (
     <PostWrapper>
       <PostBox>
         <PostMarker>
           <PostMarkerBackground>
             <PostMarkerBackgroundWhite />
-            <PostMarkerText>4명</PostMarkerText>
+            <PostMarkerText>{data.detail.number}명</PostMarkerText>
           </PostMarkerBackground>
         </PostMarker>
         <PostLeftBar>
           <PostLeftBarInner>
-            <PostLeftBarImg src={React} />
-            <PostLeftBarImg src={React} />
-            <PostLeftBarImg src={React} />
-            <PostLeftBarImg src={React} />
-            <PostLeftBarImg src={React} />
-            <PostLeftBarImg src={React} />
+            {data.stackList.map((item) => (
+              <PostLeftBarImg key={item} src={require(`../../assets/images/stacks/${item}.png`)} />
+            ))}
           </PostLeftBarInner>
         </PostLeftBar>
         <PostContentWrapper>
           <PostContentWrapperInner>
             <PostContentInfoWrapper>
-              <PostContentInfo>모집중</PostContentInfo>
-              <PostContentInfo>서울</PostContentInfo>
-              <PostContentInfo>온라인</PostContentInfo>
+              <PostContentInfo>{data.boardStatus}</PostContentInfo>
+              <PostContentInfo>{data.detail.location}</PostContentInfo>
+              <PostContentInfo>{data.detail.onOff}</PostContentInfo>
             </PostContentInfoWrapper>
-            <PostContentTitle>웹 프로젝트 함께할 열정 넘치는 팀원 모집합니다.</PostContentTitle>
+            <Link to={`/post/${data.boardIdx}`} style={{ textDecoration: 'none' }}>
+              <PostContentTitle>{data.title}</PostContentTitle>
+            </Link>
             <PostContentTagWrapper>
-              <PostContentTag>#백엔드</PostContentTag>
-              <PostContentTag>#프론트엔드</PostContentTag>
-              <PostContentTag>#기획자</PostContentTag>
-              <PostContentTag>#디자이너</PostContentTag>
+              {data.detail.parts.map((p) => (
+                <PostContentTag key={p}>#{p}</PostContentTag>
+              ))}
             </PostContentTagWrapper>
             <PostContentEtcWrapper>
               <PostContentEtc>
                 <PostContentEtcImg src={Watch} />
-                <PostContentEtcSpan>125</PostContentEtcSpan>
+                <PostContentEtcSpan>{data.watch}</PostContentEtcSpan>
               </PostContentEtc>
               <PostContentEtc>
                 <PostContentEtcImg src={Comment} />
-                <PostContentEtcSpan>12</PostContentEtcSpan>
+                <PostContentEtcSpan>{data.totalComent}</PostContentEtcSpan>
               </PostContentEtc>
               <PostContentEtc>
-                <PostContentEtcImg src={Heart} />
-                <PostContentEtcSpan>15</PostContentEtcSpan>
+                <PostContentEtcImg src={data.isHeart === 'Y' ? Hearted : Heart} />
+                <PostContentEtcSpan>{data.heart}</PostContentEtcSpan>
               </PostContentEtc>
             </PostContentEtcWrapper>
           </PostContentWrapperInner>
