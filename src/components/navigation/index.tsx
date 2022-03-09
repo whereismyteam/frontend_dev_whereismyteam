@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { setModalVisible } from '../../store/auth';
 // import { setScrolled } from '../../store/navigation';
 import { rootState } from '../../store';
+import { setLogout } from '../../store/user';
 import { fetchLogout } from '../../apis';
 import Auth from '../../pages/auth';
 import SearchTitleBox from '../common/searchTitleBox';
@@ -249,6 +250,7 @@ function Navigation() {
     const response = await fetchLogout(logoutData);
     if (response.ok) {
       alert('로그아웃 되었습니다');
+      dispatch(setLogout());
     } else {
       alert(response.msg);
     }
