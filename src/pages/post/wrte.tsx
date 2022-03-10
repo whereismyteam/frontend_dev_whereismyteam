@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { clearState } from '../../store/auth';
 
 import Modal from '../../components/common/modal';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface WriteModalProps {
   setModalClose: () => void;
@@ -18,7 +18,7 @@ const ContentWrapper = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow-y: scroll;
+  overflow: scroll;
 `;
 
 const FormWrapper = styled.div`
@@ -51,6 +51,7 @@ const OptionTitle = styled.span`
 `;
 
 const OptionSelect = styled.div`
+  position: relative;
   display: flex;
   overflow-x: scroll;
 
@@ -59,11 +60,28 @@ const OptionSelect = styled.div`
   }
 `;
 
-const SelectedButton = styled.div`
+const SelectDropDown = styled.select`
+  width: 100px;
+  border: none;
+  outline: none;
+
+  margin-right: 10px;
+`;
+
+const SelectedButton = styled.div<{ selected: boolean }>`
+  position: relative;
   padding: 3px 12px;
   border-radius: 30px;
   color: #fff;
-  background-color: var(--color-blue);
+  background-color: ${(props) => (props.selected ? `var(--color-blue)` : `#CDCDCD`)};
+`;
+
+const StackDelete = styled.span`
+  padding-left: 8px;
+  color: var(--color-yellow);
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 const InputTitle = styled.input`
@@ -92,6 +110,13 @@ const SubmitButton = styled.div`
 `;
 
 function Write() {
+  const [category, setCategory] = useState('프로젝트');
+  const [parts, setParts] = useState<Array<string>>([]);
+  const [onOff, setOnOff] = useState('온라인');
+  const [location, setLocation] = useState('');
+  const [member, setMember] = useState('');
+  const [stacks, setStacks] = useState<Array<string>>([]);
+
   return (
     <ContentWrapper>
       <MainTitle>팀원 구하자</MainTitle>
@@ -100,24 +125,78 @@ function Write() {
           <OptionTitle>분야</OptionTitle>
           <OptionSelect>
             {['프로젝트', '대회', '스터디'].map((text, idx) => (
-              <SelectedButton key={idx}>{text}</SelectedButton>
+              <SelectedButton onClick={() => setCategory(text)} selected={text === category} key={idx}>
+                {text}
+              </SelectedButton>
             ))}
           </OptionSelect>
         </OptionSection>
         <OptionSection>
           <OptionTitle>지역</OptionTitle>
+          <SelectDropDown onChange={(e) => setLocation(e.target.value)}>
+            {['서울', '수원', '인천', '대구', '부산', '울산', '광주', '전주', '대전', '세종', '천안', '청주', '원주', '제주', '기타'].map((text, idx) => (
+              <option value={text} key={idx}>
+                {text}
+              </option>
+            ))}
+          </SelectDropDown>
         </OptionSection>
         <OptionSection>
           <OptionTitle>모집 인원</OptionTitle>
+          <SelectDropDown onChange={(e) => setMember(e.target.value)}>
+            {['1', '2', '3', '4', '5', '6', '7', '8', '기타'].map((text, idx) => (
+              <option value={text} key={idx}>
+                {text}
+              </option>
+            ))}
+          </SelectDropDown>
         </OptionSection>
         <OptionSection>
           <OptionTitle>모집 파트</OptionTitle>
+          <OptionSelect>
+            {['백엔드', '프론트엔드', '기획자', '디자이너'].map((text, idx) => (
+              <SelectedButton
+                onClick={() => setParts((p) => (p.includes(text) ? p.filter((v) => v !== text) : [...p, text]))}
+                selected={parts.includes(text)}
+                key={idx}
+              >
+                {text}
+              </SelectedButton>
+            ))}
+          </OptionSelect>
         </OptionSection>
         <OptionSection>
           <OptionTitle>회의 방식</OptionTitle>
+          <OptionSelect>
+            {['온라인', '오프라인', '온/오프'].map((text, idx) => (
+              <SelectedButton onClick={() => setOnOff(text)} selected={text === onOff} key={idx}>
+                {text}
+              </SelectedButton>
+            ))}
+          </OptionSelect>
         </OptionSection>
         <OptionSection>
           <OptionTitle>기술 스택</OptionTitle>
+          <div style={{ display: 'flex' }}>
+            <SelectDropDown value="선택" onChange={(e) => !stacks.includes(e.target.value) && setStacks((s) => [...s, e.target.value])}>
+              <option selected disabled hidden>
+                선택
+              </option>
+              {['JavaScript', 'TypeScript', 'Node.js', 'Spring', 'Python', 'React', 'Vue', 'Angular', 'Kotlin'].map((text, idx) => (
+                <option value={text} key={idx}>
+                  {text}
+                </option>
+              ))}
+            </SelectDropDown>
+            <OptionSelect>
+              {stacks.map((text, idx) => (
+                <SelectedButton selected={true} key={idx}>
+                  {text}
+                  <StackDelete onClick={() => setStacks((s) => s.filter((v) => v !== text))}>X</StackDelete>
+                </SelectedButton>
+              ))}
+            </OptionSelect>
+          </div>
         </OptionSection>
         <OptionSection>
           <InputTitle placeholder="제목" type="text" />
