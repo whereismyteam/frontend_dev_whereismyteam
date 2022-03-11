@@ -19,6 +19,7 @@ const ContentWrapper = styled.main`
   flex-direction: column;
   align-items: center;
   overflow: scroll;
+  cursor: default;
 `;
 
 const FormWrapper = styled.div`

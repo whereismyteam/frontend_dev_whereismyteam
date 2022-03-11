@@ -41,7 +41,6 @@ const GlobalStyles = createGlobalStyle`
 
   body * {
     font-family: 'Infinity Sans';
-    cursor: default;
   }
 
   position: relative;
