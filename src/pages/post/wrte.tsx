@@ -63,6 +63,7 @@ const OptionSelect = styled.div`
 
 const SelectDropDown = styled.select`
   width: 100px;
+  height: 22px;
   border: none;
   outline: none;
 
@@ -108,6 +109,9 @@ const SubmitButton = styled.div`
   text-align: center;
   color: #000;
   background-color: var(--color-yellow);
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 function Write() {
