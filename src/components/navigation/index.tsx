@@ -17,7 +17,7 @@ import LogoWhiteImg from '../../assets/images/logoWhite.svg';
 import Pencil from '../../assets/images/pencil.svg';
 import Notification from '../../assets/images/notification.svg';
 import Profile from '../../assets/images/profile.svg';
-import Write from '../../pages/post/wrte';
+import Write from '../../pages/post/write';
 
 const NavBox = styled.nav<{ isScrolled: boolean }>`
   position: fixed;
