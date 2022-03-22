@@ -39,8 +39,7 @@ const GlobalStyles = createGlobalStyle`
     --color-pink-red: #fe7777;
   }
 
-  body {
-    overflow: hidden;
+  body * {
     font-family: 'Infinity Sans';
   }
 
