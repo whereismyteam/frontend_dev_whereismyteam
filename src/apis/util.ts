@@ -55,3 +55,13 @@ export const deleteCredentialsJSON = (body: any): RequestInit => ({
   },
   body: JSON.stringify(body),
 });
+
+export const postCredentialsJSONwithR_Token = (body: any): RequestInit => ({
+  method: 'post',
+  credentials: 'include',
+  headers: {
+    'Content-Type': 'application/json',
+    REFRESH_TOKEN: cookies.get('REFRESH_TOKEN'),
+  },
+  body: JSON.stringify(body),
+});

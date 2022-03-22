@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { Cookies } from 'react-cookie';
 
 import { setModalVisible } from '../../store/auth';
 // import { setScrolled } from '../../store/navigation';
@@ -247,10 +248,14 @@ function Navigation() {
   const { userIdx } = useSelector((state: rootState) => state.user);
   const logoutData = { userIdx };
   const onClickLogoutBtn = async () => {
+    const cookies = new Cookies();
     const response = await fetchLogout(logoutData);
     if (response.ok) {
-      alert('로그아웃 되었습니다');
       dispatch(setLogout());
+      cookies.remove('ACCESS_TOKEN');
+      cookies.remove('REFRESH_TOKEN');
+      cookies.remove('userIdx');
+      alert('로그아웃 되었습니다');
     } else {
       alert(response.msg);
     }
