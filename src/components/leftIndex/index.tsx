@@ -51,7 +51,7 @@ function LeftIndex() {
       <Button btnName={btnName} setBtnName={setBtnName} btnNameProps={'프로젝트'} />
       <Button btnName={btnName} setBtnName={setBtnName} btnNameProps={'대회'} />
       <Button btnName={btnName} setBtnName={setBtnName} btnNameProps={'스터디'} />
-      <Button btnName={btnName} setBtnName={setBtnName} btnNameProps={'즐겨찾기'} />
+      {/* <Button btnName={btnName} setBtnName={setBtnName} btnNameProps={'즐겨찾기'} /> */}
     </Wrapper>
   );
 }
