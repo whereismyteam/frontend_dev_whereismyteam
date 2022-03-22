@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import SearchTitleBox from '../../components/common/searchTitleBox';
+// import SearchTitleBox from '../../components/common/searchTitleBox';
 import mainBanner from '../../assets/images/mainBanner.png';
 import Card from '../../components/card';
 import LeftIndex from '../../components/leftIndex';
@@ -82,7 +82,7 @@ const SearchBarWrapper = styled.div`
 const SearchStackWrapper = styled.div`
   display: flex;
   margin-top: 17px;
-  justify-content: start; /* 스크롤시 center로 변경 */
+  justify-content: center;
 `;
 
 // Post List
@@ -155,7 +155,7 @@ function Main() {
       <SearchBarWrapper>
         <Link to="/post/1"> test</Link>
         <SearchStackWrapper>
-          <SearchTitleBox location={'main'} />
+          {/* <SearchTitleBox location={'main'} /> */}
           {stackfirstLineList.map((stack) => (
             <StackBtn key={stack} btnName={`${stack}`} />
           ))}

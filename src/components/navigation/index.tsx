@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
@@ -10,18 +10,18 @@ import { rootState } from '../../store';
 import { setLogout } from '../../store/user';
 import { fetchLogout } from '../../apis';
 import Auth from '../../pages/auth';
-import SearchTitleBox from '../common/searchTitleBox';
+// import SearchTitleBox from '../common/searchTitleBox';
 import DefaultBtn from '../button/defaultBtn';
 import scrollBar from '../../assets/styles/scrollBar';
 
 import LogoImg from '../../assets/images/logo.svg';
-import LogoWhiteImg from '../../assets/images/logoWhite.svg';
+// import LogoWhiteImg from '../../assets/images/logoWhite.svg';
 import Pencil from '../../assets/images/pencil.svg';
 import Notification from '../../assets/images/notification.svg';
 import Profile from '../../assets/images/profile.svg';
 import Write from '../../pages/post/write';
 
-const NavBox = styled.nav<{ isScrolled: boolean }>`
+const NavBox = styled.nav`
   position: fixed;
   top: 0;
   display: flex;
@@ -32,7 +32,8 @@ const NavBox = styled.nav<{ isScrolled: boolean }>`
   padding: 0 5%;
   width: 90%;
   height: 100px;
-  background: ${(props) => (props.isScrolled ? '#2353BB' : '#fff')};
+  /* background: ? '#2353BB' : '#fff')}; */
+  background: #fff;
 
   transition: all 0.5s ease-in-out;
 `;
@@ -46,10 +47,11 @@ const NavLogoImg = styled.img`
 const AuthBtn = styled.div`
   cursor: pointer;
 `;
-const AuthBtnSpan = styled.span<{ isScrolled: boolean }>`
+const AuthBtnSpan = styled.span`
   font-weight: bold;
   font-size: var(--font-size-mid);
-  color: ${(props) => (props.isScrolled ? '#fff' : '#000')};
+  /* color: ? '#fff' : '#000')}; */
+  color: #000;
 `;
 
 const NavIconBox = styled.div`
@@ -215,20 +217,20 @@ function Navigation() {
   const setModalOpen = () => dispatch(setModalVisible(true));
   const setModalClose = () => dispatch(setModalVisible(false));
 
-  const [isScrolled, setIsScrolled] = useState(false);
-  useEffect(() => {
-    document.body.children[1].children[1].children[0].addEventListener('scroll', handleScroll);
-  }, []);
-  const handleScroll = () => {
-    const scrollTop = document.body.children[1].children[1].children[0].scrollTop;
-    if (scrollTop > 477) {
-      setIsScrolled(true);
-      // dispatch(setIsScrolled);
-    } else {
-      setIsScrolled(false);
-      // dispatch(setIsScrolled);
-    }
-  };
+  // const [isScrolled, setIsScrolled] = useState(false);
+  // useEffect(() => {
+  //   document.body.children[1].children[1].children[0].addEventListener('scroll', handleScroll);
+  // }, []);
+  // const handleScroll = () => {
+  //   const scrollTop = document.body.children[1].children[1].children[0].scrollTop;
+  //   if (scrollTop > 477) {
+  //     setIsScrolled(true);
+  //     // dispatch(setIsScrolled);
+  //   } else {
+  //     setIsScrolled(false);
+  //     // dispatch(setIsScrolled);
+  //   }
+  // };
 
   const setModalWithTimeout = (state: string) => setTimeout(() => setModal(state), 500);
 
@@ -285,9 +287,9 @@ function Navigation() {
           visible={modalVisible}
         />
       )}
-      <NavBox isScrolled={isScrolled}>
-        <NavLogoImg src={isScrolled ? LogoWhiteImg : LogoImg} onClick={onClickLogo} />
-        {isScrolled ? <SearchTitleBox location={'nav'} /> : <></>}
+      <NavBox>
+        <NavLogoImg src={LogoImg} onClick={onClickLogo} />
+        {/* {isScrolled ? <SearchTitleBox location={'nav'} /> : <></>} */}
         {isLogin ? (
           <NavIconBox>
             <NavIcon
@@ -354,7 +356,7 @@ function Navigation() {
               setModal('Auth');
             }}
           >
-            <AuthBtnSpan isScrolled={isScrolled}>로그인/회원가입</AuthBtnSpan>
+            <AuthBtnSpan>로그인/회원가입</AuthBtnSpan>
           </AuthBtn>
         )}
       </NavBox>
