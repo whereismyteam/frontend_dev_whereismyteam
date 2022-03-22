@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
@@ -57,12 +59,13 @@ const SignUpSpan = styled.span`
   cursor: pointer;
 `;
 
-const SocialLoginSection = styled.div`
+const SocialLoginSection = styled.a`
   margin-top: 40px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  text-decoration: none;
   cursor: pointer;
 `;
 
@@ -125,7 +128,10 @@ function Login({ setRegister }: LoginProps) {
         <MarginBlock />
         <DefaultBtn onClick={onClickLoginButton} btnName={'로그인'} width={400} height={50} color="blue" />
         <SignUpSpan onClick={setRegister}>회원가입</SignUpSpan>
-        <SocialLoginSection onClick={onClickSocialLoginButton}>
+        <SocialLoginSection
+          href="https://accounts.google.com/o/oauth2/v2/auth?scope=https%3A//www.googleapis.com/auth/drive.metadata.readonly&response_type=code&redirect_uri=http://localhost:3000/social/google&client_id=550484817415-h831fi64l8vc96nd5tirhhte0g2dhdkm.apps.googleusercontent.com"
+          onClick={onClickSocialLoginButton}
+        >
           <SocialIcon src={GoogleIcon} />
           <SocialDescription>구글 계정으로 로그인</SocialDescription>
         </SocialLoginSection>
