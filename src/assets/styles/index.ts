@@ -51,6 +51,26 @@ const GlobalStyles = createGlobalStyle`
   &::-webkit-scrollbar {
     display: none;
   }
+
+  /* &::-webkit-scrollbar {
+    display: block;
+    width: 4px;
+    height: 8px;
+    background: #fff;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: #758ec4;
+    opacity: 0.5;
+
+    &:hover {
+      background-color: var(--color-blue);
+    }
+  }
+  &::-webkit-scrollbar-track {
+    background: #fff;
+  } */
+  overflow: scroll;
 `;
 
 export default GlobalStyles;

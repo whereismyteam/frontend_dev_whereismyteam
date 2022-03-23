@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { clearState } from '../../store/auth';
 
 import Modal from '../../components/common/modal';
-import { useEffect, useRef, useState } from 'react';
+import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { postPost } from '../../apis/post';
 import { rootState } from '../../store';
 
@@ -60,7 +60,9 @@ const OptionTitle = styled.span`
 const OptionSelect = styled.div`
   position: relative;
   display: flex;
+  width: 100%;
   overflow-x: scroll;
+  overflow-y: hidden;
 
   div {
     margin-right: 10px;
@@ -78,13 +80,15 @@ const SelectDropDown = styled.select`
 
 const SelectedButton = styled.div<{ selected: boolean }>`
   position: relative;
-  padding: 3px 12px;
+  padding: 0px 12px;
+  min-width: max-content;
+  line-height: 25px;
   border-radius: 30px;
   color: #fff;
   background-color: ${(props) => (props.selected ? `var(--color-blue)` : `#CDCDCD`)};
 `;
 
-const StackDelete = styled.span`
+const SelectedDelete = styled.span`
   padding-left: 8px;
   color: var(--color-yellow);
   :hover {
@@ -120,18 +124,59 @@ const SubmitButton = styled.div`
   }
 `;
 
+const AddButton = styled.div`
+  position: relative;
+  color: var(--color-blue);
+  font-size: var(--font-size-large);
+  min-width: 75px;
+  line-height: 25px;
+  padding: 0px 10px;
+  border: 1px solid #d7d7d7;
+  box-sizing: border-box;
+  border-radius: 30px;
+
+  :hover {
+    cursor: pointer;
+  }
+`;
+
+const AddInputButton = styled.input<{ maxWidth: number }>`
+  position: relative;
+  max-width: ${(props) => props.maxWidth}px;
+  padding: 0px 10px;
+  border: 1px solid #d7d7d7;
+  box-sizing: border-box;
+  border-radius: 30px;
+  outline: none;
+
+  margin-right: 10px;
+`;
+
+const HiddenSpan = styled.span`
+  visibility: hidden;
+  position: absolute;
+  top: -10000;
+  font-size: 16px;
+`;
+
 function Write({ setModalClose }: WriteProps) {
   const userIdx = useSelector((state: rootState) => state.user.userIdx);
 
   const [categoryName, setCategoryName] = useState('프로젝트');
   const [recruitmentPart, setRecruitmentPart] = useState<Array<string>>([]);
+  const [recruitmentPartList, setRecruitmentPartList] = useState<Array<string>>(['백엔드', '프론트엔드', '기획자', '디자이너']);
   const [onOff, setOnOff] = useState('온라인');
   const [area, setArea] = useState('서울');
   const [capacityNum, setCapacityNum] = useState<number>(1);
   const [techstacks, setTechStacks] = useState<Array<string>>([]);
 
+  const [isNewPartAdding, setIsNewPartAdding] = useState(false);
+  const [newPartWidth, setNewPartWidth] = useState(55);
+
   const postTitleRef = useRef<HTMLInputElement>(null);
   const postTextRef = useRef<HTMLTextAreaElement>(null);
+  const addInputRef = useRef<HTMLInputElement>(null);
+  const hiddenSpanRef = useRef<HTMLSpanElement>(null);
 
   const checkRecruitmentPartSelected = () => recruitmentPart.length !== 0;
 
@@ -140,6 +185,29 @@ function Write({ setModalClose }: WriteProps) {
   const checkTitleFilled = () => postTitleRef.current?.value !== '';
 
   const checkTextFilled = () => postTextRef.current?.value !== '';
+
+  const onKeyUpAddPartInput = () => {
+    hiddenSpanRef.current!.textContent = addInputRef.current!.value;
+    setNewPartWidth(hiddenSpanRef.current!.offsetWidth < 35 ? 55 : hiddenSpanRef.current!.offsetWidth + 15);
+  };
+
+  const onKeyDownEnter = (e: globalThis.KeyboardEvent) => {
+    if (document.activeElement !== addInputRef.current) return;
+    if (e.key !== 'Enter') return;
+    if (newPartWidth === 0) return;
+
+    setRecruitmentPartList((now) => [...now, addInputRef.current!.value]);
+    setIsNewPartAdding(false);
+    addInputRef.current!.value = '';
+    hiddenSpanRef.current!.textContent = '';
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', onKeyDownEnter);
+    return () => {
+      window.removeEventListener('keydown', onKeyDownEnter);
+    };
+  }, []);
 
   const onClickSubmit = async (boardStatus: string) => {
     if (!checkRecruitmentPartSelected()) return alert('모집 파트를 선택해주세요');
@@ -195,15 +263,32 @@ function Write({ setModalClose }: WriteProps) {
         <OptionSection>
           <OptionTitle>모집 파트</OptionTitle>
           <OptionSelect>
-            {['백엔드', '프론트엔드', '기획자', '디자이너'].map((text, idx) => (
-              <SelectedButton
-                onClick={() => setRecruitmentPart((p) => (p.includes(text) ? p.filter((v) => v !== text) : [...p, text]))}
-                selected={recruitmentPart.includes(text)}
-                key={idx}
-              >
-                {text}
-              </SelectedButton>
-            ))}
+            {recruitmentPartList.map((text, idx) =>
+              idx <= 3 ? (
+                <SelectedButton
+                  onClick={() => setRecruitmentPart((p) => (p.includes(text) ? p.filter((v) => v !== text) : [...p, text]))}
+                  selected={recruitmentPart.includes(text)}
+                  key={idx}
+                >
+                  {text}
+                </SelectedButton>
+              ) : (
+                <SelectedButton selected={true} key={idx}>
+                  {text}
+                  <SelectedDelete onClick={() => setRecruitmentPartList((s) => s.filter((v, idx) => idx > 3 && v !== text))}>X</SelectedDelete>
+                </SelectedButton>
+              ),
+            )}
+            {isNewPartAdding && <AddInputButton ref={addInputRef} onKeyUp={onKeyUpAddPartInput} maxWidth={newPartWidth} />}
+            <HiddenSpan ref={hiddenSpanRef} />
+            <AddButton
+              onClick={() => {
+                setIsNewPartAdding((now) => !now);
+                setTimeout(() => addInputRef.current?.focus(), 0);
+              }}
+            >
+              {isNewPartAdding ? '-' : '+'}
+            </AddButton>
           </OptionSelect>
         </OptionSection>
         <OptionSection>
@@ -233,7 +318,7 @@ function Write({ setModalClose }: WriteProps) {
               {techstacks.map((text, idx) => (
                 <SelectedButton selected={true} key={idx}>
                   {text}
-                  <StackDelete onClick={() => setTechStacks((s) => s.filter((v) => v !== text))}>X</StackDelete>
+                  <SelectedDelete onClick={() => setTechStacks((s) => s.filter((v) => v !== text))}>X</SelectedDelete>
                 </SelectedButton>
               ))}
             </OptionSelect>
