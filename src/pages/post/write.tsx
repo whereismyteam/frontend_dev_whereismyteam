@@ -342,6 +342,14 @@ function Write({ setModalClose }: WriteProps) {
   );
 }
 
+function TempWrite() {
+  return (
+    <ContentWrapper>
+      <MainTitle>임시저장한 글</MainTitle>
+    </ContentWrapper>
+  );
+}
+
 function WriteModal({ setModalClose, visible }: WriteModalProps) {
   const dispatch = useDispatch();
 
