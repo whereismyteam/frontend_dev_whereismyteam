@@ -275,7 +275,7 @@ function Write({ setModalClose }: WriteProps) {
               ) : (
                 <SelectedButton selected={true} key={idx}>
                   {text}
-                  <SelectedDelete onClick={() => setRecruitmentPartList((s) => s.filter((v, idx) => idx > 3 && v !== text))}>X</SelectedDelete>
+                  <SelectedDelete onClick={() => setRecruitmentPartList((s) => s.filter((v, idx) => idx <= 3 && v !== text))}>X</SelectedDelete>
                 </SelectedButton>
               ),
             )}
