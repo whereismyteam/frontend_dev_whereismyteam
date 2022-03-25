@@ -5,9 +5,10 @@ import { clearState } from '../../store/auth';
 
 import Modal from '../../components/common/modal';
 import { useEffect, useRef, useState } from 'react';
-import { patchPost, patchPostFix, postPost } from '../../apis/post';
+import { getPrePosts, patchPost, patchPostFix, postPost } from '../../apis/post';
 import { rootState } from '../../store';
 import { IPost } from '.';
+import LoadingSpinner from '../../assets/styles/loadingSpinner';
 
 interface WriteModalProps {
   isEdit: boolean;
@@ -166,6 +167,17 @@ const HiddenSpan = styled.span`
   font-size: 16px;
 `;
 
+const BackSpan = styled.span`
+  position: absolute;
+  top: 35px;
+  left: 40px;
+  font-size: 30px;
+
+  :hover {
+    cursor: pointer;
+  }
+`;
+
 function Write({ isEdit, postInfo, setPostInfo, setModalClose }: WriteProps) {
   const userIdx = useSelector((state: rootState) => state.user.userIdx);
 
@@ -179,6 +191,8 @@ function Write({ isEdit, postInfo, setPostInfo, setModalClose }: WriteProps) {
 
   const [isNewPartAdding, setIsNewPartAdding] = useState(false);
   const [newPartWidth, setNewPartWidth] = useState(55);
+
+  const [isEditListOn, setIsEditListOn] = useState(false);
 
   const postTitleRef = useRef<HTMLInputElement>(null);
   const postTextRef = useRef<HTMLTextAreaElement>(null);
@@ -305,7 +319,8 @@ function Write({ isEdit, postInfo, setPostInfo, setModalClose }: WriteProps) {
 
   return (
     <ContentWrapper>
-      <MainTitle>팀원 구하자</MainTitle>
+      <MainTitle>{isEditListOn ? '임시저장 글' : '팀원 구하자'}</MainTitle>
+      {isEditListOn && <BackSpan onClick={() => setIsEditListOn(false)}>{'<'}</BackSpan>}
       <FormWrapper>
         <OptionSection>
           <OptionTitle>분야</OptionTitle>
@@ -420,22 +435,58 @@ function Write({ isEdit, postInfo, setPostInfo, setModalClose }: WriteProps) {
             <SubmitButton siblings={3} onClick={() => onClickSubmit('임시저장')}>
               임시저장
             </SubmitButton>
-            <SubmitButton siblings={3}>임시저장한 글</SubmitButton>
+            <SubmitButton siblings={3} onClick={() => setIsEditListOn(true)}>
+              임시저장한 글
+            </SubmitButton>
             <SubmitButton siblings={3} onClick={() => onClickSubmit('모집중')}>
               작성 완료
             </SubmitButton>
           </OptionSelect>
         )}
       </FormWrapper>
+      {isEditListOn && <TempWrite />}
     </ContentWrapper>
   );
 }
 
+export interface ITempList {
+  totalNum: number;
+  prePostList: Array<{ title: string; createdAt: string }>;
+}
+
 function TempWrite() {
+  const userIdx = useSelector((state: rootState) => state.user.userIdx);
+  const [loading, setLoading] = useState(true);
+  const [tempListInfo, setTempListInfo] = useState<ITempList | null>(null);
+
+  const init = async () => {
+    setLoading(true);
+    const res = await getPrePosts(userIdx);
+    if (res.ok && res.data) {
+      setTempListInfo(res.data);
+      setLoading(false);
+    } else alert(res.msg);
+  };
+
+  useEffect(() => {
+    init().catch((e) => console.error(e));
+  }, []);
+
   return (
-    <ContentWrapper>
-      <MainTitle>임시저장한 글</MainTitle>
-    </ContentWrapper>
+    <FormWrapper style={{ position: 'absolute', width: '620px', height: '570px', top: '80px', backgroundColor: '#fff' }}>
+      {loading && <LoadingSpinner />}
+      {!loading && (
+        <>
+          <OptionSection>총 {tempListInfo!.totalNum}개</OptionSection>
+          {tempListInfo!.prePostList.map((info, idx) => (
+            <OptionSection style={{ height: '110px' }} key={idx}>
+              <OptionTitle style={{ fontSize: 'var(--font-size-mid)' }}>{info.title}</OptionTitle>
+              <div style={{ color: '#9d9d9d' }}>{info.createdAt.replaceAll('-', '.').replace('T', '.').slice(0, -3)}</div>
+            </OptionSection>
+          ))}
+        </>
+      )}
+    </FormWrapper>
   );
 }
 

@@ -1,6 +1,7 @@
 import { API_URL } from '..';
 import { IPost } from '../../pages/post';
-import { deleteCredentialsJSON, patchCredentialsJSON, postCredentialsJSON } from '../util';
+import { ITempList } from '../../pages/post/write';
+import { deleteCredentialsJSON, getCredentialsJSON, patchCredentialsJSON, postCredentialsJSON } from '../util';
 
 export const postComment = async (boardIdx: string, userIdx: number, content: string, isSecret: boolean) => {
   try {
@@ -159,6 +160,22 @@ export const patchPostFix = async (args: {
     };
 
     if (res.success) return { ok: true, msg: res.data };
+    else return { ok: false, msg: res.message };
+  } catch (e) {
+    return { ok: false, msg: '서버가 불안정합니다. 다시 시도해주세요' };
+  }
+};
+
+export const getPrePosts = async (userIdx: number) => {
+  try {
+    const res = (await fetch(`${API_URL}/users/${userIdx}/prePosts`, getCredentialsJSON()).then((res) => res.json())) as {
+      success: boolean | undefined;
+      code: number;
+      message: string;
+      data: ITempList;
+    };
+
+    if (res.success) return { ok: true, data: res.data };
     else return { ok: false, msg: res.message };
   } catch (e) {
     return { ok: false, msg: '서버가 불안정합니다. 다시 시도해주세요' };
