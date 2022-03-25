@@ -433,6 +433,7 @@ function Post() {
             setModalClose();
             setModalWithTimeout('');
           }}
+          setPostInfo={setPostInfo}
           visible={modalVisible}
         />
       )}
