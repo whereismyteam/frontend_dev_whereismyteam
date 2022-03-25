@@ -272,7 +272,7 @@ function Post() {
   }, []);
 
   const onClickBackBtn = () => {
-    navigate(-1);
+    navigate('/', { replace: true });
   };
 
   const onChangeComment = () => {
