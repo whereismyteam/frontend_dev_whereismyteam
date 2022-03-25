@@ -366,10 +366,16 @@ function Post() {
           <AvailableBox width={125} height={35} color="invBlue">
             {postInfo!.boardStatus}
           </AvailableBox>
-          <UserWrapper>
-            <UserImg src={`/profileImg/${postInfo!.writer.profileImgIdx}.png`} />
-            &nbsp;&nbsp;&nbsp;{postInfo!.writer.userName}
-          </UserWrapper>
+          <FlexRow style={{ width: '100%' }}>
+            <UserWrapper>
+              <UserImg src={`/profileImg/${postInfo!.writer.profileImgIdx}.png`} />
+              &nbsp;&nbsp;&nbsp;{postInfo!.writer.userName}
+            </UserWrapper>
+            <FlexRow style={{ width: '170px' }}>
+              <DefaultBtn btnName="삭제" width={75} height={35} color="invBlue" />
+              <DefaultBtn btnName="편집" width={75} height={35} color="invBlue" />
+            </FlexRow>
+          </FlexRow>
           <EtcWrapper>
             <Date>{postInfo!.createdAt.substring(0, 10).replaceAll('-', '.')}</Date>
             <EtcInfo>
