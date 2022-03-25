@@ -254,15 +254,11 @@ function Write({ isEdit, postInfo, setPostInfo, setModalClose }: WriteProps) {
     postTextRef.current!.value = postText;
   }, []);
 
-  const checkInputs = () => {
+  const onClickEdit = async () => {
     if (!checkRecruitmentPartSelected()) return alert('모집 파트를 선택해주세요');
     if (!checkTechStacksSelected()) return alert('기술 스택을 선택해주세요');
     if (!checkTitleFilled()) return alert('제목을 입력해주세요');
     if (!checkTextFilled()) return alert('글 내용을 입력해주세요');
-  };
-
-  const onClickEdit = async () => {
-    checkInputs();
 
     const res = await patchPostFix({
       postIdx: postInfo!.boardIdx,
@@ -296,7 +292,10 @@ function Write({ isEdit, postInfo, setPostInfo, setModalClose }: WriteProps) {
   };
 
   const onClickSubmit = async (boardStatus: string) => {
-    checkInputs();
+    if (!checkRecruitmentPartSelected()) return alert('모집 파트를 선택해주세요');
+    if (!checkTechStacksSelected()) return alert('기술 스택을 선택해주세요');
+    if (!checkTitleFilled()) return alert('제목을 입력해주세요');
+    if (!checkTextFilled()) return alert('글 내용을 입력해주세요');
 
     const res = await postPost({
       userIdx,
@@ -473,7 +472,7 @@ function TempWrite() {
   }, []);
 
   return (
-    <FormWrapper style={{ position: 'absolute', width: '620px', height: '570px', top: '80px', backgroundColor: '#fff' }}>
+    <FormWrapper style={{ position: 'absolute', width: '620px', height: '530px', top: '80px', backgroundColor: '#fff' }}>
       {loading && <LoadingSpinner />}
       {!loading && (
         <>
