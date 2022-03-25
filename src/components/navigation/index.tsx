@@ -280,6 +280,7 @@ function Navigation() {
       )}
       {modal === 'Write' && (
         <Write
+          isEdit={false}
           setModalClose={() => {
             setModalClose();
             setModalWithTimeout('');

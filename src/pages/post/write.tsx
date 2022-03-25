@@ -7,13 +7,18 @@ import Modal from '../../components/common/modal';
 import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { postPost } from '../../apis/post';
 import { rootState } from '../../store';
+import { IPost } from '.';
 
 interface WriteModalProps {
+  isEdit: boolean;
+  postInfo?: IPost | null;
   setModalClose: () => void;
   visible: boolean;
 }
 
 interface WriteProps {
+  isEdit: boolean;
+  postInfo?: IPost | null;
   setModalClose: () => void;
 }
 
@@ -112,8 +117,8 @@ const TextareaPost = styled.textarea`
   padding: 10px;
 `;
 
-const SubmitButton = styled.div`
-  width: calc(calc(100% - 40px) / 3);
+const SubmitButton = styled.div<{ siblings: number }>`
+  width: ${(props) => `calc(calc(100% - 40px) / ${props.siblings} )`};
   padding: 20px 0px;
   border-radius: 50px;
   text-align: center;
@@ -159,7 +164,7 @@ const HiddenSpan = styled.span`
   font-size: 16px;
 `;
 
-function Write({ setModalClose }: WriteProps) {
+function Write({ isEdit, postInfo, setModalClose }: WriteProps) {
   const userIdx = useSelector((state: rootState) => state.user.userIdx);
 
   const [categoryName, setCategoryName] = useState('프로젝트');
@@ -173,6 +178,8 @@ function Write({ setModalClose }: WriteProps) {
   const [isNewPartAdding, setIsNewPartAdding] = useState(false);
   const [newPartWidth, setNewPartWidth] = useState(55);
 
+  const areaRef = useRef<HTMLSelectElement>(null);
+  const capacityNumRef = useRef<HTMLSelectElement>(null);
   const postTitleRef = useRef<HTMLInputElement>(null);
   const postTextRef = useRef<HTMLTextAreaElement>(null);
   const addInputRef = useRef<HTMLInputElement>(null);
@@ -210,6 +217,31 @@ function Write({ setModalClose }: WriteProps) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isEdit || !postInfo) return;
+
+    const {
+      category,
+      stackList,
+      title,
+      detail: { location, number, onOff, parts },
+      postText,
+    } = postInfo;
+
+    setCategoryName(category);
+    setRecruitmentPart(parts);
+    setRecruitmentPartList((now) => [...now, ...parts.filter((s) => !now.includes(s))]);
+    setOnOff(onOff);
+    setArea(location);
+    setCapacityNum(number);
+    setTechStacks(stackList);
+
+    areaRef.current!.value = location;
+    capacityNumRef.current!.value = number === 9 ? '9+' : number.toString();
+    postTitleRef.current!.value = title;
+    postTextRef.current!.value = postText;
+  }, []);
+
   const onClickSubmit = async (boardStatus: string) => {
     if (!checkRecruitmentPartSelected()) return alert('모집 파트를 선택해주세요');
     if (!checkTechStacksSelected()) return alert('기술 스택을 선택해주세요');
@@ -243,7 +275,7 @@ function Write({ setModalClose }: WriteProps) {
         </OptionSection>
         <OptionSection>
           <OptionTitle>지역</OptionTitle>
-          <SelectDropDown onChange={(e) => setArea(e.target.value)}>
+          <SelectDropDown ref={areaRef} onChange={(e) => setArea(e.target.value)}>
             {['서울', '수원', '인천', '대구', '부산', '울산', '광주', '전주', '대전', '세종', '천안', '청주', '원주', '제주', '기타'].map((text, idx) => (
               <option value={text} key={idx}>
                 {text}
@@ -253,7 +285,7 @@ function Write({ setModalClose }: WriteProps) {
         </OptionSection>
         <OptionSection>
           <OptionTitle>모집 인원</OptionTitle>
-          <SelectDropDown onChange={(e) => setCapacityNum(Number(e.target.value[0]))}>
+          <SelectDropDown ref={capacityNumRef} onChange={(e) => setCapacityNum(Number(e.target.value[0]))}>
             {['1', '2', '3', '4', '5', '6', '7', '8', '9+'].map((text, idx) => (
               <option value={text} key={idx}>
                 {text}
@@ -333,11 +365,19 @@ function Write({ setModalClose }: WriteProps) {
           spellCheck={false}
           placeholder="진행 예상 기간, 진행 방식(온라인/오프라인)과 신청 방법 등 필요한 사항을 자세히 기재해주세요."
         />
-        <OptionSelect>
-          <SubmitButton onClick={() => onClickSubmit('임시저장')}>임시저장</SubmitButton>
-          <SubmitButton>임시저장한 글</SubmitButton>
-          <SubmitButton onClick={() => onClickSubmit('모집중')}>작성 완료</SubmitButton>
-        </OptionSelect>
+        {isEdit && <SubmitButton siblings={1}>수정완료</SubmitButton>}
+
+        {!isEdit && (
+          <OptionSelect>
+            <SubmitButton siblings={3} onClick={() => onClickSubmit('임시저장')}>
+              임시저장
+            </SubmitButton>
+            <SubmitButton siblings={3}>임시저장한 글</SubmitButton>
+            <SubmitButton siblings={3} onClick={() => onClickSubmit('모집중')}>
+              작성 완료
+            </SubmitButton>
+          </OptionSelect>
+        )}
       </FormWrapper>
     </ContentWrapper>
   );
@@ -351,7 +391,7 @@ function TempWrite() {
   );
 }
 
-function WriteModal({ setModalClose, visible }: WriteModalProps) {
+function WriteModal({ isEdit, postInfo, setModalClose, visible }: WriteModalProps) {
   const dispatch = useDispatch();
 
   useEffect(
@@ -361,7 +401,7 @@ function WriteModal({ setModalClose, visible }: WriteModalProps) {
     [visible],
   );
 
-  return <Modal children={<Write setModalClose={setModalClose} />} visible={visible} onClickClose={setModalClose}></Modal>;
+  return <Modal children={<Write isEdit={isEdit} postInfo={postInfo} setModalClose={setModalClose} />} visible={visible} onClickClose={setModalClose}></Modal>;
 }
 
 export default WriteModal;
