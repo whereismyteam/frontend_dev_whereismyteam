@@ -197,6 +197,7 @@ function Write({ setModalClose }: WriteProps) {
     if (newPartWidth === 0) return;
 
     setRecruitmentPartList((now) => [...now, addInputRef.current!.value]);
+    setRecruitmentPart((now) => [...now, addInputRef.current!.value]);
     setIsNewPartAdding(false);
     addInputRef.current!.value = '';
     hiddenSpanRef.current!.textContent = '';
