@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { clearState } from '../../store/auth';
 
 import Modal from '../../components/common/modal';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { getPrePosts, patchPost, patchPostFix, postPost } from '../../apis/post';
 import { rootState } from '../../store';
 import { IPost } from '.';
@@ -237,9 +237,7 @@ function Write({ isEdit, postInfo, setPostInfo, setModalClose }: WriteProps) {
     };
   }, []);
 
-  useEffect(() => {
-    if (!isEdit || !postInfo) return;
-
+  const setEditPostInfo = useCallback((postInfo: IPost) => {
     const {
       category,
       stackList,
@@ -258,6 +256,12 @@ function Write({ isEdit, postInfo, setPostInfo, setModalClose }: WriteProps) {
 
     postTitleRef.current!.value = title;
     postTextRef.current!.value = postText;
+  }, []);
+
+  useEffect(() => {
+    if (!isEdit || !postInfo) return;
+
+    setEditPostInfo(postInfo);
   }, []);
 
   const onClickEdit = async () => {
@@ -449,7 +453,7 @@ function Write({ isEdit, postInfo, setPostInfo, setModalClose }: WriteProps) {
           </OptionSelect>
         )}
       </FormWrapper>
-      {isEditListOn && <TempWrite />}
+      {isEditListOn && <TempWrite setIsEditListOn={setIsEditListOn} setEditPostInfo={setEditPostInfo} />}
     </ContentWrapper>
   );
 }
@@ -459,7 +463,13 @@ export interface ITempList {
   prePostList: Array<{ postIdx: number; title: string; createdAt: string }>;
 }
 
-function TempWrite() {
+function TempWrite({
+  setIsEditListOn,
+  setEditPostInfo,
+}: {
+  setIsEditListOn: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditPostInfo: (postInfo: IPost) => void;
+}) {
   const userIdx = useSelector((state: rootState) => state.user.userIdx);
   const [loading, setLoading] = useState(true);
   const [tempListInfo, setTempListInfo] = useState<ITempList | null>(null);
@@ -477,21 +487,31 @@ function TempWrite() {
     init().catch((e) => console.error(e));
   }, []);
 
+  const onClickPrePost = async (postIdx: number) => {
+    const res = await patchPost(String(postIdx), userIdx ?? 0);
+    if (!res.data) return;
+
+    setEditPostInfo(res.data);
+    setIsEditListOn(false);
+  };
+
   return (
-    <FormWrapper style={{ position: 'absolute', width: '620px', height: '530px', top: '80px', backgroundColor: '#fff' }}>
-      {loading && <LoadingSpinner />}
-      {!loading && (
-        <>
-          <OptionSection>총 {tempListInfo!.totalNum}개</OptionSection>
-          {tempListInfo!.prePostList.map((info, idx) => (
-            <OptionSection hoverStyle={true} style={{ height: '110px' }} key={idx}>
-              <OptionTitle style={{ fontSize: 'var(--font-size-mid)' }}>{info.title}</OptionTitle>
-              <div style={{ color: '#9d9d9d' }}>{info.createdAt.replaceAll('-', '.').replace('T', '.').slice(0, -3)}</div>
-            </OptionSection>
-          ))}
-        </>
-      )}
-    </FormWrapper>
+    <>
+      <FormWrapper style={{ position: 'absolute', width: '620px', height: '530px', top: '80px', backgroundColor: '#fff' }}>
+        {loading && <LoadingSpinner />}
+        {!loading && (
+          <>
+            <OptionSection>총 {tempListInfo!.totalNum}개</OptionSection>
+            {tempListInfo!.prePostList.map((info, idx) => (
+              <OptionSection onClick={() => onClickPrePost(info.postIdx)} hoverStyle={true} style={{ height: '110px' }} key={idx}>
+                <OptionTitle style={{ fontSize: 'var(--font-size-mid)' }}>{info.title}</OptionTitle>
+                <div style={{ color: '#9d9d9d' }}>{info.createdAt.replaceAll('-', '.').replace('T', '.').slice(0, -3)}</div>
+              </OptionSection>
+            ))}
+          </>
+        )}
+      </FormWrapper>
+    </>
   );
 }
 
