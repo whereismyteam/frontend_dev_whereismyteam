@@ -153,7 +153,6 @@ function Main() {
         </MainBannerBackground>
       </MainBannerWrapper>
       <SearchBarWrapper>
-        <Link to="/post/1"> test</Link>
         <SearchStackWrapper>
           {/* <SearchTitleBox location={'main'} /> */}
           {stackfirstLineList.map((stack) => (
