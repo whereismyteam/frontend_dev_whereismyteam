@@ -51,14 +51,20 @@ const MainTitle = styled.div`
   border-bottom: 1px solid #d7d7d7;
 `;
 
-const OptionSection = styled.section`
+const OptionSection = styled.section<{ hoverStyle?: boolean }>`
   width: calc(100% - 40px);
   height: 85px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   padding: 0px 20px;
-  border-bottom: 1px solid #d7d7d7;
+  border-bottom: 1px solid #e4e1e1;
+
+  ${(props) =>
+    props.hoverStyle &&
+    `:hover {
+    background-color: #eeeded;
+  }`}
 `;
 
 const OptionTitle = styled.span`
@@ -450,7 +456,7 @@ function Write({ isEdit, postInfo, setPostInfo, setModalClose }: WriteProps) {
 
 export interface ITempList {
   totalNum: number;
-  prePostList: Array<{ title: string; createdAt: string }>;
+  prePostList: Array<{ postIdx: number; title: string; createdAt: string }>;
 }
 
 function TempWrite() {
@@ -478,7 +484,7 @@ function TempWrite() {
         <>
           <OptionSection>총 {tempListInfo!.totalNum}개</OptionSection>
           {tempListInfo!.prePostList.map((info, idx) => (
-            <OptionSection style={{ height: '110px' }} key={idx}>
+            <OptionSection hoverStyle={true} style={{ height: '110px' }} key={idx}>
               <OptionTitle style={{ fontSize: 'var(--font-size-mid)' }}>{info.title}</OptionTitle>
               <div style={{ color: '#9d9d9d' }}>{info.createdAt.replaceAll('-', '.').replace('T', '.').slice(0, -3)}</div>
             </OptionSection>
