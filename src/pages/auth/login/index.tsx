@@ -107,6 +107,7 @@ function Login({ setRegister }: LoginProps) {
     if (response.ok) {
       dispatch(setIsLogin({ isLogin: true, userIdx: response.userIdx, nickName: response.nickName, email: response.email }));
       dispatch(setModalVisible(false));
+      window.location.reload();
     } else {
       alert(response.msg);
     }
