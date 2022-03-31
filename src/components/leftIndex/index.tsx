@@ -1,5 +1,8 @@
 import styled from 'styled-components';
-import { useState, Dispatch, SetStateAction } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
+// import { useDispatch } from 'react-redux';
+// import { setCategoryIndex } from '../../store/main';
+import { IPostViewData } from '../../pages/main';
 
 const Wrapper = styled.div`
   display: flex;
@@ -25,7 +28,11 @@ const IndexButtonSpan = styled.span<{ isClicked: boolean }>`
 `;
 
 // 자기 이름의 버튼이면 -> blue css 적용, 아니면 -> yellow css 적용
-type ButtonProps = { btnName: string; setBtnName: Dispatch<SetStateAction<string>>; btnNameProps: string };
+type ButtonProps = {
+  btnName: string;
+  setBtnName: Dispatch<SetStateAction<string>>;
+  btnNameProps: string;
+};
 
 function Button({ btnName, setBtnName, btnNameProps }: ButtonProps) {
   const onClickBtn = () => {
@@ -44,8 +51,26 @@ function Button({ btnName, setBtnName, btnNameProps }: ButtonProps) {
   );
 }
 
-function LeftIndex() {
+function LeftIndex({ setPatchPostViewData }: { setPatchPostViewData: Dispatch<React.SetStateAction<IPostViewData>> }) {
   const [btnName, setBtnName] = useState('프로젝트');
+  // function returnCategoryIdx(btnName: string) {
+  //   if (btnName === '프로젝트') return 1;
+  //   else if (btnName === '대회') return 2;
+  //   else if (btnName === '스터디') return 3;
+  //   else return 0;
+  // }
+  // dispatch(setCategoryIndex(returnCategoryIdx(btnName)));
+  useEffect(() => {
+    function returnCategoryIdx(btnName: string) {
+      if (btnName === '프로젝트') return 1;
+      else if (btnName === '대회') return 2;
+      else if (btnName === '스터디') return 3;
+      else return 0;
+    }
+    setPatchPostViewData((prev) => {
+      return { ...prev, categoryIdx: returnCategoryIdx(btnName) };
+    });
+  }, [btnName]);
   return (
     <Wrapper>
       <Button btnName={btnName} setBtnName={setBtnName} btnNameProps={'프로젝트'} />

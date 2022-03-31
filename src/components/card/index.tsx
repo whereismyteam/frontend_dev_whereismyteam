@@ -5,6 +5,7 @@ import Watch from '../../assets/images/watch.svg';
 import Comment from '../../assets/images/comment.svg';
 import Heart from '../../assets/images/heart.svg';
 import Hearted from '../../assets/images/hearted.svg';
+import { ICard } from '../../pages/main';
 
 const PostWrapper = styled.li`
   padding-top: 36px;
@@ -149,31 +150,7 @@ const PostContentEtcSpan = styled.span`
   font-size: var(--font-size-small-2);
 `;
 
-interface ICardData {
-  boardIdx: number;
-  categoryIdx: number;
-  stackList: string[];
-  title: string;
-  detail: {
-    location: string;
-    number: number;
-    onOff: string;
-    parts: string[];
-  };
-  boardStatus: string;
-  writer: {
-    userIdx: number;
-    profileImgIdx: number;
-    userName: string;
-  };
-  createdAt: string;
-  watch: number;
-  heart: number;
-  totalComent: number;
-  isHeart: string;
-}
-
-function Card({ data }: { data: ICardData }) {
+function Card({ data }: { data: ICard }) {
   return (
     <PostWrapper>
       <PostBox>

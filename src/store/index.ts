@@ -1,21 +1,21 @@
 import { combineReducers } from 'redux';
 import auth from './auth';
 import user from './user';
-import navigation from './navigation';
+import main from './main';
 import { InitialState } from './auth';
 import { UserState } from './user';
-import { NavState } from './navigation';
+import { MainState } from './main';
 
 export type rootState = {
   auth: InitialState;
   user: UserState;
-  navigation: NavState;
+  main: MainState;
 };
 
 const rootReducer = combineReducers({
   auth,
   user,
-  navigation,
+  main,
 });
 
 export default rootReducer;

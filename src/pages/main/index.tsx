@@ -1,11 +1,14 @@
+import { useState, useEffect, useRef } from 'react';
+import { Cookies } from 'react-cookie';
 import styled from 'styled-components';
 
 // import SearchTitleBox from '../../components/common/searchTitleBox';
 import mainBanner from '../../assets/images/mainBanner.png';
 import Card from '../../components/card';
+import Skeletons from '../../components/card/skeleton';
 import LeftIndex from '../../components/leftIndex';
 import StackBtn from '../../components/button/stackBtn';
-import { Link } from 'react-router-dom';
+import { patchPostView } from '../../apis';
 
 const MainWrapper = styled.div`
   position: relative;
@@ -125,23 +128,220 @@ const CheckBoxDetail = styled.span`
 `;
 
 const PostListBox = styled.ul`
+  position: relative;
   margin-top: 45px;
+  margin-left: 4.5px;
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
 `;
 
-import { mockMainData } from './mockData';
+const ObserverDiv = styled.div`
+  position: absolute;
+  bottom: 0;
+`;
+export interface ICard {
+  boardIdx: number;
+  category: string;
+  stackList: string[]; // 스택 리스트
+  title: string; // 제목
+  detail: {
+    // 지역, 모집인원, 호의방식, 모집파트
+    location: string;
+    number: number;
+    onOff: string;
+    parts: string[];
+  };
+  boardStatus: string;
+  writer: {
+    userIdx: number;
+    profileImgIdx: number;
+    userName: string; // 작성자 닉네임
+  };
+  createdAt: string;
+  watch: number; // 조회수
+  heart: number; // 하트수
+  totalComent: number;
+  isHeart: string;
+}
 
-function Main() {
+export interface IPostViewData {
+  userIdx: number;
+  categoryIdx: number;
+  lastArticleIdx: number;
+  meeting: boolean;
+  liked: boolean;
+  tectStacksObj: {
+    tech_stacks: string[];
+  };
+}
+
+function Main({
+  userIdx,
+  isInfoLoaded,
+  patchPostViewData,
+  setPatchPostViewData,
+}: {
+  userIdx: number;
+  isInfoLoaded: boolean;
+  patchPostViewData: IPostViewData;
+  setPatchPostViewData: React.Dispatch<React.SetStateAction<IPostViewData>>;
+}) {
+  //fetch post
+  // const InitialData = {
+  //   userIdx: 0,
+  //   categoryIdx: 1,
+  //   lastArticleIdx: 0,
+  //   meeting: false,
+  //   liked: false,
+  //   tectStacksObj: {
+  //     tech_stacks: [],
+  //   },
+  // };
+  const [postView, setPostView] = useState<Array<ICard> | null>(null);
+  // const [patchPostViewData, setPatchPostViewData] = useState<IPostViewData>(InitialData);
+  const [loading, setLoading] = useState(true);
+
+  const fetchPostView = async (data: IPostViewData) => {
+    const res = await patchPostView(data);
+    if (res.ok) {
+      return res.data as Array<ICard>;
+    } else if (res.msg === '더이상 조회되는 게시글이 없습니다.') {
+      setPostView(null);
+      return null;
+    } else {
+      throw Error(`fetch error: ${res.msg}`);
+    }
+  };
+
+  // stackList
   const stackfirstLineList = ['JavaScript', 'TypeScript', 'Node.js', 'Python', 'Spring', 'React'];
   const stackSecondLineList = ['Angular', 'Kotlin', 'Flutter', 'Swift', 'Java', 'Vue', 'Go', 'C++', 'C', 'Django'];
 
+  const [stackList, setStackList] = useState<Set<string>>(new Set());
+
+  // checkbox
+  const [lastestChecked, setLastestChecked] = useState(false);
+  const [likedChecked, setLikedChecked] = useState(false);
+
+  const onChangeCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checkboxValue = e.target.value;
+    if (checkboxValue === 'lastest') {
+      if (likedChecked) {
+        setLikedChecked((prev) => !prev);
+        setLastestChecked((prev) => !prev);
+      } else {
+        setLastestChecked((prev) => !prev);
+      }
+      setPatchPostViewData((prev) => {
+        return { ...prev, liked: false };
+      });
+    } else {
+      if (lastestChecked) {
+        setLastestChecked((prev) => !prev);
+        setLikedChecked((prev) => !prev);
+      } else {
+        setLikedChecked((prev) => !prev);
+      }
+      setPatchPostViewData((prev) => {
+        return { ...prev, liked: true };
+      });
+    }
+  };
+
+  const onChangeMeetingCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const ischecked = e.target.checked;
+    // setPatchPostViewData((prev) => {
+    //   return { ...prev, meeting: ischecked };
+    // });
+  };
+
+  // Infinite scroll
+  // console.log([...Array(9).keys()]); 1~9 배열
+  // setPostview에 ...prev, 데이터 추가, -> 리렌더링
+
+  useEffect(() => {
+    // if (userIdx && userIdx !== 0) {
+    //   setPatchPostViewData((prev) => {
+    //     return { ...prev, userIdx: userIdx };
+    //   });
+    //   console.log(patchPostViewData);
+    // }
+    if (isInfoLoaded) {
+      setLoading(true);
+      fetchPostView(patchPostViewData)
+        .then((data) => setPostView(data))
+        .catch(alert)
+        .finally(() => setLoading(false));
+    }
+  }, [
+    patchPostViewData.userIdx,
+    patchPostViewData.categoryIdx,
+    patchPostViewData.liked,
+    patchPostViewData.meeting,
+    // patchPostViewData.lastArticleIdx,
+    patchPostViewData.tectStacksObj.tech_stacks,
+  ]);
+
+  useEffect(() => {
+    if (patchPostViewData.lastArticleIdx !== 0) {
+      setLoading(true);
+      fetchPostView(patchPostViewData)
+        .then((data) => setPostView((prev) => (prev && data ? ([...prev, ...data] as Array<ICard>) : prev)))
+        .catch(alert)
+        .finally(() => setLoading(false));
+    }
+  }, [patchPostViewData.lastArticleIdx]);
+
+  // const [isObserved, setIsObserved] = useState(false);
+  const [target, setTarget] = useState<HTMLDivElement | null>(null);
+  const [isObserveLoading, setIsObserveLoading] = useState(false);
+  const PostListBoxRef = useRef<HTMLUListElement>(null);
+  // const observer = new IntersectionObserver(([entry]) => setIsObserved(entry.isIntersecting), { threshold: 1 });
+
+  const onIntersect = ([entry]: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+    if (entry.isIntersecting && !isObserveLoading) {
+      observer.unobserve(entry.target);
+      setIsObserveLoading(true);
+      // console.log(PostListBoxRef.current?.children);
+      console.log(postView);
+      // if (postView!.length > 8) {
+      //   setPatchPostViewData((prev) => {
+      //     return { ...prev, lastArticleIdx: 9 };
+      // });
+      // }
+      setIsObserveLoading(false);
+      // observer.observe(entry.target);
+    }
+  };
+
+  useEffect(() => {
+    let observer: IntersectionObserver;
+    if (target) {
+      observer = new IntersectionObserver(onIntersect, {
+        threshold: 0,
+      });
+      observer.observe(target);
+    }
+    return () => observer && observer.disconnect();
+  }, [target]);
+
+  // useEffect(() => {
+  //   if (fetchMoreRef.current) observer.observe(fetchMoreRef.current);
+  //   if (isObserved) {
+  //     setPatchPostViewData((prev) => {
+  //       return { ...prev, lastArticleIdx: postView!.length };
+  //     });
+  //   }
+  // }, [fetchMoreRef]);
+
+  console.log('렌더링됨');
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  console.log(`render: ${postView}`);
   return (
     <MainWrapper>
       <LeftIndexWrapper>
-        <LeftIndex />
+        <LeftIndex setPatchPostViewData={setPatchPostViewData} />
       </LeftIndexWrapper>
       <MainBannerWrapper>
         <MainBannerImg src={mainBanner} />
@@ -153,16 +353,15 @@ function Main() {
         </MainBannerBackground>
       </MainBannerWrapper>
       <SearchBarWrapper>
-        <Link to="/post/1"> test</Link>
         <SearchStackWrapper>
           {/* <SearchTitleBox location={'main'} /> */}
           {stackfirstLineList.map((stack) => (
-            <StackBtn key={stack} btnName={`${stack}`} />
+            <StackBtn key={stack} btnName={`${stack}`} stackList={stackList} setStackList={setStackList} setPatchPostViewData={setPatchPostViewData} />
           ))}
         </SearchStackWrapper>
         <SearchStackWrapper>
           {stackSecondLineList.map((stack) => (
-            <StackBtn key={stack} btnName={`${stack}`} />
+            <StackBtn key={stack} btnName={`${stack}`} stackList={stackList} setStackList={setStackList} setPatchPostViewData={setPatchPostViewData} />
           ))}
         </SearchStackWrapper>
       </SearchBarWrapper>
@@ -170,25 +369,32 @@ function Main() {
         <PostListGuideWrapper>
           <PostListGuideLeft>
             <PostListGuideBox>
-              <CheckBox type="checkbox" />
+              <CheckBox type="checkbox" value="lastest" checked={lastestChecked} onChange={onChangeCheckbox} />
               <CheckBoxDetail>최신순</CheckBoxDetail>
             </PostListGuideBox>
             <PostListGuideBox>
-              <CheckBox type="checkbox" />
+              <CheckBox type="checkbox" value="liked" checked={likedChecked} onChange={onChangeCheckbox} />
               <CheckBoxDetail>인기순</CheckBoxDetail>
             </PostListGuideBox>
           </PostListGuideLeft>
           <PostListGuideRight>
             <PostListGuideBox>
-              <CheckBox type="checkbox" />
+              <CheckBox type="checkbox" value="meeting" onChange={onChangeMeetingCheckbox} />
               <CheckBoxDetail>모집 중인 공고만 보기</CheckBoxDetail>
             </PostListGuideBox>
           </PostListGuideRight>
         </PostListGuideWrapper>
-        <PostListBox>
-          {mockMainData.data.map((data) => (
-            <Card key={data.boardIdx} data={data} />
-          ))}
+        <PostListBox ref={PostListBoxRef}>
+          {loading ? (
+            <Skeletons />
+          ) : postView ? (
+            postView.length > 0 && postView.map((data: ICard) => <Card key={data.boardIdx} data={data} />)
+          ) : (
+            '해당 게시글이 존재하지 않습니다'
+          )}
+          {/* loading 구문 지우기 */}
+          <ObserverDiv ref={setTarget} />
+          {isObserveLoading ? <Skeletons /> : <></>}
         </PostListBox>
       </PostListWrapper>
     </MainWrapper>

@@ -262,6 +262,7 @@ function Navigation() {
       cookies.remove('REFRESH_TOKEN');
       cookies.remove('userIdx');
       alert('로그아웃 되었습니다');
+      window.location.reload();
     } else {
       alert(response.msg);
     }

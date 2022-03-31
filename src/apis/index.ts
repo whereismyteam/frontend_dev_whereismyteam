@@ -1,4 +1,4 @@
-import { getJSON, postJSON, postCredentialsJSON, getCredentialsJSON, postCredentialsJSONwithR_Token } from './util';
+import { getJSON, postJSON, postCredentialsJSON, getCredentialsJSON, patchCredentialsJSON, postCredentialsJSONwithR_Token } from './util';
 import { Cookies } from 'react-cookie';
 import { useDispatch } from 'react-redux';
 
@@ -6,6 +6,7 @@ export const API_URL = `http://prod.9tapi.site:9000`;
 
 import { setLogout } from '../store/user';
 import { setModalVisible } from '../store/auth';
+import { IPostViewData } from '../pages/main';
 
 // local login
 
@@ -146,6 +147,28 @@ export const fetchEmailSend = async (email: string): Promise<{ ok: boolean; msg:
 
     if (res.success) return { ok: true, msg: '성공' };
     else return { ok: false, msg: res.message };
+  } catch (e) {
+    return { ok: false, msg: '서버가 불안정합니다. 다시 시도해주세요' };
+  }
+};
+
+// post view
+
+export const patchPostView = async (patchPostViewData: IPostViewData): Promise<{ ok: boolean; msg: string; data?: object }> => {
+  try {
+    const res = (await fetch(
+      `${API_URL}/users/homes/${patchPostViewData.userIdx}?categoryIdx=${patchPostViewData.categoryIdx}&size=20&lastArticleIdx=${
+        patchPostViewData.lastArticleIdx
+      }&meeting=${patchPostViewData.meeting ? 'true' : 'false'}&liked=${patchPostViewData.liked ? 'true' : 'false'}`,
+      patchCredentialsJSON(patchPostViewData.tectStacksObj),
+    ).then((res) => res.json())) as {
+      success: boolean | undefined;
+      message: string;
+      data: Array<object>;
+    };
+    if (res.success) {
+      return { ok: true, msg: '성공', data: res.data };
+    } else return { ok: false, msg: res.message };
   } catch (e) {
     return { ok: false, msg: '서버가 불안정합니다. 다시 시도해주세요' };
   }

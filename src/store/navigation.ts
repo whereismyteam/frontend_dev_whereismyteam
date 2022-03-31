@@ -1,3 +1,5 @@
+// 사용 x
+
 const SCROLLED = 'navigation/SCROLLED';
 
 export const setScrolled = () => ({ type: SCROLLED });
