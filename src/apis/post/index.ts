@@ -1,6 +1,7 @@
 import { API_URL } from '..';
 import { IPost } from '../../pages/post';
-import { deleteCredentialsJSON, patchCredentialsJSON, postCredentialsJSON } from '../util';
+import { ITempList } from '../../pages/post/write';
+import { deleteCredentialsJSON, getCredentialsJSON, patchCredentialsJSON, postCredentialsJSON } from '../util';
 
 export const postComment = async (boardIdx: string, userIdx: number, content: string, isSecret: boolean) => {
   try {
@@ -132,6 +133,49 @@ export const postPost = async (args: {
     };
 
     if (res.success) return { ok: true, msg: res.data };
+    else return { ok: false, msg: res.message };
+  } catch (e) {
+    return { ok: false, msg: '서버가 불안정합니다. 다시 시도해주세요' };
+  }
+};
+
+export const patchPostFix = async (args: {
+  postIdx: number;
+  userIdx: number;
+  title: string;
+  content: string;
+  onOff: string;
+  category: string;
+  capacityNum: number;
+  recruitmentPart: Array<string>;
+  area: string;
+  techstacks: Array<string>;
+}) => {
+  try {
+    const res = (await fetch(`${API_URL}/users/posts/${args.postIdx}/fix`, patchCredentialsJSON({ ...args })).then((res) => res.json())) as {
+      success: boolean | undefined;
+      code: number;
+      message: string;
+      data: string;
+    };
+
+    if (res.success) return { ok: true, msg: res.data };
+    else return { ok: false, msg: res.message };
+  } catch (e) {
+    return { ok: false, msg: '서버가 불안정합니다. 다시 시도해주세요' };
+  }
+};
+
+export const getPrePosts = async (userIdx: number) => {
+  try {
+    const res = (await fetch(`${API_URL}/users/${userIdx}/prePosts`, getCredentialsJSON()).then((res) => res.json())) as {
+      success: boolean | undefined;
+      code: number;
+      message: string;
+      data: ITempList;
+    };
+
+    if (res.success) return { ok: true, data: res.data };
     else return { ok: false, msg: res.message };
   } catch (e) {
     return { ok: false, msg: '서버가 불안정합니다. 다시 시도해주세요' };

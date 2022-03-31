@@ -4,17 +4,25 @@ import styled from 'styled-components';
 import { clearState } from '../../store/auth';
 
 import Modal from '../../components/common/modal';
-import { KeyboardEvent, useEffect, useRef, useState } from 'react';
-import { postPost } from '../../apis/post';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { getPrePosts, patchPost, patchPostFix, postPost } from '../../apis/post';
 import { rootState } from '../../store';
+import { IPost } from '.';
+import LoadingSpinner from '../../assets/styles/loadingSpinner';
 
 interface WriteModalProps {
+  isEdit: boolean;
+  postInfo?: IPost | null;
   setModalClose: () => void;
+  setPostInfo?: React.Dispatch<React.SetStateAction<IPost | null>>;
   visible: boolean;
 }
 
 interface WriteProps {
+  isEdit: boolean;
+  postInfo?: IPost | null;
   setModalClose: () => void;
+  setPostInfo?: React.Dispatch<React.SetStateAction<IPost | null>>;
 }
 
 const ContentWrapper = styled.main`
@@ -43,14 +51,20 @@ const MainTitle = styled.div`
   border-bottom: 1px solid #d7d7d7;
 `;
 
-const OptionSection = styled.section`
+const OptionSection = styled.section<{ hoverStyle?: boolean }>`
   width: calc(100% - 40px);
   height: 85px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   padding: 0px 20px;
-  border-bottom: 1px solid #d7d7d7;
+  border-bottom: 1px solid #e4e1e1;
+
+  ${(props) =>
+    props.hoverStyle &&
+    `:hover {
+    background-color: #eeeded;
+  }`}
 `;
 
 const OptionTitle = styled.span`
@@ -112,8 +126,8 @@ const TextareaPost = styled.textarea`
   padding: 10px;
 `;
 
-const SubmitButton = styled.div`
-  width: calc(calc(100% - 40px) / 3);
+const SubmitButton = styled.div<{ siblings: number }>`
+  width: ${(props) => `calc(calc(100% - 40px) / ${props.siblings} )`};
   padding: 20px 0px;
   border-radius: 50px;
   text-align: center;
@@ -159,7 +173,18 @@ const HiddenSpan = styled.span`
   font-size: 16px;
 `;
 
-function Write({ setModalClose }: WriteProps) {
+const BackSpan = styled.span`
+  position: absolute;
+  top: 35px;
+  left: 40px;
+  font-size: 30px;
+
+  :hover {
+    cursor: pointer;
+  }
+`;
+
+function Write({ isEdit, postInfo, setPostInfo, setModalClose }: WriteProps) {
   const userIdx = useSelector((state: rootState) => state.user.userIdx);
 
   const [categoryName, setCategoryName] = useState('프로젝트');
@@ -172,6 +197,8 @@ function Write({ setModalClose }: WriteProps) {
 
   const [isNewPartAdding, setIsNewPartAdding] = useState(false);
   const [newPartWidth, setNewPartWidth] = useState(55);
+
+  const [isEditListOn, setIsEditListOn] = useState(false);
 
   const postTitleRef = useRef<HTMLInputElement>(null);
   const postTextRef = useRef<HTMLTextAreaElement>(null);
@@ -197,6 +224,7 @@ function Write({ setModalClose }: WriteProps) {
     if (newPartWidth === 0) return;
 
     setRecruitmentPartList((now) => [...now, addInputRef.current!.value]);
+    setRecruitmentPart((now) => [...now, addInputRef.current!.value]);
     setIsNewPartAdding(false);
     addInputRef.current!.value = '';
     hiddenSpanRef.current!.textContent = '';
@@ -209,16 +237,88 @@ function Write({ setModalClose }: WriteProps) {
     };
   }, []);
 
+  const setEditPostInfo = useCallback((postInfo: IPost) => {
+    const {
+      category,
+      stackList,
+      title,
+      detail: { location, number, onOff, parts },
+      postText,
+    } = postInfo;
+
+    setCategoryName(category);
+    setRecruitmentPart(parts);
+    setRecruitmentPartList((now) => [...now, ...parts.filter((s) => !now.includes(s))]);
+    setOnOff(onOff);
+    setArea(location);
+    setCapacityNum(number);
+    setTechStacks(stackList);
+
+    postTitleRef.current!.value = title;
+    postTextRef.current!.value = postText;
+  }, []);
+
+  useEffect(() => {
+    if (!isEdit || !postInfo) return;
+
+    setEditPostInfo(postInfo);
+  }, []);
+
+  const onClickEdit = async () => {
+    if (!checkRecruitmentPartSelected()) return alert('모집 파트를 선택해주세요');
+    if (!checkTechStacksSelected()) return alert('기술 스택을 선택해주세요');
+    if (!checkTitleFilled()) return alert('제목을 입력해주세요');
+    if (!checkTextFilled()) return alert('글 내용을 입력해주세요');
+
+    const res = await patchPostFix({
+      postIdx: postInfo!.boardIdx,
+      userIdx,
+      title: postTitleRef.current!.value,
+      content: postTextRef.current!.value,
+      onOff,
+      category: categoryName,
+      capacityNum,
+      recruitmentPart,
+      area,
+      techstacks,
+    });
+
+    if (res.ok && setPostInfo) {
+      const fetchPostData = async () => {
+        const updatedRes = await patchPost(postInfo!.boardIdx as unknown as string, userIdx ?? 0);
+        if (updatedRes.ok) {
+          return updatedRes.data as IPost;
+        } else {
+          throw Error(`fetch error: ${updatedRes.msg as string}`);
+        }
+      };
+
+      alert(`수정이 완료되었습니다.`);
+      fetchPostData()
+        .then((data) => setPostInfo(data))
+        .catch(alert);
+      setModalClose();
+    } else alert(res.msg);
+  };
+
   const onClickSubmit = async (boardStatus: string) => {
     if (!checkRecruitmentPartSelected()) return alert('모집 파트를 선택해주세요');
     if (!checkTechStacksSelected()) return alert('기술 스택을 선택해주세요');
     if (!checkTitleFilled()) return alert('제목을 입력해주세요');
     if (!checkTextFilled()) return alert('글 내용을 입력해주세요');
 
-    const title = postTitleRef.current!.value;
-    const content = postTextRef.current!.value;
-
-    const res = await postPost({ userIdx, title, content, onOff, categoryName, capacityNum, recruitmentPart, area, techstacks, boardStatus });
+    const res = await postPost({
+      userIdx,
+      title: postTitleRef.current!.value,
+      content: postTextRef.current!.value,
+      onOff,
+      categoryName,
+      capacityNum,
+      recruitmentPart,
+      area,
+      techstacks,
+      boardStatus,
+    });
 
     if (res.ok) {
       alert(`${boardStatus === '임시저장' ? '임시저장' : '글 작성'}이 완료되었습니다.`);
@@ -228,7 +328,8 @@ function Write({ setModalClose }: WriteProps) {
 
   return (
     <ContentWrapper>
-      <MainTitle>팀원 구하자</MainTitle>
+      <MainTitle>{isEditListOn ? '임시저장 글' : '팀원 구하자'}</MainTitle>
+      {isEditListOn && <BackSpan onClick={() => setIsEditListOn(false)}>{'<'}</BackSpan>}
       <FormWrapper>
         <OptionSection>
           <OptionTitle>분야</OptionTitle>
@@ -242,7 +343,7 @@ function Write({ setModalClose }: WriteProps) {
         </OptionSection>
         <OptionSection>
           <OptionTitle>지역</OptionTitle>
-          <SelectDropDown onChange={(e) => setArea(e.target.value)}>
+          <SelectDropDown value={area} onChange={(e) => setArea(e.target.value)}>
             {['서울', '수원', '인천', '대구', '부산', '울산', '광주', '전주', '대전', '세종', '천안', '청주', '원주', '제주', '기타'].map((text, idx) => (
               <option value={text} key={idx}>
                 {text}
@@ -252,7 +353,7 @@ function Write({ setModalClose }: WriteProps) {
         </OptionSection>
         <OptionSection>
           <OptionTitle>모집 인원</OptionTitle>
-          <SelectDropDown onChange={(e) => setCapacityNum(Number(e.target.value[0]))}>
+          <SelectDropDown value={capacityNum === 9 ? '9+' : capacityNum.toString()} onChange={(e) => setCapacityNum(Number(e.target.value[0]))}>
             {['1', '2', '3', '4', '5', '6', '7', '8', '9+'].map((text, idx) => (
               <option value={text} key={idx}>
                 {text}
@@ -304,8 +405,8 @@ function Write({ setModalClose }: WriteProps) {
         <OptionSection>
           <OptionTitle>기술 스택</OptionTitle>
           <div style={{ display: 'flex' }}>
-            <SelectDropDown value="선택" onChange={(e) => !techstacks.includes(e.target.value) && setTechStacks((s) => [...s, e.target.value])}>
-              <option selected disabled hidden>
+            <SelectDropDown defaultValue="선택" onChange={(e) => !techstacks.includes(e.target.value) && setTechStacks((s) => [...s, e.target.value])}>
+              <option disabled hidden>
                 선택
               </option>
               {['JavaScript', 'TypeScript', 'Node.js', 'Spring', 'Python', 'React', 'Vue', 'Angular', 'Kotlin'].map((text, idx) => (
@@ -332,25 +433,89 @@ function Write({ setModalClose }: WriteProps) {
           spellCheck={false}
           placeholder="진행 예상 기간, 진행 방식(온라인/오프라인)과 신청 방법 등 필요한 사항을 자세히 기재해주세요."
         />
-        <OptionSelect>
-          <SubmitButton onClick={() => onClickSubmit('임시저장')}>임시저장</SubmitButton>
-          <SubmitButton>임시저장한 글</SubmitButton>
-          <SubmitButton onClick={() => onClickSubmit('모집중')}>작성 완료</SubmitButton>
-        </OptionSelect>
+        {isEdit && (
+          <SubmitButton siblings={1} onClick={onClickEdit}>
+            수정완료
+          </SubmitButton>
+        )}
+
+        {!isEdit && (
+          <OptionSelect>
+            <SubmitButton siblings={3} onClick={() => onClickSubmit('임시저장')}>
+              임시저장
+            </SubmitButton>
+            <SubmitButton siblings={3} onClick={() => setIsEditListOn(true)}>
+              임시저장한 글
+            </SubmitButton>
+            <SubmitButton siblings={3} onClick={() => onClickSubmit('모집중')}>
+              작성 완료
+            </SubmitButton>
+          </OptionSelect>
+        )}
       </FormWrapper>
+      {isEditListOn && <TempWrite setIsEditListOn={setIsEditListOn} setEditPostInfo={setEditPostInfo} />}
     </ContentWrapper>
   );
 }
 
-function TempWrite() {
+export interface ITempList {
+  totalNum: number;
+  prePostList: Array<{ postIdx: number; title: string; createdAt: string }>;
+}
+
+function TempWrite({
+  setIsEditListOn,
+  setEditPostInfo,
+}: {
+  setIsEditListOn: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditPostInfo: (postInfo: IPost) => void;
+}) {
+  const userIdx = useSelector((state: rootState) => state.user.userIdx);
+  const [loading, setLoading] = useState(true);
+  const [tempListInfo, setTempListInfo] = useState<ITempList | null>(null);
+
+  const init = async () => {
+    setLoading(true);
+    const res = await getPrePosts(userIdx);
+    if (res.ok && res.data) {
+      setTempListInfo(res.data);
+      setLoading(false);
+    } else alert(res.msg);
+  };
+
+  useEffect(() => {
+    init().catch((e) => console.error(e));
+  }, []);
+
+  const onClickPrePost = async (postIdx: number) => {
+    const res = await patchPost(String(postIdx), userIdx ?? 0);
+    if (!res.data) return;
+
+    setEditPostInfo(res.data);
+    setIsEditListOn(false);
+  };
+
   return (
-    <ContentWrapper>
-      <MainTitle>임시저장한 글</MainTitle>
-    </ContentWrapper>
+    <>
+      <FormWrapper style={{ position: 'absolute', width: '620px', height: '530px', top: '80px', backgroundColor: '#fff' }}>
+        {loading && <LoadingSpinner />}
+        {!loading && (
+          <>
+            <OptionSection>총 {tempListInfo!.totalNum}개</OptionSection>
+            {tempListInfo!.prePostList.map((info, idx) => (
+              <OptionSection onClick={() => onClickPrePost(info.postIdx)} hoverStyle={true} style={{ height: '110px' }} key={idx}>
+                <OptionTitle style={{ fontSize: 'var(--font-size-mid)' }}>{info.title}</OptionTitle>
+                <div style={{ color: '#9d9d9d' }}>{info.createdAt.replaceAll('-', '.').replace('T', '.').slice(0, -3)}</div>
+              </OptionSection>
+            ))}
+          </>
+        )}
+      </FormWrapper>
+    </>
   );
 }
 
-function WriteModal({ setModalClose, visible }: WriteModalProps) {
+function WriteModal({ isEdit, postInfo, setModalClose, setPostInfo, visible }: WriteModalProps) {
   const dispatch = useDispatch();
 
   useEffect(
@@ -360,7 +525,13 @@ function WriteModal({ setModalClose, visible }: WriteModalProps) {
     [visible],
   );
 
-  return <Modal children={<Write setModalClose={setModalClose} />} visible={visible} onClickClose={setModalClose}></Modal>;
+  return (
+    <Modal
+      children={<Write isEdit={isEdit} postInfo={postInfo} setPostInfo={setPostInfo} setModalClose={setModalClose} />}
+      visible={visible}
+      onClickClose={setModalClose}
+    ></Modal>
+  );
 }
 
 export default WriteModal;

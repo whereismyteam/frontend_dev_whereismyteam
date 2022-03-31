@@ -2,6 +2,7 @@ import { MouseEvent, UIEvent, useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
+import Write from '../../pages/post/write';
 import Comment, { IComment } from './comment';
 import DefaultBtn, { BtnWrapper } from '../../components/button/defaultBtn';
 import Watch from '../../assets/images/watch.svg';
@@ -11,8 +12,9 @@ import BackBtn from '../../assets/images/backBtn.svg';
 import CheckedGray from '../../assets/images/checkedGray.png';
 import LoadingSpinner from '../../assets/styles/loadingSpinner';
 import { deleteComment, patchCancelLikes, patchPost, postComment, postLikes, postReply } from '../../apis/post';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { rootState } from '../../store';
+import { setModalVisible } from '../../store/auth';
 
 const ContentWrapper = styled.div`
   position: relative;
@@ -233,6 +235,7 @@ export interface IPost {
 }
 function Post() {
   const { postId } = useParams();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const userIdx = useSelector((state: rootState) => state.user.userIdx);
 
@@ -245,6 +248,12 @@ function Post() {
   const [isPrivateComment, setIsPrivateComment] = useState(false);
   const [loading, setLoading] = useState(true);
   const [offsetY, setOffsetY] = useState(0);
+
+  const [modal, setModal] = useState('');
+  const setModalOpen = () => dispatch(setModalVisible(true));
+  const setModalClose = () => dispatch(setModalVisible(false));
+  const setModalWithTimeout = (state: string) => setTimeout(() => setModal(state), 500);
+  const modalVisible = useSelector((state: rootState) => state.auth.modalVisible);
 
   const fetchPostData = async () => {
     const res = await patchPost(postId as string, userIdx ?? 0);
@@ -272,7 +281,7 @@ function Post() {
   }, []);
 
   const onClickBackBtn = () => {
-    navigate(-1);
+    navigate('/', { replace: true });
   };
 
   const onChangeComment = () => {
@@ -366,10 +375,31 @@ function Post() {
           <AvailableBox width={125} height={35} color="invBlue">
             {postInfo!.boardStatus}
           </AvailableBox>
-          <UserWrapper>
-            <UserImg src={`/profileImg/${postInfo!.writer.profileImgIdx}.png`} />
-            &nbsp;&nbsp;&nbsp;{postInfo!.writer.userName}
-          </UserWrapper>
+          <FlexRow style={{ width: '100%' }}>
+            <UserWrapper>
+              <UserImg src={`/profileImg/${postInfo!.writer.profileImgIdx}.png`} />
+              &nbsp;&nbsp;&nbsp;{postInfo!.writer.userName}
+            </UserWrapper>
+
+            <FlexRow style={{ width: '170px' }}>
+              {postInfo!.writer.userIdx === userIdx ? (
+                <>
+                  {' '}
+                  <DefaultBtn btnName="삭제" width={75} height={35} color="invBlue" />
+                  <DefaultBtn
+                    btnName="편집"
+                    width={75}
+                    height={35}
+                    color="invBlue"
+                    onClick={() => {
+                      setModalOpen();
+                      setModal('Write');
+                    }}
+                  />
+                </>
+              ) : undefined}
+            </FlexRow>
+          </FlexRow>
           <EtcWrapper>
             <Date>{postInfo!.createdAt.substring(0, 10).replaceAll('-', '.')}</Date>
             <EtcInfo>
@@ -400,6 +430,18 @@ function Post() {
             ))}
           </CommentWrapper>
         </ContentWrapper>
+      )}
+      {modal === 'Write' && (
+        <Write
+          isEdit={true}
+          postInfo={postInfo}
+          setModalClose={() => {
+            setModalClose();
+            setModalWithTimeout('');
+          }}
+          setPostInfo={setPostInfo}
+          visible={modalVisible}
+        />
       )}
     </>
   );

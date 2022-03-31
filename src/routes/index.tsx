@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
 import styled from 'styled-components';
 
@@ -74,6 +74,7 @@ function IndexRouter() {
           />
           <Route path="/social/google" element={<Social />} />
           <Route path="/post/:postId" element={<Post />} />
+          <Route path="*" element={<Navigate replace to="/" />} />
         </Routes>
       </Layout>
       <Footer />
