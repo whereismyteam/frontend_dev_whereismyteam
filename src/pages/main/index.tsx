@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Cookies } from 'react-cookie';
 import styled from 'styled-components';
 
@@ -80,6 +80,27 @@ const SearchBarWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin: 28px auto 0;
+`;
+
+const SearchBarInfoWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const SearchBarInfo = styled.div`
+  width: 305px;
+  height: 38px;
+  background: var(--color-light-yellow);
+  border-radius: 15px 15px 0px 0px;
+`;
+
+const SearchBarInfoH3 = styled.h3`
+  box-sizing: border-box;
+  padding-top: 10px;
+  color: var(--color-blue);
+  font-size: var(--font-size-base);
+  font-weight: bold;
+  text-align: center;
 `;
 
 const SearchStackWrapper = styled.div`
@@ -221,7 +242,7 @@ function Main({
   const [stackList, setStackList] = useState<Set<string>>(new Set());
 
   // checkbox
-  const [lastestChecked, setLastestChecked] = useState(false);
+  const [lastestChecked, setLastestChecked] = useState(true);
   const [likedChecked, setLikedChecked] = useState(false);
 
   const onChangeCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -234,7 +255,7 @@ function Main({
         setLastestChecked((prev) => !prev);
       }
       setPatchPostViewData((prev) => {
-        return { ...prev, liked: false };
+        return { ...prev, liked: false, lastArticleIdx: 0 };
       });
     } else {
       if (lastestChecked) {
@@ -244,30 +265,22 @@ function Main({
         setLikedChecked((prev) => !prev);
       }
       setPatchPostViewData((prev) => {
-        return { ...prev, liked: true };
+        return { ...prev, liked: true, lastArticleIdx: 0 };
       });
     }
   };
 
   const onChangeMeetingCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
     const ischecked = e.target.checked;
-    // setPatchPostViewData((prev) => {
-    //   return { ...prev, meeting: ischecked };
-    // });
+    setPatchPostViewData((prev) => {
+      return { ...prev, meeting: ischecked, lastArticleIdx: 0 };
+    });
   };
 
-  // Infinite scroll
-  // console.log([...Array(9).keys()]); 1~9 배열
-  // setPostview에 ...prev, 데이터 추가, -> 리렌더링
-
   useEffect(() => {
-    // if (userIdx && userIdx !== 0) {
-    //   setPatchPostViewData((prev) => {
-    //     return { ...prev, userIdx: userIdx };
-    //   });
-    //   console.log(patchPostViewData);
-    // }
-    if (isInfoLoaded) {
+    // userIdx: false(undefined) => 바로 패치
+    // userIdx: true => isInfoloaded: true일때 패치
+    if (!userIdx || (userIdx && isInfoLoaded)) {
       setLoading(true);
       fetchPostView(patchPostViewData)
         .then((data) => setPostView(data))
@@ -293,51 +306,81 @@ function Main({
     }
   }, [patchPostViewData.lastArticleIdx]);
 
+  // Infinite scroll
+  // setPostview에 ...prev, 데이터 추가, -> 리렌더링
+
   // const [isObserved, setIsObserved] = useState(false);
   const [target, setTarget] = useState<HTMLDivElement | null>(null);
   const [isObserveLoading, setIsObserveLoading] = useState(false);
-  const PostListBoxRef = useRef<HTMLUListElement>(null);
+  const PostListBoxRef = useRef<HTMLUListElement | null>(null);
+
+  const observerRef = useRef<IntersectionObserver>(null);
+  const fetchMoreRef = useRef<HTMLDivElement>(null);
   // const observer = new IntersectionObserver(([entry]) => setIsObserved(entry.isIntersecting), { threshold: 1 });
 
   const onIntersect = ([entry]: IntersectionObserverEntry[], observer: IntersectionObserver) => {
     if (entry.isIntersecting && !isObserveLoading) {
       observer.unobserve(entry.target);
       setIsObserveLoading(true);
-      // console.log(PostListBoxRef.current?.children);
-      console.log(postView);
-      // if (postView!.length > 8) {
-      //   setPatchPostViewData((prev) => {
-      //     return { ...prev, lastArticleIdx: 9 };
-      // });
-      // }
+      console.log(target?.offsetTop);
+      let postNum: any;
+      if (PostListBoxRef) {
+        postNum = PostListBoxRef.current?.children.length;
+      }
+      if ((postNum - 7) % 9 == 0) {
+        setPatchPostViewData((prev) => {
+          return { ...prev, lastArticleIdx: 9 };
+        });
+      }
       setIsObserveLoading(false);
       // observer.observe(entry.target);
     }
   };
 
-  useEffect(() => {
-    let observer: IntersectionObserver;
-    if (target) {
-      observer = new IntersectionObserver(onIntersect, {
-        threshold: 0,
-      });
-      observer.observe(target);
-    }
-    return () => observer && observer.disconnect();
-  }, [target]);
-
   // useEffect(() => {
-  //   if (fetchMoreRef.current) observer.observe(fetchMoreRef.current);
-  //   if (isObserved) {
-  //     setPatchPostViewData((prev) => {
-  //       return { ...prev, lastArticleIdx: postView!.length };
+  //   let observer: IntersectionObserver;
+  //   console.log(PostListBoxRef.current?.children.length);
+  //   if (target) {
+  //     observer = new IntersectionObserver(onIntersect, {
+  //       threshold: 0,
   //     });
+  //     observer.observe(target);
   //   }
-  // }, [fetchMoreRef]);
+  // }, [target, target?.offsetTop]);
+
+  const getObserver = useCallback(() => {
+    if (!observerRef.current) {
+      observerRef.current = new IntersectionObserver(([entries]: IntersectionObserverEntry[]) => {
+        if (entries.isIntersecting) {
+          let postNum: any;
+          if (PostListBoxRef) {
+            postNum = PostListBoxRef.current?.children.length;
+          }
+          if ((postNum - 1) % 9 == 0) {
+            setPatchPostViewData((prev) => {
+              return { ...prev, lastArticleIdx: 9 };
+            });
+          }
+        }
+      });
+    }
+    return observerRef.current;
+  }, [observerRef.current]);
+
+  useEffect(
+    () => {
+      if (fetchMoreRef.current) getObserver().observe(fetchMoreRef.current);
+    },
+    // if (fetchMoreRef.current) observer.observe(fetchMoreRef.current);
+    // if (isObserved) {
+    //   setPatchPostViewData((prev) => {
+    //     return { ...prev, lastArticleIdx: postView!.length };
+    //   });
+    // }
+    [fetchMoreRef.current],
+  );
 
   console.log('렌더링됨');
-  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  console.log(`render: ${postView}`);
   return (
     <MainWrapper>
       <LeftIndexWrapper>
@@ -353,6 +396,11 @@ function Main({
         </MainBannerBackground>
       </MainBannerWrapper>
       <SearchBarWrapper>
+        <SearchBarInfoWrapper>
+          <SearchBarInfo>
+            <SearchBarInfoH3>찾고싶은 스택을 클릭해보세요!</SearchBarInfoH3>
+          </SearchBarInfo>
+        </SearchBarInfoWrapper>
         <SearchStackWrapper>
           {/* <SearchTitleBox location={'main'} /> */}
           {stackfirstLineList.map((stack) => (
@@ -385,15 +433,24 @@ function Main({
           </PostListGuideRight>
         </PostListGuideWrapper>
         <PostListBox ref={PostListBoxRef}>
-          {loading ? (
+          {/* {loading ? (
             <Skeletons />
           ) : postView ? (
-            postView.length > 0 && postView.map((data: ICard) => <Card key={data.boardIdx} data={data} />)
+            postView.length <= 8 && postView.map((data: ICard) => <Card key={data.boardIdx} data={data} />)
+          ) : (
+            '해당 게시글이 존재하지 않습니다'
+          )} */}
+          {postView ? (
+            loading && postView.length <= 9 ? (
+              <Skeletons />
+            ) : (
+              postView.map((data: ICard) => <Card key={data.boardIdx} data={data} />)
+            )
           ) : (
             '해당 게시글이 존재하지 않습니다'
           )}
-          {/* loading 구문 지우기 */}
-          <ObserverDiv ref={setTarget} />
+          {/* {!loading && postView!.length >= 9 && postView!.map((data: ICard) => <Card key={data.boardIdx} data={data} />)} */}
+          <ObserverDiv ref={fetchMoreRef} />
           {isObserveLoading ? <Skeletons /> : <></>}
         </PostListBox>
       </PostListWrapper>

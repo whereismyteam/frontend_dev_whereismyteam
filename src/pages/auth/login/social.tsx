@@ -9,8 +9,10 @@ function Social() {
     const current = decodeURI(window.location.href).split('?')[1];
     const params = new URLSearchParams(current);
     const keywords = params.get('code');
-    console.log(keywords);
-    // navigate('/');
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    alert(`AuthCode: ${keywords}`);
+    navigate('/');
+    window.location.reload();
   }, []);
   return <LoadingSpinner />;
 }

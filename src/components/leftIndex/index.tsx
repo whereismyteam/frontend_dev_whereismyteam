@@ -68,7 +68,7 @@ function LeftIndex({ setPatchPostViewData }: { setPatchPostViewData: Dispatch<Re
       else return 0;
     }
     setPatchPostViewData((prev) => {
-      return { ...prev, categoryIdx: returnCategoryIdx(btnName) };
+      return { ...prev, categoryIdx: returnCategoryIdx(btnName), lastArticleIdx: 0 };
     });
   }, [btnName]);
   return (

@@ -37,6 +37,7 @@ function StackBtn({
     setPatchPostViewData((prev) => {
       return {
         ...prev,
+        lastArticleIdx: 0,
         tectStacksObj: {
           ...prev.tectStacksObj,
           tech_stacks: Array.from(stackList),

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
 
 import { setModalVisible } from '../../store/auth';
@@ -38,10 +38,23 @@ const NavBox = styled.nav`
   transition: all 0.5s ease-in-out;
 `;
 
+const NavLeftBox = styled.div`
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+`;
+
 const NavLogoImg = styled.img`
   max-width: 100px;
   height: 50px;
   cursor: pointer;
+`;
+
+const BrandIcon = styled(Link)`
+  color: #000;
+  font-size: var(--font-size-mid);
+  margin-top: 20px;
+  text-decoration: none;
 `;
 
 const AuthBtn = styled.div`
@@ -290,7 +303,10 @@ function Navigation() {
         />
       )}
       <NavBox>
-        <NavLogoImg src={LogoImg} onClick={onClickLogo} />
+        <NavLeftBox>
+          <NavLogoImg src={LogoImg} onClick={onClickLogo} />
+          <BrandIcon to="/brand">브랜드</BrandIcon>
+        </NavLeftBox>
         {/* {isScrolled ? <SearchTitleBox location={'nav'} /> : <></>} */}
         {isLogin ? (
           <NavIconBox>
