@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import Navigation from '../components/navigation';
 import Footer from '../components/footer';
 import Main from '../pages/main';
+import Brand from '../pages/brand';
 import Post from '../pages/post';
 import Social from '../pages/auth/login/social';
 
@@ -72,6 +73,7 @@ function IndexRouter() {
               <Main userIdx={parseInt(userIdx)} isInfoLoaded={isInfoLoaded} patchPostViewData={patchPostViewData} setPatchPostViewData={setPatchPostViewData} />
             }
           />
+          <Route path="/brand" element={<Brand />} />
           <Route path="/social/google" element={<Social />} />
           <Route path="/post/:postId" element={<Post />} />
           <Route path="*" element={<Navigate replace to="/" />} />
