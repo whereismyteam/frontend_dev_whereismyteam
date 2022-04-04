@@ -1,0 +1,33 @@
+{
+  "files": {
+    "main.js": "/static/js/main.b63b3976.js",
+    "static/media/About_brand5.png": "/static/media/About_brand5.9c1aee4ba0ead5469d76.png",
+    "static/media/InfinitySans-Bold.otf": "/static/media/InfinitySans-Bold.ec7bffceadda681b5d65.otf",
+    "static/media/InfinitySansR-Regular.otf": "/static/media/InfinitySansR-Regular.f0f874e013dd7f3af8a1.otf",
+    "static/media/About_brand3.png": "/static/media/About_brand3.eb3b6bc5a76429ff2db9.png",
+    "static/media/About_brand2.png": "/static/media/About_brand2.ae661f91e9b84e915970.png",
+    "static/media/About_brand1.png": "/static/media/About_brand1.75d056ef2e3ca45a7e8f.png",
+    "static/media/About_brand4.png": "/static/media/About_brand4.729d72a8b210a62d5ac4.png",
+    "static/media/mainBanner.png": "/static/media/mainBanner.ec82163b949c778b6636.png",
+    "static/media/welcome.png": "/static/media/welcome.58527ed627094304022e.png",
+    "static/media/googleIcon.svg": "/static/media/googleIcon.56ead0e61a697330493171ce3e4295e9.svg",
+    "static/media/logo.svg": "/static/media/logo.dd5dbf7fced19dfb758d0923da3e919d.svg",
+    "static/media/heart.svg": "/static/media/heart.e5fc7a007d05054d103a5e5a57880c33.svg",
+    "static/media/hearted.svg": "/static/media/hearted.0865f5b536303ac69f7405c475f0d4c1.svg",
+    "static/media/backBtn.svg": "/static/media/backBtn.2be48aee219b21ed96293a4dc268b138.svg",
+    "static/media/watch.svg": "/static/media/watch.11529d283a5b2028a1c38eab0756cd61.svg",
+    "static/media/pencil.svg": "/static/media/pencil.4a068f41a28fb7b135cb37ffefb00556.svg",
+    "static/media/authModalBackground.svg": "/static/media/authModalBackground.9eaee01a0dbdf0b775e527832286d9f8.svg",
+    "index.html": "/index.html",
+    "static/media/notification.svg": "/static/media/notification.fede9dae4293c024d9c0a7a9ff91cbf7.svg",
+    "static/media/profile.svg": "/static/media/profile.0c0ef06acc102e909406671967a60cf1.svg",
+    "static/media/secret.svg": "/static/media/secret.f44ac8af6422a38c6280e63e5178bd9a.svg",
+    "static/media/comment.svg": "/static/media/comment.f3dbde4442d539f2c387da0c0ab98e1b.svg",
+    "static/media/reply.svg": "/static/media/reply.9366ed54a9d1de0ca76ab235f8e9ba90.svg",
+    "static/media/delete.svg": "/static/media/delete.00e91782a1ff0dd60755b663750f4b94.svg",
+    "main.b63b3976.js.map": "/static/js/main.b63b3976.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.b63b3976.js"
+  ]
+}
