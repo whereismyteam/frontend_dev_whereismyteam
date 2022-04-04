@@ -314,7 +314,7 @@ function Main({
   const [isObserveLoading, setIsObserveLoading] = useState(false);
   const PostListBoxRef = useRef<HTMLUListElement | null>(null);
 
-  const observerRef = useRef<IntersectionObserver>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
   const fetchMoreRef = useRef<HTMLDivElement>(null);
   // const observer = new IntersectionObserver(([entry]) => setIsObserved(entry.isIntersecting), { threshold: 1 });
 
