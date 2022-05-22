@@ -2,7 +2,7 @@ import { getJSON, postJSON, postCredentialsJSON, getCredentialsJSON, patchCreden
 import { Cookies } from 'react-cookie';
 import { useDispatch } from 'react-redux';
 
-export const API_URL = `https://prod.9tapi.site:9000`;
+export const API_URL = `https://prod.9tapi.site`;
 
 import { setLogout } from '../store/user';
 import { setModalVisible } from '../store/auth';
