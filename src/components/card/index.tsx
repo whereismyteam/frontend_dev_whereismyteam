@@ -163,7 +163,7 @@ function Card({ data }: { data: ICard }) {
         <PostLeftBar>
           <PostLeftBarInner>
             {data.stackList.map((item) => (
-              <PostLeftBarImg key={item} src={require(`../../assets/images/stacks/${item}.png`)} />
+              <PostLeftBarImg key={item} src={`/stacks/${item}.png`} />
             ))}
           </PostLeftBarInner>
         </PostLeftBar>
