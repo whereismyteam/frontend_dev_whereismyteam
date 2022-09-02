@@ -1,46 +1,46 @@
-# Getting Started with Create React App
+<img width="997" alt="image" src="https://user-images.githubusercontent.com/67696767/171990124-4d1132a7-271e-428f-9687-a55c8ae68261.png">
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# 구해줘 팀원  
+구해줘 팀원에서는 다양한 분야의 팀원을 자유롭게 모집할 수 있는 기회의 장을 제공하고자 합니다.  
+프로젝트, 대회, 해커톤 팀원 뿐만 아니라 스터디 구인까지 구해줘 팀원에서 해결하세요!  
 
-## Available Scripts
+구해줘 팀원의 프론트엔드 레포입니다 😊
+## 👨‍💻 프론트엔드 팀원 소개  
+|    공은배    |    이호현    |
+|:---:|:---:|
+|    [@eunbae11](https://github.com/eunbae11)    |    [@iHoHyeon](https://github.com/iHoHyeon)    |
 
-In the project directory, you can run:
+## 📍 프로젝트 목표  
+1. 원하는 스택/언어를 필터링하여 그에 해당하는 구인 공고를 확인할 수 있습니다.  
+2. 사용 스택, 모집 여부, 지역, 온/오프, 모집 파트, 구인 인원을 메인 화면의 게시글 카드에서 바로 확인할 수 있습니다.  
+3. 한눈에 보기 좋은 깔끔한 사이트를 제공합니다.  
 
-### `yarn start`
+## 🛠️ 개발 언어 및 활용 기술  
+#### 🧊 개발 환경     
+- TypeScript   
+- React  
+- React-router-dom  
+- Redux  
+- Styled-components  
+- Eslint / Prettier  
+#### 🧊 협업 관리   
+- 깃 이모지  
+- 깃 이슈  
+- 브랜치 관리  
+- 포스트맨  
+- slack  
+- Trello
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## :eyes: 결과물  
+[API 명세서](https://docs.google.com/spreadsheets/d/1Se4Mw5U-iBnIYvI8USGfCpZsjdbbU6ZVmfj4tjdsq1A/edit#gid=311837363)  
+[시연 영상 모음](https://drive.google.com/drive/folders/1AIhcHvlE4235UomqI3CbHqN0i2U5GhPp)  
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+<figure class="third">
+  <img width="400" alt="image" src="https://user-images.githubusercontent.com/67696767/171991775-1f6c7911-8aff-4f9e-a29e-d35d66dc2927.png">
+  <img width="400" alt="image" src="https://user-images.githubusercontent.com/67696767/171991806-ccaba938-976f-442c-b303-3e450ef6974c.png">
+  <img width="400" alt="image" src="https://user-images.githubusercontent.com/67696767/171991814-51ab4b35-0aec-4893-a21b-2f2711b66dbf.png">
+</figure>  
 
-### `yarn test`
+## 🏗️ 백엔드 깃 레포지토리  
+[링크](https://github.com/whereismyteam/backend_dev_whereismyteam)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
